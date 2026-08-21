@@ -11,7 +11,7 @@ export default function Icon() {
         style={{
           fontSize: 24,
           fontWeight: 800,
-          background: 'linear-gradient(135deg, #2dd4bf 0%, #3b368a 100%)', // teal to indigo
+          background: 'linear-gradient(135deg, #4ECDA0 0%, #3b368a 100%)', // teal to indigo
           width: '100%',
           height: '100%',
           display: 'flex',

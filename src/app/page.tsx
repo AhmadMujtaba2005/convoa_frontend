@@ -1,20 +1,10 @@
 import HomePageTemplate from "@/components/templates/HomePageTemplate";
-import {
-  heroContent,
-  homeCards,
-  homeTrustedBy,
-  homesolutions,
-  integrationCategories,
-  steps,
-  homefocus,
-  homeindustries,
-  ctaSection,
-} from "@/features/home";
+import { heroContent, homeCards, homeTrustedBy, homesolutions, integrationCategories, steps, homefocus, homeindustries, ctaSection } from "@/features/home";
 
 export default function Page() {
   return (
     <main>
-      <HomePageTemplate
+      <HomePageTemplate 
         hero={heroContent}
         cards={homeCards}
         trustedBy={homeTrustedBy}
@@ -28,3 +18,4 @@ export default function Page() {
     </main>
   );
 }
+

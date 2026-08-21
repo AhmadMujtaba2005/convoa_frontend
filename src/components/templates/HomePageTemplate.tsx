@@ -1,18 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { CheckCircleFilled, StarFilled, ArrowRightOutlined } from "@ant-design/icons";
-
-const BRAND = "#2dd4bf"; // Primary brand color (Teal)
-const BRAND_DIM = "rgba(45, 212, 191, 0.12)";
-const BRAND_BORDER = "rgba(45, 212, 191, 0.25)";
-const BRAND_GRADIENT = "linear-gradient(90deg, #2dd4bf 0%, #60a5fa 40%, #8b5cf6 100%)";
-const BG = "#0d0b1e";
-const CARD_BG = "rgba(255,255,255,0.03)";
-const CARD_BORDER = "rgba(255,255,255,0.07)";
-const TEXT_MUTED = "#94a3b8";
-const TEXT_DIM = "#64748b";
+import { theme } from "@/lib/theme";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 interface Stat { value: string; label: string; }
@@ -37,455 +29,808 @@ interface Props {
 }
 
 // ─── Animations ──────────────────────────────────────────────────────────────
-const fadeUp = keyframes`from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}`;
-const pulse = keyframes`0%{box-shadow:0 0 0 0 rgba(45,212,191,.35)}70%{box-shadow:0 0 0 18px rgba(45,212,191,0)}100%{box-shadow:0 0 0 0 rgba(45,212,191,0)}`;
-const shimmer = keyframes`0%{background-position:200% 0}100%{background-position:-200% 0}`;
-const scroll = keyframes`0%{transform:translateX(0)}100%{transform:translateX(-50%)}`;
+const fadeUp = keyframes`from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}`;
+const pulse = keyframes`0%{box-shadow:0 0 0 0 rgba(78,205,160,.25)}70%{box-shadow:0 0 0 14px rgba(78,205,160,0)}100%{box-shadow:0 0 0 0 rgba(78,205,160,0)}`;
+const marquee = keyframes`0%{transform:translateX(0)}100%{transform:translateX(-50%)}`;
+const floatAnim = keyframes`0%{transform:translateY(0)}100%{transform:translateY(-6px)}`;
 
-// ─── Shared Layout ────────────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// GLOBAL LAYOUT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const Page = styled.div`
-  background: ${BG};
-  color: #fff;
-  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  background: ${theme.colors.background};
+  color: ${theme.colors.textPrimary};
+  font-family: ${theme.fonts.body};
   overflow-x: hidden;
+  position: relative;
+  z-index: 1;
 `;
 
-const Section = styled.section<{ $padTop?: string; $padBot?: string }>`
+const Section = styled.section`
   width: 100%;
-  padding-top: ${p => p.$padTop ?? "96px"};
-  padding-bottom: ${p => p.$padBot ?? "96px"};
+  padding: 120px 0;
   position: relative;
+  @media(max-width:768px){ padding: 64px 0; }
 `;
 
 const Container = styled.div`
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+  @media(max-width:768px){ padding: 0 16px; }
 `;
 
-const Pill = styled.span`
-  display: inline-block;
-  padding: 4px 14px;
-  border-radius: 20px;
-  background: ${BRAND_DIM};
-  border: 1px solid ${BRAND_BORDER};
-  color: ${BRAND};
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
+// ─── Typography ──────────────────────────────────────────────
+const EyebrowWrap = styled.div`
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; max-width: 600px; margin: 0 auto 24px;
+  &::before, &::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.15));
+  }
+  &::after {
+    background: linear-gradient(270deg, transparent, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.15));
+  }
+`;
+
+const EyebrowPill = styled.span`
+  padding: 6px 20px; border-radius: 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: ${theme.colors.textMuted};
+  font-family: ${theme.fonts.body};
+  font-size: 13px; font-weight: 500;
+  margin: 0 16px; white-space: nowrap;
+`;
+
+const FunnelGlow = styled.div`
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 1000px; height: 400px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at top center, ${theme.colors.brandTeal}40 0%, ${theme.colors.brandTeal}15 50%, transparent 80%);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+`;
+
+const SectionHead = styled.div`
+  text-align: center;
+  margin-bottom: 56px;
+  position: relative;
+  z-index: 1;
 `;
 
 const H1 = styled.h1`
-  font-size: clamp(40px, 5.5vw, 72px);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -2px;
-  color: #fff;
+  font-family: ${theme.fonts.heading};
+  font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: ${theme.colors.textPrimary};
   margin: 0 0 20px;
 `;
 
 const H2 = styled.h2`
-  font-size: clamp(28px, 3.5vw, 48px);
+  font-family: ${theme.fonts.heading};
+  font-size: clamp(26px, 3vw, 42px);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -1px;
-  color: #fff;
-  margin: 0 0 16px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: ${theme.colors.textPrimary};
+  margin: 0 0 14px;
 `;
 
 const H3 = styled.h3`
+  font-family: ${theme.fonts.heading};
   font-size: 20px;
-  font-weight: 600;
-  color: #fff;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: ${theme.colors.textPrimary};
   margin: 0 0 10px;
 `;
 
 const Body = styled.p`
-  font-size: 17px;
-  line-height: 1.7;
-  color: ${TEXT_MUTED};
+  font-family: ${theme.fonts.body};
+  font-size: 16px;
+  line-height: 1.6;
+  color: ${theme.colors.textMuted};
   margin: 0;
 `;
 
-const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  background: ${CARD_BORDER};
-`;
-
-// ─── Section Glow ────────────────────────────────────────────────────────────
-const Glow = styled.div<{ $top?: string; $left?: string; $right?: string; $size?: string; $opacity?: string }>`
-  position: absolute;
-  top: ${p => p.$top ?? "50%"};
-  left: ${p => p.$left ?? "auto"};
-  right: ${p => p.$right ?? "auto"};
-  width: ${p => p.$size ?? "600px"};
-  height: ${p => p.$size ?? "600px"};
-  background: radial-gradient(circle, rgba(45,212,191,${p => p.$opacity ?? "0.08"}) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  transform: translate(${p => p.$left ? "-50%" : "50%"}, -50%);
+const GradientWord = styled.span`
+  background: ${theme.colors.brandGradient};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 1. HERO
+// HERO
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const HeroSection = styled.section`
   position: relative;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  padding: 140px 24px 80px;
+  padding: 160px 24px 96px;
   overflow: hidden;
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(45,212,191,0.15) 0%, transparent 65%),
-              radial-gradient(ellipse 60% 40% at 20% 80%, rgba(45,212,191,0.05) 0%, transparent 60%),
-              ${BG};
+  @media(max-width:768px){ padding: 120px 16px 64px; }
 `;
 
-const HeroStars = styled.div`
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(2px 2px at 60% 50%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 35% 75%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 90% 65%, rgba(255,255,255,0.3), transparent);
-  background-size: 500px 400px;
+const HeroGlow = styled.div`
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, ${theme.colors.brandTeal}40 0%, ${theme.colors.brandTeal}15 50%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+`;
+
+const HeroIconBadge = styled.div`
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 28px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 40px ${theme.colors.brandTeal}20;
+  animation: ${fadeUp} 0.6s ease-out;
 `;
 
 const HeroContent = styled.div`
   position: relative; z-index: 1;
-  max-width: 820px;
+  max-width: 760px;
   animation: ${fadeUp} 0.8s ease-out;
 `;
 
-const HeroInputRow = styled.div`
+const HeroCTARow = styled.div`
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid ${CARD_BORDER};
-  border-radius: 14px;
-  padding: 6px 6px 6px 20px;
   max-width: 480px;
-  margin: 40px auto 48px;
-  backdrop-filter: blur(12px);
+  margin: 36px auto 36px;
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 28px;
+  padding: 4px 4px 4px 20px;
+  @media(max-width:480px){ flex-direction: column; border-radius: 16px; padding: 12px; gap: 8px; }
 `;
 
-const EmailInput = styled.input`
-  flex: 1; background: transparent; border: none; outline: none;
-  color: #fff; font-size: 15px;
-  &::placeholder { color: ${TEXT_DIM}; }
+const HeroInput = styled.input`
+  flex: 1;
+  background: transparent; border: none; outline: none;
+  color: ${theme.colors.textPrimary};
+  font-family: ${theme.fonts.body};
+  font-size: 14px;
+  min-width: 0;
+  &::placeholder { color: ${theme.colors.textDim}; }
+  @media(max-width:480px){ width: 100%; text-align: center; padding: 8px 0; }
 `;
 
-const CtaBtn = styled.button`
-  background: ${BRAND};
-  border: none;
-  height: 46px;
-  padding: 0 28px;
-  border-radius: 10px;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity .2s, transform .2s;
-  animation: ${pulse} 3s infinite;
-  &:hover { opacity: .88; transform: translateY(-1px); }
+const SpinAnim = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 `;
 
-const BenefitRow = styled.div`
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
-`;
-
-const Benefit = styled.span`
-  display: flex; align-items: center; gap: 7px;
-  color: #cbd5e1; font-size: 14px;
-  .anticon { color: ${BRAND}; font-size: 15px; }
-`;
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 2. STATS BAR
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const StatsBar = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: ${CARD_BORDER};
-  border: 1px solid ${CARD_BORDER};
-  border-radius: 16px;
+const GlowingButtonWrap = styled.div`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 9999px;
   overflow: hidden;
+  background: ${theme.colors.surface};
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  @media(max-width:480px){ width: 100%; }
+  
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(78,205,160,0.1);
+    transform: translateY(-2px);
+  }
+  &:active { transform: translateY(0); }
+`;
+
+const GlowingBorderBlur = styled.div`
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  filter: blur(4px); opacity: 0.7; transition: opacity 0.3s;
+  ${GlowingButtonWrap}:hover & { opacity: 1; }
+`;
+
+const GlowingBorderSharp = styled.div`
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 1;
+`;
+
+const SpinningGradient = styled.div`
+  width: 300%; height: 300%;
+  animation: ${SpinAnim} 2.5s linear infinite;
+  background: conic-gradient(
+    from 0deg,
+    transparent 40%,
+    rgba(78, 205, 160, 0.1) 60%,
+    rgba(78, 205, 160, 0.6) 80%,
+    rgba(61, 74, 155, 0.9) 95%,
+    #3D4A9B 100%
+  );
+`;
+
+const GlowingButtonInner = styled.button<{ $large?: boolean }>`
+  position: relative; z-index: 10;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; 
+  height: ${p => p.$large ? '52px' : '48px'}; 
+  padding: 0 ${p => p.$large ? '40px' : '28px'};
+  border-radius: 9999px; border: none;
+  background: ${theme.colors.surface};
+  color: #fff; font-family: ${theme.fonts.body};
+  font-size: ${p => p.$large ? '16px' : '14px'}; 
+  font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: background 0.3s;
+  ${GlowingButtonWrap}:hover & {
+    background: #1a1a24;
+  }
+`;
+
+const GlowingButton = ({ children, style, large }: any) => (
+  <GlowingButtonWrap style={style}>
+    <GlowingBorderBlur><SpinningGradient /></GlowingBorderBlur>
+    <GlowingBorderSharp><SpinningGradient /></GlowingBorderSharp>
+    <GlowingButtonInner $large={large}>{children}</GlowingButtonInner>
+  </GlowingButtonWrap>
+);
+
+const BadgeGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  max-width: 420px;
+  margin: 0 auto 56px;
+  @media(max-width:480px){ grid-template-columns: 1fr; }
+`;
+
+const Badge = styled.span`
+  display: flex; align-items: center; gap: 8px;
+  color: ${theme.colors.textMuted}; font-size: 14px;
+  font-family: ${theme.fonts.body};
+  .anticon { color: ${theme.colors.brandTeal}; font-size: 14px; }
+`;
+
+/* ── Background Elements ── */
+const HeroBeam = styled.div`
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 400px; transform: translateY(-50%);
+  pointer-events: none; z-index: 0; opacity: 0.9;
+`;
+
+const HeroCurvesSvg = () => (
+  <svg width="100%" height="400" viewBox="0 0 1440 400" fill="none" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="hcGrad" x1="0" y1="0" x2="1440" y2="0">
+        <stop offset="0%" stopColor="transparent" />
+        <stop offset="30%" stopColor={theme.colors.brandTeal} stopOpacity="0.6" />
+        <stop offset="50%" stopColor={theme.colors.brandTeal} stopOpacity="1" />
+        <stop offset="70%" stopColor={theme.colors.brandTeal} stopOpacity="0.6" />
+        <stop offset="100%" stopColor="transparent" />
+      </linearGradient>
+    </defs>
+    <path d="M0 250 Q 360 150 720 250 T 1440 250" stroke="url(#hcGrad)" strokeWidth="1.5" />
+    <path d="M0 250 Q 360 300 720 250 T 1440 250" stroke="url(#hcGrad)" strokeWidth="1.5" opacity="0.8" />
+    <path d="M0 250 Q 360 250 720 250 T 1440 250" stroke="url(#hcGrad)" strokeWidth="6" filter="blur(16px)" opacity="0.7" />
+  </svg>
+);
+
+const SectionBgArc = styled.div`
+  position: absolute; top: 0; left: 0; right: 0; height: 250px;
+  pointer-events: none; z-index: 0; opacity: 0.8;
+`;
+const ArcSvg = () => (
+  <svg width="100%" height="250" viewBox="0 0 1440 250" fill="none" preserveAspectRatio="xMidYMin slice">
+    <defs>
+      <linearGradient id="arcGrad" x1="0" y1="0" x2="1440" y2="0">
+        <stop offset="0%" stopColor="transparent" />
+        <stop offset="30%" stopColor={theme.colors.brandTeal} stopOpacity="0.4" />
+        <stop offset="50%" stopColor={theme.colors.brandTeal} stopOpacity="0.9" />
+        <stop offset="70%" stopColor={theme.colors.brandTeal} stopOpacity="0.4" />
+        <stop offset="100%" stopColor="transparent" />
+      </linearGradient>
+    </defs>
+    <path d="M0 100 Q 720 -20 1440 100" stroke="url(#arcGrad)" strokeWidth="1.5" />
+    <path d="M0 100 Q 720 -20 1440 100" stroke="url(#arcGrad)" strokeWidth="6" filter="blur(12px)" opacity="0.8" />
+  </svg>
+);
+
+const SectionBgHelix = styled.div`
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 250px; height: 400px; pointer-events: none; z-index: 0; opacity: 0.8;
+`;
+const HelixSvg = () => (
+  <svg width="250" height="400" viewBox="0 0 250 400" fill="none">
+    <defs>
+      <linearGradient id="helGrad" x1="0" y1="0" x2="0" y2="400">
+        <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.9" />
+        <stop offset="100%" stopColor="transparent" />
+      </linearGradient>
+    </defs>
+    <path d="M125 0 Q 80 80 125 150 T 125 300 T 125 400" stroke="url(#helGrad)" strokeWidth="1.5" />
+    <path d="M125 0 Q 170 80 125 150 T 125 300 T 125 400" stroke="url(#helGrad)" strokeWidth="1.5" opacity="0.8" />
+    <path d="M125 0 V 400" stroke="url(#helGrad)" strokeWidth="24" filter="blur(24px)" opacity="0.3" />
+  </svg>
+);
+
+const SectionBgLines = styled.div`
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 500px; height: 400px; pointer-events: none; z-index: 0; opacity: 0.8;
+`;
+const LinesSvg = () => (
+  <svg width="500" height="400" viewBox="0 0 500 400" fill="none">
+    <defs>
+      <linearGradient id="linesGrad" x1="0" y1="0" x2="0" y2="400">
+        <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.9" />
+        <stop offset="100%" stopColor="transparent" />
+      </linearGradient>
+    </defs>
+    <rect x="249" y="0" width="2" height="400" fill="url(#linesGrad)" />
+    <rect x="220" y="0" width="1" height="250" fill="url(#linesGrad)" opacity="0.6" />
+    <rect x="280" y="0" width="1" height="250" fill="url(#linesGrad)" opacity="0.6" />
+    <rect x="190" y="0" width="1" height="180" fill="url(#linesGrad)" opacity="0.4" />
+    <rect x="310" y="0" width="1" height="180" fill="url(#linesGrad)" opacity="0.4" />
+    <rect x="150" y="0" width="200" height="400" fill="url(#linesGrad)" filter="blur(40px)" opacity="0.2" />
+  </svg>
+);
+
+const SectionBgGrid = styled.div`
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center top;
+  mask-image: radial-gradient(ellipse at center top, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center top, black 20%, transparent 70%);
+`;
+
+// ── Dashboard Mockup ──
+const DashWrap = styled.div`
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 22px;
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  display: flex;
+  overflow: hidden;
+  animation: ${fadeUp} 1s ease-out 0.15s both;
+  position: relative;
+  z-index: 2;
+  min-height: 380px;
+  @media(max-width:768px){ flex-direction: column; width: 100%; min-height: auto; border-radius: 16px; }
+`;
+
+const DSide = styled.div`
+  width: 56px;
+  border-right: 1px solid ${theme.colors.surfaceBorder};
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px 0; gap: 20px;
+  @media(max-width:768px){ flex-direction: row; width: 100%; border-right: none; border-bottom: 1px solid ${theme.colors.surfaceBorder}; padding: 12px 16px; justify-content: flex-start; }
+`;
+
+const DSideIcon = styled.div<{ $active?: boolean }>`
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  background: ${p => p.$active ? `${theme.colors.brandTeal}15` : "transparent"};
+  color: ${p => p.$active ? theme.colors.brandTeal : theme.colors.textDim};
+`;
+
+const DMain = styled.div`
+  flex: 1; padding: 24px 28px;
+  display: flex; flex-direction: column; gap: 16px;
+  @media(max-width:768px){ padding: 16px; }
+`;
+
+const DTopBar = styled.div`
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 16px; border-bottom: 1px solid ${theme.colors.surfaceBorder};
+`;
+
+const DSearch = styled.div`
+  flex: 1; max-width: 200px; height: 30px; border-radius: 8px;
+  background: rgba(255,255,255,0.03); border: 1px solid ${theme.colors.surfaceBorder};
+  margin: 0 20px;
+  @media(max-width:480px){ display: none; }
+`;
+
+const DAvatar = styled.div`
+  width: 28px; height: 28px; border-radius: 50%;
+  background: ${theme.colors.brandGradient};
+`;
+
+const DStatRow = styled.div`
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  @media(max-width:640px){ grid-template-columns: 1fr; }
+`;
+
+const DStatCard = styled.div`
+  background: rgba(255,255,255,0.02);
+  border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 14px; padding: 18px;
+`;
+
+const DStatVal = styled.div`
+  font-family: ${theme.fonts.heading};
+  font-size: 24px; font-weight: 700;
+  background: ${theme.colors.brandGradient};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+`;
+
+const DStatLabel = styled.div`
+  font-size: 11px; color: ${theme.colors.textDim}; font-weight: 500;
+  letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px;
+`;
+
+const DChartCard = styled.div`
+  flex: 1; border-radius: 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid ${theme.colors.surfaceBorder};
+  padding: 18px; position: relative; overflow: hidden;
+  min-height: 120px;
+`;
+
+/* Mini area chart SVG */
+const MiniChart = () => (
+  <svg width="100%" height="80" viewBox="0 0 400 80" fill="none" preserveAspectRatio="none"
+    style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+    <defs>
+      <linearGradient id="chartFill" x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
+        <stop stopColor={theme.colors.brandTeal} stopOpacity="0.3" />
+        <stop offset="1" stopColor={theme.colors.brandIndigo} stopOpacity="0.1" />
+      </linearGradient>
+      <linearGradient id="chartLine" x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
+        <stop stopColor={theme.colors.brandTeal} />
+        <stop offset="1" stopColor={theme.colors.brandIndigo} />
+      </linearGradient>
+    </defs>
+    <path d="M0 60 Q 50 40 100 45 T 200 30 T 300 25 T 400 15 V 80 H 0 Z" fill="url(#chartFill)" />
+    <path d="M0 60 Q 50 40 100 45 T 200 30 T 300 25 T 400 15" stroke="url(#chartLine)" strokeWidth="2" fill="none" />
+  </svg>
+);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// STATS / TRUST BAR
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const StatsStrip = styled.div`
+  background: ${theme.colors.backgroundElevated};
+  border-top: 1px solid ${theme.colors.surfaceBorder};
+  border-bottom: 1px solid ${theme.colors.surfaceBorder};
+  padding: 48px 0;
+`;
+
+const StatsGrid = styled.div`
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
   @media(max-width:640px){ grid-template-columns: repeat(2,1fr); }
 `;
 
-const StatCell = styled.div`
-  background: ${CARD_BG};
-  padding: 32px 24px;
+const StatItem = styled.div`
   text-align: center;
-  backdrop-filter: blur(8px);
 `;
 
 const StatValue = styled.div`
-  font-size: 36px;
-  font-weight: 800;
-  color: ${BRAND};
-  line-height: 1;
+  font-family: ${theme.fonts.heading};
+  font-size: 34px; font-weight: 700;
+  background: ${theme.colors.brandGradient};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em; line-height: 1;
   margin-bottom: 8px;
 `;
 
 const StatLabel = styled.div`
-  font-size: 13px;
-  color: ${TEXT_MUTED};
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  font-weight: 600;
+  font-size: 13px; color: ${theme.colors.textMuted}; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.06em;
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 2.5 HERO MOCKUP
+// FEATURE CARDS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const MockupContainer = styled.div`
-  margin: 64px auto 0; max-width: 1040px; width: 100%; aspect-ratio: 16/9;
-  background: rgba(13, 11, 30, 0.7);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(45,212,191,0.15);
-  display: flex; overflow: hidden;
-  animation: ${fadeUp} 1s ease-out 0.2s both;
-  z-index: 2; position: relative;
+const ShowcaseLayout = styled.div`
+  display: flex; flex-direction: column; gap: 32px; width: 100%; margin: 0 auto;
+  @media(min-width: 900px){ flex-direction: row; gap: 48px; align-items: center; justify-content: center; }
 `;
 
-const MockupSidebar = styled.div`
-  width: 260px; border-right: 1px solid rgba(255,255,255,0.05); padding: 24px;
-  display: flex; flex-direction: column; gap: 16px; text-align: left;
+const ShowcaseLeft = styled.div`
+  flex: 1; display: flex; flex-direction: column; gap: 24px; justify-content: flex-start;
+  @media(min-width: 900px){ gap: 32px; padding: 24px 16px; }
 `;
 
-const MockupItem = styled.div<{ $active?: boolean }>`
-  height: 36px; border-radius: 8px;
-  background: ${p => p.$active ? "rgba(45,212,191,0.15)" : "transparent"};
-  border: 1px solid ${p => p.$active ? "rgba(45,212,191,0.3)" : "transparent"};
-  display: flex; align-items: center; padding: 0 12px;
-  color: ${p => p.$active ? BRAND : TEXT_MUTED}; font-size: 14px; font-weight: 500; gap: 12px;
+const ShowcaseItem = styled.div`
+  display: grid; grid-template-columns: 3px 1fr; gap: 24px; cursor: pointer;
 `;
 
-const MockupMain = styled.div`
-  flex: 1; padding: 32px; display: flex; flex-direction: column; gap: 24px; text-align: left;
+const ProgressBarWrap = styled.div`
+  position: relative; width: 100%; height: 100%; min-height: 40px;
+  background: ${theme.colors.surfaceBorder}; border-radius: 999px; overflow: hidden;
 `;
 
-const MockupHeader = styled.div`
-  display: flex; justify-content: space-between; align-items: center;
-  border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 24px;
+const fillProgressAnim = keyframes`
+  from { height: 0%; } to { height: 100%; }
 `;
 
-const MockupCardRow = styled.div`
-  display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px;
+const ProgressBarActive = styled.div<{ $duration: number }>`
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: ${theme.colors.brandTeal};
+  transform-origin: top;
+  animation: ${fillProgressAnim} ${p => p.$duration}s linear forwards;
+  ${ShowcaseItem}:hover & { animation-play-state: paused; }
 `;
 
-const MockupCard = styled.div`
-  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;
+const ShowcaseItemContent = styled.div`
+  display: flex; flex-direction: column; justify-content: center; padding: 4px 0;
 `;
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 3. FEATURE CARDS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const CardGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  @media(max-width:900px){ grid-template-columns: repeat(2,1fr); }
-  @media(max-width:580px){ grid-template-columns: 1fr; }
-`;
-
-const FeatureCard = styled.div<{ $wide?: boolean }>`
-  background: ${CARD_BG};
-  border: 1px solid ${CARD_BORDER};
-  border-radius: 16px;
-  padding: 32px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color .25s, transform .25s;
-  ${p => p.$wide && "grid-column: span 2;"}
-  &:hover {
-    border-color: ${BRAND_BORDER};
-    transform: translateY(-3px);
+const ShowcaseItemTitle = styled.h5<{ $active: boolean }>`
+  font-size: 17px; font-family: ${theme.fonts.heading}; margin: 0;
+  transition: color 0.3s;
+  color: ${p => p.$active ? theme.colors.brandTeal : theme.colors.textMuted};
+  font-weight: ${p => p.$active ? 700 : 500};
+  @media(min-width: 768px){ font-size: 20px; }
+  ${ShowcaseItem}:hover & {
+    color: ${p => !p.$active ? theme.colors.textPrimary : theme.colors.brandTeal};
   }
-  &::before {
-    content:'';
-    position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, ${BRAND}, transparent);
-    opacity: 0;
-    transition: opacity .25s;
-  }
-  &:hover::before { opacity: 1; }
 `;
 
-const CardDot = styled.div`
-  width: 36px; height: 36px; border-radius: 10px;
-  background: ${BRAND_DIM}; border: 1px solid ${BRAND_BORDER};
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 20px;
-  &::after { content:''; width:10px; height:10px; border-radius:50%; background:${BRAND}; }
+const ShowcaseItemDescWrap = styled.div<{ $active: boolean }>`
+  overflow: hidden; transition: all 0.4s ease-in-out;
+  max-height: ${p => p.$active ? '120px' : '0'};
+  opacity: ${p => p.$active ? '1' : '0'};
+  margin-top: ${p => p.$active ? '8px' : '0'};
 `;
+
+const ShowcaseItemDesc = styled.p`
+  font-size: 14px; color: ${theme.colors.textDim}; line-height: 1.6; margin: 0;
+`;
+
+const ShowcaseRight = styled.div`
+  flex: 1; position: relative; display: flex; align-items: center; justify-content: center;
+  min-height: 300px; width: 100%;
+  @media(min-width: 768px){ min-height: 400px; }
+`;
+
+const SuperpowerShowcase = ({ cards }: { cards: Card[] }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.3 });
+
+  const showcaseImages = [
+    "/images/features/feature3.png",
+    "/images/features/feature2.png",
+    "/images/features/feature5.png",
+    "/images/features/feature4.png",
+    "/images/features/feature1.png",
+  ];
+  const customTitles = [
+    "Human-like AI Voice",
+    "Smarter AI Assistant",
+    "Service Heat Maps",
+    "Real-time Analytics",
+    "24/7 Operations"
+  ];
+
+  const handleAnimationEnd = (e: React.AnimationEvent<HTMLDivElement>, index: number) => {
+    if (index === activeIndex) {
+      setActiveIndex((prev) => (prev + 1) % cards.length);
+    }
+  };
+
+  return (
+    <ShowcaseLayout ref={containerRef}>
+      <ShowcaseLeft>
+        {cards.map((card, idx) => {
+          const isActive = activeIndex === idx && isInView;
+          return (
+            <ShowcaseItem key={idx} onClick={() => setActiveIndex(idx)}>
+              <ProgressBarWrap>
+                {isActive && (
+                  <ProgressBarActive 
+                    $duration={4} 
+                    onAnimationEnd={(e) => handleAnimationEnd(e, idx)} 
+                  />
+                )}
+              </ProgressBarWrap>
+              <ShowcaseItemContent>
+                <ShowcaseItemTitle $active={isActive}>
+                  {customTitles[idx] || `Superpower ${idx + 1}`}
+                </ShowcaseItemTitle>
+                <ShowcaseItemDescWrap $active={isActive}>
+                  <ShowcaseItemDesc>{card.description}</ShowcaseItemDesc>
+                </ShowcaseItemDescWrap>
+              </ShowcaseItemContent>
+            </ShowcaseItem>
+          );
+        })}
+      </ShowcaseLeft>
+      <ShowcaseRight>
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={activeIndex}
+            src={showcaseImages[activeIndex]}
+            alt="Feature Graphic"
+            initial={{ opacity: 0, scale: (activeIndex === 1 || activeIndex === 3) ? 1.15 : 0.95 }}
+            animate={{ opacity: 1, scale: (activeIndex === 1 || activeIndex === 3) ? 1.25 : 1 }}
+            exit={{ opacity: 0, scale: (activeIndex === 1 || activeIndex === 3) ? 1.35 : 1.05 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'contain' }}
+          />
+        </AnimatePresence>
+      </ShowcaseRight>
+    </ShowcaseLayout>
+  );
+};
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 4. SOLUTIONS / TABS
+// SOLUTIONS / TABS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const TabRow = styled.div`
   display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 48px;
+  justify-content: center;
 `;
 
 const Tab = styled.button<{ $active: boolean }>`
-  padding: 10px 24px; border-radius: 30px; font-size: 14px;
+  padding: 10px 24px; border-radius: 26px; font-size: 14px;
+  font-family: ${theme.fonts.body};
   font-weight: 600; cursor: pointer; transition: all .2s;
-  background: ${p => p.$active ? BRAND : CARD_BG};
-  color: ${p => p.$active ? "#fff" : TEXT_MUTED};
-  border: 1px solid ${p => p.$active ? BRAND : CARD_BORDER};
-  &:hover { border-color: ${BRAND}; color: ${p => p.$active ? "#fff" : BRAND}; }
+  background: ${p => p.$active ? theme.colors.brandGradientText : theme.colors.surface};
+  color: ${p => p.$active ? "#fff" : theme.colors.textMuted};
+  border: 1px solid ${p => p.$active ? "transparent" : theme.colors.surfaceBorder};
+  &:hover { border-color: ${theme.colors.brandTeal}40; }
 `;
 
-const SolutionContent = styled.div`
-  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+const SolutionLayout = styled.div`
+  display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
   @media(max-width:768px){ grid-template-columns:1fr; gap:32px; }
 `;
 
 const SolutionVisual = styled.div`
   aspect-ratio: 4/3; border-radius: 20px;
-  background: linear-gradient(135deg, rgba(45,212,191,0.08) 0%, rgba(59,54,138,0.15) 100%);
-  border: 1px solid ${CARD_BORDER};
+  background: linear-gradient(135deg, ${theme.colors.brandTeal}08 0%, ${theme.colors.brandIndigo}14 100%);
+  border: 1px solid ${theme.colors.surfaceBorder};
   display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden;
-  &::after {
-    content:''; position:absolute; inset:0;
-    background: radial-gradient(circle at 30% 40%, rgba(45,212,191,0.15) 0%, transparent 60%);
-  }
 `;
 
 const SolutionIcon = styled.div`
-  width: 72px; height: 72px; border-radius: 20px;
-  background: ${BRAND_DIM}; border: 1px solid ${BRAND_BORDER};
+  width: 64px; height: 64px; border-radius: 18px;
+  background: ${theme.colors.brandTeal}15; border: 1px solid ${theme.colors.brandTeal}25;
   display: flex; align-items: center; justify-content: center;
-  font-size: 32px; color: ${BRAND}; position: relative; z-index:1;
+  font-size: 28px; color: ${theme.colors.brandTeal};
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 5. INTEGRATIONS
+// INTEGRATIONS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const IntegrationGrid = styled.div`
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 48px;
+const IntegGrid = styled.div`
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 48px;
   @media(max-width:768px){ grid-template-columns: repeat(2,1fr); }
 `;
 
 const IntegCard = styled.div`
-  background: ${CARD_BG}; border: 1px solid ${CARD_BORDER};
-  border-radius: 14px; padding: 24px; text-align: center;
+  background: ${theme.colors.surface}; border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 14px; padding: 32px; text-align: left;
   transition: border-color .2s, transform .2s;
-  &:hover { border-color: ${BRAND_BORDER}; transform: translateY(-2px); }
+  &:hover { border-color: ${theme.colors.brandTeal}50; transform: translateY(-4px); }
+  @media(max-width:768px){ padding: 24px; }
 `;
 
-const IntegIcon = styled.div`
-  width: 48px; height: 48px; border-radius: 12px;
-  background: ${BRAND_DIM}; margin: 0 auto 12px;
+const IntegChip = styled.div`
+  width: 32px; height: 32px; border-radius: 8px;
+  background: ${theme.colors.brandTeal}15;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; color: ${BRAND};
+  font-size: 16px; margin-bottom: 14px;
 `;
 
 const IntegLabel = styled.div`
-  font-size: 13px; color: ${TEXT_MUTED}; font-weight: 500;
+  font-size: 14px; color: ${theme.colors.textMuted}; font-weight: 500;
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 6. STEPS
+// STEPS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const StepsGrid = styled.div`
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px;
+const StepsRow = styled.div`
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px;
+  position: relative;
   @media(max-width:768px){ grid-template-columns:1fr; }
 `;
 
 const StepCard = styled.div`
-  background: ${CARD_BG}; border: 1px solid ${CARD_BORDER};
-  border-radius: 16px; padding: 36px 28px; position: relative; overflow: hidden;
+  background: ${theme.colors.surface}; border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 18px; padding: 32px; position: relative;
   transition: border-color .25s, transform .25s;
-  &:hover { border-color: ${BRAND_BORDER}; transform: translateY(-3px); }
+  &:hover { border-color: ${theme.colors.brandTeal}50; transform: translateY(-4px); }
+  @media(max-width:768px){ padding: 24px; }
 `;
 
-const StepNumber = styled.div`
-  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: ${BRAND}; margin-bottom: 20px;
+const StepEyebrow = styled.div`
+  font-family: ${theme.fonts.body};
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: ${theme.colors.brandTeal}; margin-bottom: 18px;
 `;
 
 const StepTitle = styled.h3`
-  font-size: 22px; font-weight: 700; color: #fff; margin: 0 0 12px;
+  font-family: ${theme.fonts.heading};
+  font-size: 20px; font-weight: 700; color: ${theme.colors.textPrimary};
+  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.1;
 `;
 
-const ConnectorLine = styled.div`
-  position: absolute; top: 48px; right: -12px; width: 24px; height: 1px;
-  background: ${BRAND_BORDER}; z-index: 2;
+/* dashed connector line between step cards (desktop only) */
+const StepConnector = styled.div`
+  position: absolute; top: 40px; right: -10px; width: 20px; height: 0;
+  border-top: 1.5px dashed ${theme.colors.brandTeal}40;
+  z-index: 2;
+  @media(max-width:768px){ display: none; }
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 7. FOCUS SECTION
+// FOCUS SECTION
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const FocusSection = styled.section`
-  position: relative; padding: 96px 24px; overflow: hidden;
-  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(45,212,191,0.07) 0%, transparent 70%),
-              ${BG};
+const FocusLayout = styled.div`
+  display: flex; flex-direction: column; gap: 56px;
 `;
 
-const FocusGrid = styled.div`
-  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
-  max-width: 1120px; margin: 0 auto;
-  @media(max-width:768px){ grid-template-columns:1fr; gap:40px; }
+const FocusTop = styled.div`
+  text-align: center; max-width: 700px; margin: 0 auto;
+  display: flex; flex-direction: column; align-items: center;
 `;
 
-const FocusVisual = styled.div`
-  aspect-ratio: 1; border-radius: 24px; position: relative; overflow: hidden;
-  background: ${CARD_BG}; border: 1px solid ${CARD_BORDER};
-  display: flex; align-items: center; justify-content: center;
-  &::before {
-    content:''; position:absolute; inset:0;
-    background: radial-gradient(circle at 50% 50%, rgba(45,212,191,0.15) 0%, transparent 60%);
+const FocusCards = styled.div`
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  @media(max-width:900px){ grid-template-columns: 1fr; }
+`;
+
+const IndustryCard = styled.div`
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 20px;
+  padding: 32px 24px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  transition: all 0.3s;
+  position: relative; overflow: hidden;
+  &:hover {
+    transform: translateY(-4px);
+    border-color: ${theme.colors.brandTeal}50;
+    box-shadow: 0 10px 30px rgba(78,205,160,0.1);
   }
 `;
 
-const FocusRing = styled.div<{ $size: string; $opacity: string }>`
-  position: absolute; border-radius: 50%;
-  width: ${p => p.$size}; height: ${p => p.$size};
-  border: 1px solid rgba(45,212,191,${p => p.$opacity});
-`;
-
-const FocusCore = styled.div`
-  width: 80px; height: 80px; border-radius: 24px;
-  background: ${BRAND_DIM}; border: 1px solid ${BRAND_BORDER};
+const IndustryIconWrap = styled.div`
+  width: 64px; height: 64px; border-radius: 16px;
+  background: linear-gradient(135deg, ${theme.colors.brandTeal}15 0%, ${theme.colors.brandIndigo}15 100%);
   display: flex; align-items: center; justify-content: center;
-  font-size: 36px; color: ${BRAND}; position: relative; z-index:1;
+  font-size: 28px; margin-bottom: 24px;
+  border: 1px solid ${theme.colors.brandTeal}20;
+`;
+
+const IndustryTitle = styled.h4`
+  color: ${theme.colors.textPrimary};
+  font-family: ${theme.fonts.heading};
+  font-size: 18px; font-weight: 600; margin: 0;
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 8. INDUSTRIES MARQUEE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const MarqueeTrack = styled.div`
-  overflow: hidden; width: 100%; padding: 8px 0;
-`;
-
-const MarqueeInner = styled.div`
-  display: flex; gap: 16px; width: max-content;
-  animation: ${scroll} 18s linear infinite;
-`;
-
-const IndustryTag = styled.span`
-  padding: 10px 24px; border-radius: 30px;
-  background: ${CARD_BG}; border: 1px solid ${CARD_BORDER};
-  color: ${TEXT_MUTED}; font-size: 14px; font-weight: 500;
-  white-space: nowrap;
-`;
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 9. TESTIMONIALS
+// TESTIMONIALS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const TestiGrid = styled.div`
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 56px;
@@ -494,49 +839,61 @@ const TestiGrid = styled.div`
 `;
 
 const TestiCard = styled.div`
-  background: ${CARD_BG}; border: 1px solid ${CARD_BORDER};
-  border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 16px;
+  background: #0a0a12;
+  border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 18px; padding: 28px;
+  display: flex; flex-direction: column; gap: 16px;
   transition: border-color .2s, transform .2s;
-  &:hover { border-color: ${BRAND_BORDER}; transform: translateY(-3px); }
+  &:hover { border-color: ${theme.colors.brandTeal}40; transform: translateY(-3px); }
 `;
 
 const Stars = styled.div`
   display: flex; gap: 3px;
-  .anticon { color: ${BRAND}; font-size: 13px; }
+  .anticon { color: ${theme.colors.brandTeal}; font-size: 13px; }
 `;
 
 const TestiQuote = styled.p`
-  color: #e2e8f0; font-size: 15px; line-height: 1.65; margin: 0; flex: 1;
+  color: ${theme.colors.textPrimary}; font-size: 15px; line-height: 1.6;
+  margin: 0; flex: 1; font-weight: 400; opacity: 0.9;
 `;
 
-const TestiAuthor = styled.div``;
-const AuthorName = styled.div`color:#fff;font-weight:600;font-size:14px;`;
-const AuthorLoc = styled.div`color:${TEXT_DIM};font-size:13px;margin-top:2px;`;
+const TestiAuthor = styled.div`
+  display: flex; align-items: center; gap: 12px;
+`;
+
+const TestiAvatar = styled.div`
+  width: 36px; height: 36px; border-radius: 50%;
+  background: ${theme.colors.brandGradient};
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #fff;
+`;
+
+const AuthorName = styled.div`color:${theme.colors.textPrimary};font-weight:600;font-size:14px;`;
+const AuthorLoc = styled.div`color:${theme.colors.textDim};font-size:12px;margin-top:2px;`;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 10. CTA BANNER
+// FINAL CTA
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const CtaBanner = styled.section`
-  position: relative; padding: 96px 24px; text-align: center; overflow: hidden;
-  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(45,212,191,0.1) 0%, transparent 70%), ${BG};
+const CtaSection = styled.section`
+  padding: 120px 24px;
+  @media(max-width:768px){ padding: 64px 16px; }
 `;
 
-const CtaCard = styled.div`
-  max-width: 680px; margin: 0 auto; position: relative; z-index:1;
+const CtaBox = styled.div`
+  max-width: 1000px; margin: 0 auto;
+  background: ${theme.colors.backgroundElevated};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 24px;
+  padding: 56px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 40px;
+  @media(max-width:768px){ flex-direction: column; text-align: center; padding: 40px 24px; }
 `;
 
-const BigCtaBtn = styled.button`
-  background: ${BRAND}; border: none; height: 56px; padding: 0 48px;
-  border-radius: 12px; color: #fff; font-size: 17px; font-weight: 700;
-  cursor: pointer; transition: opacity .2s, transform .2s;
-  animation: ${pulse} 3s infinite;
-  margin-top: 36px;
-  display: inline-flex; align-items: center; gap: 10px;
-  &:hover { opacity: .88; transform: translateY(-2px); }
-`;
 
-const CtaSubtext = styled.p`
-  color: ${TEXT_DIM}; font-size: 13px; margin-top: 14px;
+
+const CtaSub = styled.p`
+  color: ${theme.colors.textDim}; font-size: 13px; margin: 10px 0 0;
 `;
 
 // ─── Integration icon helpers ─────────────────────────────────────────────────
@@ -558,81 +915,73 @@ export default function HomePageTemplate({
   const [activeTab, setActiveTab] = useState(0);
   const active = solutions.content[activeTab];
 
-  // Duplicate industries for seamless scroll
+  const solutionImages = [
+    "/images/solutions/plumbing.png",
+    "/images/solutions/cleaning.png",
+    "/images/solutions/dentistry.png"
+  ];
   const marqueeItems = [...industries, ...industries, ...industries, ...industries];
 
   return (
     <Page>
-      {/* ── 1. HERO ── */}
+      {/* ── HERO ── */}
       <HeroSection>
-        <HeroStars />
+        <HeroGlow />
+        <HeroIconBadge>🎙️</HeroIconBadge>
         <HeroContent>
-          <Pill>{hero.eyebrow}</Pill>
-          <H1>{hero.title}</H1>
-          <Body style={{ fontSize: "18px", maxWidth: "620px", margin: "0 auto" }}>
+          <EyebrowWrap style={{ maxWidth: '400px' }}><EyebrowPill>{hero.eyebrow}</EyebrowPill></EyebrowWrap>
+          <H1><GradientWord>{hero.title}</GradientWord></H1>
+          <Body style={{ fontSize: "18px", maxWidth: "620px", margin: "0 auto", lineHeight: "1.6" }}>
             {hero.description}
           </Body>
-          <HeroInputRow>
-            <EmailInput placeholder="Enter your email" />
-            <CtaBtn>{hero.cta}</CtaBtn>
-          </HeroInputRow>
-          <BenefitRow>
+          <HeroCTARow>
+            <HeroInput placeholder="Enter your email" />
+            <GlowingButton>{hero.cta}</GlowingButton>
+          </HeroCTARow>
+          <BadgeGrid>
             {hero.benefits.map((b, i) => (
-              <Benefit key={i}><CheckCircleFilled />{b}</Benefit>
+              <Badge key={i}><CheckCircleFilled />{b}</Badge>
             ))}
-          </BenefitRow>
-
+          </BadgeGrid>
 
         </HeroContent>
       </HeroSection>
 
-      {/* ── 2. STATS BAR ── */}
-      <Section $padTop="0" $padBot="80px">
-        <Container>
-          <StatsBar>
-            {hero.stats.map((s, i) => (
-              <StatCell key={i}>
-                <StatValue>{s.value}</StatValue>
-                <StatLabel>{s.label}</StatLabel>
-              </StatCell>
-            ))}
-          </StatsBar>
-        </Container>
-      </Section>
+      {/* ── STATS ── */}
+      <StatsStrip>
+        <StatsGrid>
+          {hero.stats.map((s, i) => (
+            <StatItem key={i}>
+              <StatValue>{s.value}</StatValue>
+              <StatLabel>{s.label}</StatLabel>
+            </StatItem>
+          ))}
+        </StatsGrid>
+      </StatsStrip>
 
-      <Divider />
-
-      {/* ── 3. FEATURE CARDS ── */}
+      {/* ── FEATURES ── */}
       <Section>
-        <Glow $top="50%" $left="50%" $size="700px" $opacity="0.06" />
-        <Container style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ textAlign: "center", marginBottom: "56px" }}>
-            <Pill>Built-In AI Superpowers</Pill>
+        <SectionBgArc><ArcSvg /></SectionBgArc>
+        <Container style={{ position: 'relative', zIndex: 1 }}>
+          <SectionHead>
+            <EyebrowWrap><EyebrowPill>Built-In AI Superpowers</EyebrowPill></EyebrowWrap>
             <H2>Everything your business needs, powered by AI</H2>
             <Body style={{ maxWidth: "560px", margin: "0 auto" }}>
               Convoa packs a full suite of intelligent tools — no extra apps, no extra cost.
             </Body>
-          </div>
-          <CardGrid>
-            {cards.map((card, i) => (
-              <FeatureCard key={i} $wide={i === cards.length - 1 && cards.length % 3 !== 0}>
-                <CardDot />
-                <Body style={{ fontSize: "16px", lineHeight: "1.65" }}>{card.description}</Body>
-              </FeatureCard>
-            ))}
-          </CardGrid>
+          </SectionHead>
+          <SuperpowerShowcase cards={cards} />
         </Container>
       </Section>
 
-      <Divider />
-
-      {/* ── 4. SOLUTIONS TABS ── */}
+      {/* ── SOLUTIONS TABS ── */}
       <Section>
-        <Container>
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <Pill>Solutions</Pill>
+        <SectionBgHelix><HelixSvg /></SectionBgHelix>
+        <Container style={{ position: 'relative', zIndex: 1 }}>
+          <SectionHead>
+            <EyebrowWrap><EyebrowPill>Solutions</EyebrowPill></EyebrowWrap>
             <H2>{solutions.title}</H2>
-          </div>
+          </SectionHead>
           <TabRow>
             {solutions.content.map((s, i) => (
               <Tab key={i} $active={activeTab === i} onClick={() => setActiveTab(i)}>
@@ -640,121 +989,125 @@ export default function HomePageTemplate({
               </Tab>
             ))}
           </TabRow>
-          <SolutionContent>
-            <div>
-              <H3 style={{ fontSize: "26px", marginBottom: "16px" }}>{active.title}</H3>
-              <Body style={{ fontSize: "17px" }}>{active.description}</Body>
-              <div style={{ marginTop: "32px", display: "flex", alignItems: "center", gap: "8px", color: BRAND, fontWeight: 600, cursor: "pointer" }}>
-                Learn more <ArrowRightOutlined />
-              </div>
-            </div>
+          <SolutionLayout>
             <SolutionVisual>
-              <SolutionIcon>🤖</SolutionIcon>
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeTab}
+                  src={solutionImages[activeTab]}
+                  alt={active.title}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute" }}
+                />
+              </AnimatePresence>
             </SolutionVisual>
-          </SolutionContent>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <H3 style={{ fontSize: "24px", marginBottom: "14px" }}>{active.title}</H3>
+                <Body>{active.description}</Body>
+                <div style={{ marginTop: "28px", display: "flex", alignItems: "center", gap: "8px", color: theme.colors.brandTeal, fontWeight: 600, cursor: "pointer", fontSize: "14px" }}>
+                  Learn more <ArrowRightOutlined />
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </SolutionLayout>
         </Container>
       </Section>
 
-      <Divider />
-
-      {/* ── 5. INTEGRATIONS ── */}
+      {/* ── INTEGRATIONS ── */}
       <Section>
-        <Glow $top="50%" $right="0" $size="500px" $opacity="0.07" />
-        <Container style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ maxWidth: "600px" }}>
-            <Pill>{integrations.subtitle}</Pill>
+        <FunnelGlow />
+        <Container style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center", marginBottom: "56px" }}>
+            <EyebrowWrap><EyebrowPill>{integrations.subtitle}</EyebrowPill></EyebrowWrap>
             <H2>{integrations.title}</H2>
             <Body>{integrations.description}</Body>
           </div>
-          <IntegrationGrid>
+          <IntegGrid style={{ marginTop: 0 }}>
             {INTEG_ITEMS.map((item, i) => (
               <IntegCard key={i}>
-                <IntegIcon>{item.icon}</IntegIcon>
+                <IntegChip>{item.icon}</IntegChip>
                 <IntegLabel>{item.label}</IntegLabel>
               </IntegCard>
             ))}
-          </IntegrationGrid>
+          </IntegGrid>
         </Container>
       </Section>
 
-      <Divider />
-
-      {/* ── 6. STEPS ── */}
+      {/* ── STEPS ── */}
       <Section>
-        <Container>
-          <div style={{ textAlign: "center" }}>
-            <Pill>How It Works</Pill>
+        <SectionBgLines><LinesSvg /></SectionBgLines>
+        <Container style={{ position: 'relative', zIndex: 1 }}>
+          <SectionHead>
+            <EyebrowWrap><EyebrowPill>How It Works</EyebrowPill></EyebrowWrap>
             <H2>{steps.title}</H2>
-          </div>
-          <StepsGrid>
+          </SectionHead>
+          <StepsRow>
             {steps.content.map((s, i) => (
-              <StepCard key={i} style={{ position: "relative" }}>
-                {i < steps.content.length - 1 && <ConnectorLine />}
-                <StepNumber>{s.step}</StepNumber>
+              <StepCard key={i}>
+                {i < steps.content.length - 1 && <StepConnector />}
+                <StepEyebrow>{s.step}</StepEyebrow>
                 <StepTitle>{s.title}</StepTitle>
                 <Body style={{ fontSize: "15px" }}>{s.description}</Body>
               </StepCard>
             ))}
-          </StepsGrid>
+          </StepsRow>
         </Container>
       </Section>
 
-      <Divider />
-
-      {/* ── 7. FOCUS ── */}
-      <FocusSection>
-        <FocusGrid>
-          <FocusVisual>
-            <FocusRing $size="280px" $opacity="0.2" />
-            <FocusRing $size="190px" $opacity="0.3" />
-            <FocusRing $size="110px" $opacity="0.4" />
-            <FocusCore>💼</FocusCore>
-          </FocusVisual>
-          <div>
-            <Pill>You. But Better.</Pill>
-            <H2>{focus.title}</H2>
-            <Body style={{ fontSize: "17px", marginTop: "8px" }}>{focus.description}</Body>
-          </div>
-        </FocusGrid>
-      </FocusSection>
-
-      <Divider />
-
-      {/* ── 8. INDUSTRIES MARQUEE ── */}
-      <Section $padTop="64px" $padBot="64px">
-        <Container>
-          <div style={{ textAlign: "center", marginBottom: "36px" }}>
-            <Pill>Who We Serve</Pill>
-            <H2 style={{ fontSize: "28px" }}>Powering businesses across industries</H2>
-          </div>
-        </Container>
-        <MarqueeTrack>
-          <MarqueeInner>
-            {marqueeItems.map((ind, i) => (
-              <IndustryTag key={i}>{ind}</IndustryTag>
-            ))}
-          </MarqueeInner>
-        </MarqueeTrack>
-      </Section>
-
-      <Divider />
-
-      {/* ── 9. TESTIMONIALS ── */}
+      {/* ── FOCUS ON YOUR CUSTOMERS ── */}
       <Section>
-        <Glow $top="50%" $left="50%" $size="800px" $opacity="0.05" />
-        <Container style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ textAlign: "center", marginBottom: "8px" }}>
-            <Pill>Reviews</Pill>
-            <H2>{trustedBy.title}</H2>
-          </div>
+        <Container style={{ position: 'relative', zIndex: 1 }}>
+          <FocusLayout>
+            <FocusTop>
+              <EyebrowWrap style={{ marginBottom: '24px' }}>
+                <EyebrowPill>You. But Better.</EyebrowPill>
+              </EyebrowWrap>
+              <H2><GradientWord>Focus</GradientWord> On Your Customers</H2>
+              <Body style={{ marginTop: "16px" }}>{focus.description}</Body>
+            </FocusTop>
+            <FocusCards>
+              {industries.map((ind, i) => (
+                <IndustryCard key={i}>
+                  <IndustryIconWrap>
+                    {i === 0 ? "🏡" : i === 1 ? "⚖️" : "🛍️"}
+                  </IndustryIconWrap>
+                  <IndustryTitle>{ind}</IndustryTitle>
+                </IndustryCard>
+              ))}
+            </FocusCards>
+          </FocusLayout>
+        </Container>
+      </Section>
+
+      {/* ── TESTIMONIALS ── */}
+      <Section>
+        <SectionBgGrid />
+        <Container style={{ position: 'relative', zIndex: 1 }}>
+          <SectionHead>
+            <EyebrowWrap><EyebrowPill>Reviews</EyebrowPill></EyebrowWrap>
+            <H2>Trusted by Businesses Like <GradientWord>Yours</GradientWord></H2>
+          </SectionHead>
           <TestiGrid>
-            {trustedBy.content.map((t, i) => (
+            {trustedBy.content.slice(0, 3).map((t, i) => (
               <TestiCard key={i}>
-                <Stars>{[1,2,3,4,5].map(n => <StarFilled key={n} />)}</Stars>
-                <TestiQuote>"{t.quote}"</TestiQuote>
+                <Stars>{[1, 2, 3, 4, 5].map(n => <StarFilled key={n} />)}</Stars>
+                <TestiQuote>&ldquo;{t.quote}&rdquo;</TestiQuote>
                 <TestiAuthor>
-                  <AuthorName>{t.name}</AuthorName>
-                  <AuthorLoc>{t.location}</AuthorLoc>
+                  <TestiAvatar>{t.name.charAt(0)}</TestiAvatar>
+                  <div>
+                    <AuthorName>{t.name}</AuthorName>
+                    <AuthorLoc>{t.location}</AuthorLoc>
+                  </div>
                 </TestiAuthor>
               </TestiCard>
             ))}
@@ -762,19 +1115,20 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
-      <Divider />
-
-      {/* ── 10. CTA BANNER ── */}
-      <CtaBanner>
-        <CtaCard>
-          <Pill>Get Started</Pill>
-          <H2 style={{ fontSize: "clamp(28px,4vw,52px)" }}>{cta.heading}</H2>
-          <BigCtaBtn>
-            {cta.button} <ArrowRightOutlined />
-          </BigCtaBtn>
-          <CtaSubtext>{cta.subtext}</CtaSubtext>
-        </CtaCard>
-      </CtaBanner>
+      {/* ── FINAL CTA ── */}
+      <CtaSection>
+        <CtaBox>
+          <div style={{ flex: 1 }}>
+            <H2 style={{ fontSize: "clamp(24px,3vw,36px)", marginBottom: "8px" }}>{cta.heading}</H2>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <GlowingButton large>
+              {cta.button} <ArrowRightOutlined />
+            </GlowingButton>
+            <CtaSub>{cta.subtext}</CtaSub>
+          </div>
+        </CtaBox>
+      </CtaSection>
     </Page>
   );
 }
