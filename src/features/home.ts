@@ -102,22 +102,16 @@ export const homesolutions = {
   title: "Tailored Solutions for Your Industry",
   content: [
     {
-      title:
-        "Handling Jobs Shouldn't Mean Missing Opportunities",
-      description:
-        "For service professionals constantly on the move, Convoa manages calls, schedules jobs and follows up with leads. It ensures every opportunity is captured while the day-to-day work continues without interruption.",
+      title: "Handling Jobs Shouldn't Mean Missing Opportunities",
+      description: "For service professionals constantly on the move, Convoa manages calls, schedules jobs and follows up with leads. It ensures every opportunity is captured while the day-to-day work continues without interruption.",
     },
     {
-      title:
-        "Support That Keeps Teams Focused and Jobs Flowing",
-      description:
-        "When balancing client communication and daily operations, Convoa handles incoming calls, manages repeat bookings and provides heatmap-based job planning. Small teams stay productive and better connected with their customers.",
+      title: "Support That Keeps Teams Focused and Jobs Flowing",
+      description: "When balancing client communication and daily operations, Convoa handles incoming calls, manages repeat bookings and provides heatmap-based job planning. Small teams stay productive and better connected with their customers.",
     },
     {
-      title:
-        "Focus on High-Value Clients Without Disruption",
-      description:
-        "For client-facing professionals, Convoa filters low-priority inquiries, highlights key leads and keeps the schedule organized. This allows more time for important conversations and better service delivery.",
+      title: "Focus on High-Value Clients Without Disruption",
+      description: "For client-facing professionals, Convoa filters low-priority inquiries, highlights key leads and keeps the schedule organized. This allows more time for important conversations and better service delivery.",
     },
   ]
 };
@@ -137,18 +131,21 @@ export const steps = {
       title: "Sign Up",
       description:
         "Create your account and explore Convoa's AI-powered features.",
+      image: "/images/steps/step1.png"
     },
     {
       step: "Step 2",
       title: "Start Automating",
       description:
         "Customize responses, set booking rules, connect your tools and go live.",
+      image: "/images/steps/step2.png"
     },
     {
       step: "Step 3",
       title: "See the Magic",
       description:
         "Get insights, refine settings, and watch your business thrive effortlessly.",
+      image: "/images/steps/step3.png"
     },
   ]
 }
@@ -159,9 +156,9 @@ export const homefocus = {
 }
 
 export const homeindustries = [
-  "Home & Service Businesses",
-  "Accounting & Legal Practices",
-  "E-Commerce and Retail"
+  { name: "Home & Service Businesses", image: "/images/focus/focus1.png" },
+  { name: "Accounting & Legal Practices", image: "/images/focus/focus2.png" },
+  { name: "E-Commerce and Retail", image: "/images/focus/focus3.png" },
 ];
 
 export const ctaSection = {

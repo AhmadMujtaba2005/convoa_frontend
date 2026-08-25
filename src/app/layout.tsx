@@ -24,6 +24,7 @@ import StyledComponentsRegistry from '@/lib/registry';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
+import ThemeSwitch from "@/components/ThemeSwitch";
 
 export default function RootLayout({
   children,
@@ -38,6 +39,9 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Footer />
+            <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 9999 }}>
+              <ThemeSwitch />
+            </div>
           </AntdRegistry>
         </StyledComponentsRegistry>
       </body>

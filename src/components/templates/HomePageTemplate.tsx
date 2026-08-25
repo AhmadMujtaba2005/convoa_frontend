@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { CheckCircleFilled, StarFilled, ArrowRightOutlined } from "@ant-design/icons";
 import { theme } from "@/lib/theme";
@@ -11,7 +11,7 @@ interface Stat { value: string; label: string; }
 interface Card { description: string; }
 interface Testimonial { quote: string; name: string; location: string; }
 interface Solution { title: string; description: string; }
-interface Step { step: string; title: string; description: string; }
+interface Step { step: string; title: string; description: string; image?: string; }
 
 interface Props {
   hero: {
@@ -24,7 +24,7 @@ interface Props {
   integrations: { subtitle: string; title: string; description: string };
   steps: { title: string; content: Step[] };
   focus: { title: string; description: string };
-  industries: string[];
+  industries: { name: string; image: string }[];
   cta: { heading: string; button: string; subtext: string };
 }
 
@@ -192,24 +192,8 @@ const HeroContent = styled.div`
 const HeroCTARow = styled.div`
   display: flex;
   align-items: center;
-  max-width: 480px;
+  justify-content: center;
   margin: 36px auto 36px;
-  background: ${theme.colors.surface};
-  border: 1px solid ${theme.colors.surfaceBorder};
-  border-radius: 28px;
-  padding: 4px 4px 4px 20px;
-  @media(max-width:480px){ flex-direction: column; border-radius: 16px; padding: 12px; gap: 8px; }
-`;
-
-const HeroInput = styled.input`
-  flex: 1;
-  background: transparent; border: none; outline: none;
-  color: ${theme.colors.textPrimary};
-  font-family: ${theme.fonts.body};
-  font-size: 14px;
-  min-width: 0;
-  &::placeholder { color: ${theme.colors.textDim}; }
-  @media(max-width:480px){ width: 100%; text-align: center; padding: 8px 0; }
 `;
 
 const SpinAnim = keyframes`
@@ -272,12 +256,12 @@ const GlowingButtonInner = styled.button<{ $large?: boolean }>`
   padding: 0 ${p => p.$large ? '40px' : '28px'};
   border-radius: 9999px; border: none;
   background: ${theme.colors.surface};
-  color: #fff; font-family: ${theme.fonts.body};
+  color: ${theme.colors.textPrimary}; font-family: ${theme.fonts.body};
   font-size: ${p => p.$large ? '16px' : '14px'}; 
   font-weight: 700; cursor: pointer;
   white-space: nowrap; transition: background 0.3s;
   ${GlowingButtonWrap}:hover & {
-    background: #1a1a24;
+    background: var(--background-elevated);
   }
 `;
 
@@ -645,9 +629,9 @@ const SuperpowerShowcase = ({ cards }: { cards: Card[] }) => {
             <ShowcaseItem key={idx} onClick={() => setActiveIndex(idx)}>
               <ProgressBarWrap>
                 {isActive && (
-                  <ProgressBarActive 
-                    $duration={4} 
-                    onAnimationEnd={(e) => handleAnimationEnd(e, idx)} 
+                  <ProgressBarActive
+                    $duration={4}
+                    onAnimationEnd={(e) => handleAnimationEnd(e, idx)}
                   />
                 )}
               </ProgressBarWrap>
@@ -699,17 +683,36 @@ const Tab = styled.button<{ $active: boolean }>`
   &:hover { border-color: ${theme.colors.brandTeal}40; }
 `;
 
-const SolutionLayout = styled.div`
-  display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
-  @media(max-width:768px){ grid-template-columns:1fr; gap:32px; }
+const SolutionsGrid = styled.div`
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  @media(max-width: 900px){ grid-template-columns: 1fr; }
 `;
 
-const SolutionVisual = styled.div`
-  aspect-ratio: 4/3; border-radius: 20px;
-  background: linear-gradient(135deg, ${theme.colors.brandTeal}08 0%, ${theme.colors.brandIndigo}14 100%);
+const SolutionCard = styled.div`
+  background: ${theme.colors.surface};
   border: 1px solid ${theme.colors.surfaceBorder};
-  display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(78, 205, 160, 0.1);
+  }
+`;
+
+const SolutionCardVisual = styled.div`
+  aspect-ratio: 5/4;
+  background: linear-gradient(135deg, ${theme.colors.brandTeal}08 0%, ${theme.colors.brandIndigo}15 100%);
+  position: relative;
+  border-bottom: 1px solid ${theme.colors.surfaceBorder};
+`;
+
+const SolutionCardBody = styled.div`
+  padding: 32px;
+  display: flex; flex-direction: column;
+  flex: 1;
 `;
 
 const SolutionIcon = styled.div`
@@ -722,28 +725,50 @@ const SolutionIcon = styled.div`
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // INTEGRATIONS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const IntegGrid = styled.div`
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 48px;
-  @media(max-width:768px){ grid-template-columns: repeat(2,1fr); }
+const IntegSplitLayout = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  @media(max-width: 900px){ grid-template-columns: 1fr; gap: 48px; }
 `;
 
-const IntegCard = styled.div`
-  background: ${theme.colors.surface}; border: 1px solid ${theme.colors.surfaceBorder};
-  border-radius: 14px; padding: 32px; text-align: left;
-  transition: border-color .2s, transform .2s;
-  &:hover { border-color: ${theme.colors.brandTeal}50; transform: translateY(-4px); }
-  @media(max-width:768px){ padding: 24px; }
+const IntegContentCol = styled.div`
+  display: flex; flex-direction: column; text-align: left;
 `;
 
-const IntegChip = styled.div`
-  width: 32px; height: 32px; border-radius: 8px;
-  background: ${theme.colors.brandTeal}15;
+const IntegCluster = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; margin-bottom: 14px;
 `;
 
-const IntegLabel = styled.div`
-  font-size: 14px; color: ${theme.colors.textMuted}; font-weight: 500;
+const ClusterCenter = styled.div`
+  width: 160px; height: 160px;
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 32px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  font-family: ${theme.fonts.heading};
+  font-size: 32px; font-weight: 700; letter-spacing: -1px;
+  background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  z-index: 2;
+`;
+
+const ClusterApp = styled(motion.div) <{ $top: string; $left: string; $size?: string; $delay?: number }>`
+  position: absolute;
+  top: ${p => p.$top}; left: ${p => p.$left};
+  width: ${p => p.$size || '64px'}; height: ${p => p.$size || '64px'};
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  font-size: 24px; font-weight: 600; color: #fff;
+  z-index: 1;
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -839,7 +864,7 @@ const TestiGrid = styled.div`
 `;
 
 const TestiCard = styled.div`
-  background: #0a0a12;
+  background: ${theme.colors.backgroundElevated};
   border: 1px solid ${theme.colors.surfaceBorder};
   border-radius: 18px; padding: 28px;
   display: flex; flex-direction: column; gap: 16px;
@@ -912,9 +937,6 @@ const INTEG_ITEMS = [
 export default function HomePageTemplate({
   hero, cards, trustedBy, solutions, integrations, steps, focus, industries, cta,
 }: Props) {
-  const [activeTab, setActiveTab] = useState(0);
-  const active = solutions.content[activeTab];
-
   const solutionImages = [
     "/images/solutions/plumbing.png",
     "/images/solutions/cleaning.png",
@@ -935,7 +957,6 @@ export default function HomePageTemplate({
             {hero.description}
           </Body>
           <HeroCTARow>
-            <HeroInput placeholder="Enter your email" />
             <GlowingButton>{hero.cta}</GlowingButton>
           </HeroCTARow>
           <BadgeGrid>
@@ -982,44 +1003,23 @@ export default function HomePageTemplate({
             <EyebrowWrap><EyebrowPill>Solutions</EyebrowPill></EyebrowWrap>
             <H2>{solutions.title}</H2>
           </SectionHead>
-          <TabRow>
+          <SolutionsGrid>
             {solutions.content.map((s, i) => (
-              <Tab key={i} $active={activeTab === i} onClick={() => setActiveTab(i)}>
-                {s.title.split(" ").slice(0, 3).join(" ")}…
-              </Tab>
+              <SolutionCard key={i}>
+                <SolutionCardVisual>
+                  <img
+                    src={solutionImages[i]}
+                    alt={s.title}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", top: 0, left: 0 }}
+                  />
+                </SolutionCardVisual>
+                <SolutionCardBody>
+                  <H3 style={{ fontSize: "20px", marginBottom: "12px", lineHeight: "1.3" }}>{s.title}</H3>
+                  <Body style={{ fontSize: "15px", lineHeight: "1.6", margin: 0 }}>{s.description}</Body>
+                </SolutionCardBody>
+              </SolutionCard>
             ))}
-          </TabRow>
-          <SolutionLayout>
-            <SolutionVisual>
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={activeTab}
-                  src={solutionImages[activeTab]}
-                  alt={active.title}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute" }}
-                />
-              </AnimatePresence>
-            </SolutionVisual>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <H3 style={{ fontSize: "24px", marginBottom: "14px" }}>{active.title}</H3>
-                <Body>{active.description}</Body>
-                <div style={{ marginTop: "28px", display: "flex", alignItems: "center", gap: "8px", color: theme.colors.brandTeal, fontWeight: 600, cursor: "pointer", fontSize: "14px" }}>
-                  Learn more <ArrowRightOutlined />
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </SolutionLayout>
+          </SolutionsGrid>
         </Container>
       </Section>
 
@@ -1027,19 +1027,55 @@ export default function HomePageTemplate({
       <Section>
         <FunnelGlow />
         <Container style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center", marginBottom: "56px" }}>
-            <EyebrowWrap><EyebrowPill>{integrations.subtitle}</EyebrowPill></EyebrowWrap>
-            <H2>{integrations.title}</H2>
-            <Body>{integrations.description}</Body>
-          </div>
-          <IntegGrid style={{ marginTop: 0 }}>
-            {INTEG_ITEMS.map((item, i) => (
-              <IntegCard key={i}>
-                <IntegChip>{item.icon}</IntegChip>
-                <IntegLabel>{item.label}</IntegLabel>
-              </IntegCard>
-            ))}
-          </IntegGrid>
+          <IntegSplitLayout>
+            <IntegContentCol>
+              <EyebrowWrap style={{ justifyContent: 'flex-start', marginBottom: '24px' }}>
+                <EyebrowPill>{integrations.subtitle}</EyebrowPill>
+              </EyebrowWrap>
+              <H2 style={{ textAlign: 'left', margin: '0 0 24px 0' }}>{integrations.title}</H2>
+              <Body style={{ textAlign: 'left', margin: 0 }}>{integrations.description}</Body>
+            </IntegContentCol>
+
+            <IntegCluster>
+              <ClusterCenter>convoa</ClusterCenter>
+              <ClusterApp $top="15%" $left="20%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
+                <span style={{ fontSize: "14px" }}>Cal.com</span>
+              </ClusterApp>
+              <ClusterApp $top="8%" $left="45%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+                <div style={{ background: "#4285F4", width: "40px", height: "40px", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", color: "white" }}>31</div>
+              </ClusterApp>
+              <ClusterApp $top="12%" $left="70%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+                <span style={{ color: "#0078D4", fontSize: "36px" }}>O</span>
+              </ClusterApp>
+
+              <ClusterApp $top="35%" $left="5%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
+                <span style={{ fontSize: "24px" }}>📅</span>
+              </ClusterApp>
+              <ClusterApp $top="55%" $left="15%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }}>
+                <span style={{ fontSize: "24px" }}>📚</span>
+              </ClusterApp>
+
+              <ClusterApp $top="30%" $left="85%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.6 }}>
+                <span style={{ fontSize: "24px" }}>⚙️</span>
+              </ClusterApp>
+              <ClusterApp $top="55%" $left="80%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.7 }}>
+                <span style={{ fontSize: "24px" }}>📊</span>
+              </ClusterApp>
+
+              <ClusterApp $top="80%" $left="30%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.8 }}>
+                <span style={{ fontSize: "24px" }}>📞</span>
+              </ClusterApp>
+              <ClusterApp $top="75%" $left="50%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.9 }}>
+                <div style={{ background: "white", color: "#111", width: "48px", height: "48px", borderRadius: "10px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#E03C31" }}>JUL</div>
+                  <div style={{ fontSize: "16px", fontWeight: 700 }}>17</div>
+                </div>
+              </ClusterApp>
+              <ClusterApp $top="70%" $left="75%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.0 }}>
+                <span style={{ fontSize: "16px" }}>_zapier</span>
+              </ClusterApp>
+            </IntegCluster>
+          </IntegSplitLayout>
         </Container>
       </Section>
 
@@ -1056,6 +1092,11 @@ export default function HomePageTemplate({
               <StepCard key={i}>
                 {i < steps.content.length - 1 && <StepConnector />}
                 <StepEyebrow>{s.step}</StepEyebrow>
+                {s.image && (
+                  <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+                    <img src={s.image} alt={s.title} style={{ height: '160px', objectFit: 'contain' }} />
+                  </div>
+                )}
                 <StepTitle>{s.title}</StepTitle>
                 <Body style={{ fontSize: "15px" }}>{s.description}</Body>
               </StepCard>
@@ -1078,10 +1119,10 @@ export default function HomePageTemplate({
             <FocusCards>
               {industries.map((ind, i) => (
                 <IndustryCard key={i}>
-                  <IndustryIconWrap>
-                    {i === 0 ? "🏡" : i === 1 ? "⚖️" : "🛍️"}
+                  <IndustryIconWrap style={{ background: 'transparent', border: 'none', width: '160px', height: '160px' }}>
+                    <img src={ind.image} alt={ind.name} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(2.2)' }} />
                   </IndustryIconWrap>
-                  <IndustryTitle>{ind}</IndustryTitle>
+                  <IndustryTitle>{ind.name}</IndustryTitle>
                 </IndustryCard>
               ))}
             </FocusCards>

@@ -3,6 +3,33 @@
 :root {
   --background: #030305;
   --foreground: #f5f5f7;
+  --background-elevated: #0a0a0d;
+  --surface: #0d0d12;
+  --surface-border: rgba(255,255,255,0.06);
+  --nav-bg: rgba(255, 255, 255, 0.03);
+  --text-primary: #f5f5f7;
+  --text-muted: #9a9aa5;
+  --text-dim: #55555f;
+  --brand-teal: #4ECDA0;
+  --brand-indigo: #3D4A9B;
+  --brand-gradient: linear-gradient(135deg, #4ECDA0 0%, #3D4A9B 100%);
+  --brand-gradient-text: linear-gradient(135deg, #3DBF91 0%, #3D4A9B 100%);
+}
+
+[data-theme='light'] {
+  --background: #f7f9fa;
+  --foreground: #111111;
+  --background-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-border: rgba(0,0,0,0.1);
+  --nav-bg: rgba(255, 255, 255, 0.85);
+  --text-primary: #111111;
+  --text-muted: #555555;
+  --text-dim: #888888;
+  --brand-teal: #21996c;
+  --brand-indigo: #2c3678;
+  --brand-gradient: linear-gradient(135deg, #21996c 0%, #2c3678 100%);
+  --brand-gradient-text: linear-gradient(135deg, #188057 0%, #2c3678 100%);
 }
 
 @theme inline {
@@ -17,11 +44,16 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: #030305;
-  color: #f5f5f7;
+  background: var(--background);
+  color: var(--text-primary);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+[data-theme='light'] body::before {
+  opacity: 0;
 }
 
 /* Global sparse star-field — fixed, covers entire viewport */

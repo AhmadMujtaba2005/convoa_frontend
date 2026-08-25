@@ -67,7 +67,7 @@ const NavOuter = styled.div<{ $scrolled: boolean }>`
 
   /* Animation and Glassmorphism */
   transform: translate(-50%, ${p => p.$scrolled ? '16px' : '0px'});
-  background: ${p => p.$scrolled ? 'rgba(255, 255, 255, 0.03)' : 'transparent'};
+  background: ${p => p.$scrolled ? 'var(--nav-bg)' : 'transparent'};
   border: 1px solid ${p => p.$scrolled ? 'rgba(255, 255, 255, 0.1)' : 'transparent'};
   box-shadow: ${p => p.$scrolled ? '0 12px 40px rgba(78, 205, 160, 0.08)' : 'none'};
   backdrop-filter: ${p => p.$scrolled ? 'blur(48px) saturate(200%)' : 'none'};
