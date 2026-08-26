@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { industryNav } from "@/lib/navConfig";
 import { DownOutlined } from "@ant-design/icons";
 import { theme } from "@/lib/theme";
@@ -183,8 +184,9 @@ const LoginBtn = styled(Link)`
 `;
 
 export default function Navbar() {
-  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 20);
@@ -195,7 +197,9 @@ export default function Navbar() {
 
   return (
     <>
-      <WingArcs><WingArcSvg /></WingArcs>
+      {pathname === '/' && (
+        <WingArcs><WingArcSvg /></WingArcs>
+      )}
       <NavOuter $scrolled={scrolled}>
         <NavInner>
           <LogoLink href="/">convoa</LogoLink>

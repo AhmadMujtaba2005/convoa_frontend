@@ -33,6 +33,8 @@ const fadeUp = keyframes`from{opacity:0;transform:translateY(20px)}to{opacity:1;
 const pulse = keyframes`0%{box-shadow:0 0 0 0 rgba(78,205,160,.25)}70%{box-shadow:0 0 0 14px rgba(78,205,160,0)}100%{box-shadow:0 0 0 0 rgba(78,205,160,0)}`;
 const marquee = keyframes`0%{transform:translateX(0)}100%{transform:translateX(-50%)}`;
 const floatAnim = keyframes`0%{transform:translateY(0)}100%{transform:translateY(-6px)}`;
+const twinkle = keyframes`0%,100%{opacity:0.1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.4)}`;
+const sparkleAnim = keyframes`0%,100%{opacity:0.4;transform:scale(1) rotate(0deg)}50%{opacity:1;transform:scale(1.6) rotate(180deg)}`;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // GLOBAL LAYOUT
@@ -66,27 +68,44 @@ const EyebrowWrap = styled.div`
   width: 100%; max-width: 600px; margin: 0 auto 24px;
   &::before, &::after {
     content: ''; flex: 1; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.15));
+    background: linear-gradient(90deg, transparent, ${theme.colors.surfaceBorder} 50%, ${theme.colors.surfaceBorder});
   }
   &::after {
-    background: linear-gradient(270deg, transparent, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.15));
+    background: linear-gradient(270deg, transparent, ${theme.colors.surfaceBorder} 50%, ${theme.colors.surfaceBorder});
   }
 `;
 
 const EyebrowPill = styled.span`
+  position: relative;
   padding: 6px 20px; border-radius: 20px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
   color: ${theme.colors.textMuted};
   font-family: ${theme.fonts.body};
   font-size: 13px; font-weight: 500;
-  margin: 0 16px; white-space: nowrap;
+  margin: 0 24px; white-space: nowrap;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    background: ${theme.colors.textMuted};
+    transform: translateY(-50%) rotate(45deg);
+  }
+  &::before {
+    left: -24px;
+  }
+  &::after {
+    right: -24px;
+  }
 `;
 
 const FunnelGlow = styled.div`
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 1000px; height: 400px; pointer-events: none; z-index: 0;
-  background: radial-gradient(ellipse at top center, ${theme.colors.brandTeal}40 0%, ${theme.colors.brandTeal}15 50%, transparent 80%);
+  background: radial-gradient(ellipse at top center, rgba(78, 205, 160, 0.40) 0%, rgba(78, 205, 160, 0.15) 50%, transparent 80%);
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
 `;
@@ -143,6 +162,63 @@ const GradientWord = styled.span`
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SECTION DIVIDER
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const SectionDividerWrap = styled.div<{ $label?: string }>`
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  z-index: 2;
+  pointer-events: none;
+`;
+
+const SectionDividerLine = styled.div`
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    ${theme.colors.surfaceBorder} 15%,
+    ${theme.colors.surfaceBorder} 85%,
+    transparent 100%
+  );
+  position: relative;
+  z-index: 2;
+`;
+
+const SectionDividerGlow = styled.div`
+  display: none;
+`;
+
+const SectionDividerPill = styled.span`
+  position: relative;
+  z-index: 3;
+  font-family: ${theme.fonts.body};
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${theme.colors.textMuted};
+  padding: 5px 16px;
+  border-radius: 20px;
+  border: 1px solid ${theme.colors.surfaceBorder};
+  background: ${theme.colors.surface};
+  margin-top: -1px;
+  transform: translateY(-50%);
+`;
+
+const SectionDivider = ({ label }: { label?: string }) => (
+  <SectionDividerWrap>
+    <SectionDividerGlow />
+    <SectionDividerLine />
+    {label && <SectionDividerPill>{label}</SectionDividerPill>}
+  </SectionDividerWrap>
+);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // HERO
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const HeroSection = styled.section`
@@ -152,9 +228,44 @@ const HeroSection = styled.section`
   align-items: center;
   text-align: center;
   padding: 160px 24px 96px;
-  overflow: hidden;
+  overflow: visible;
   @media(max-width:768px){ padding: 120px 16px 64px; }
 `;
+
+
+/* ── Star Field ── */
+const StarField = styled.div`
+  position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+`;
+const Star = styled.div<{ $x: number; $y: number; $delay: number; $size: number }>`
+  position: absolute;
+  left: ${p => p.$x}%;
+  top: ${p => p.$y}%;
+  width: ${p => p.$size}px;
+  height: ${p => p.$size}px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.12;
+  animation: ${twinkle} ${p => 2 + p.$delay}s ease-in-out ${p => p.$delay}s infinite;
+`;
+const Sparkle = styled.div<{ $x: number; $y: number; $delay: number }>`
+  position: absolute;
+  left: ${p => p.$x}%;
+  top: ${p => p.$y}%;
+  width: 5px; height: 5px;
+  background: radial-gradient(circle, ${theme.colors.brandTeal} 0%, transparent 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 10px 3px rgba(78, 205, 160, 0.60);
+  animation: ${sparkleAnim} ${p => 3 + p.$delay}s ease-in-out ${p => p.$delay}s infinite;
+`;
+const STARS = [
+  {x:8,y:15,d:0.3,s:1},{x:17,y:28,d:0.8,s:1},{x:25,y:12,d:1.2,s:1},{x:34,y:42,d:0.5,s:1},
+  {x:42,y:8,d:1.7,s:1},{x:55,y:35,d:0.2,s:1},{x:63,y:18,d:1.1,s:1},{x:71,y:50,d:0.6,s:1},
+  {x:80,y:22,d:1.4,s:1},{x:88,y:38,d:0.9,s:1},{x:93,y:14,d:0.4,s:1},{x:12,y:55,d:1.8,s:1},
+  {x:48,y:60,d:0.7,s:1},{x:76,y:65,d:1.3,s:1},{x:92,y:55,d:0.1,s:1},{x:30,y:70,d:1.6,s:1},
+  {x:60,y:75,d:0.5,s:1},{x:20,y:80,d:1.0,s:1},{x:85,y:78,d:0.3,s:1},{x:5,y:40,d:1.5,s:1},
+];
+const SPARKLES = [{x:22,y:62,d:0},{x:78,y:58,d:1.2}];
 
 const HeroGlow = styled.div`
   position: absolute;
@@ -163,7 +274,7 @@ const HeroGlow = styled.div`
   transform: translateX(-50%);
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, ${theme.colors.brandTeal}40 0%, ${theme.colors.brandTeal}15 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(78, 205, 160, 0.40) 0%, rgba(78, 205, 160, 0.15) 50%, transparent 70%);
   filter: blur(60px);
   pointer-events: none;
   z-index: 0;
@@ -179,7 +290,7 @@ const HeroIconBadge = styled.div`
   margin: 0 auto 28px;
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 40px ${theme.colors.brandTeal}20;
+  box-shadow: 0 0 40px rgba(78, 205, 160, 0.20);
   animation: ${fadeUp} 0.6s ease-out;
 `;
 
@@ -282,6 +393,77 @@ const BadgeGrid = styled.div`
   @media(max-width:480px){ grid-template-columns: 1fr; }
 `;
 
+const HeroImageWrap = styled.div`
+  width: 100%;
+  max-width: 1050px;
+  margin: 32px auto 0;
+  position: relative;
+  z-index: 1;
+  animation: ${fadeUp} 1s ease-out;
+
+  /* Top glow */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    left: -10%;
+    right: -10%;
+    height: 200px;
+    background: radial-gradient(ellipse 50% 50% at 50% 100%, ${theme.colors.brandTeal} 0%, transparent 100%);
+    filter: blur(50px);
+    opacity: 0.6;
+    z-index: -1;
+  }
+
+  /* Side beams — rendered as ::before/after on HeroImageWrap */
+  /* Beams are now separate DOM elements — see HeroBeam components below */
+`;
+
+const HeroImageInner = styled.div`
+  border-radius: 20px 20px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  border-left: 1px solid rgba(255,255,255,0.15);
+  border-right: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 0 100px rgba(78, 205, 160, 0.1);
+  -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+  padding: 8px;
+  background: rgba(255,255,255,0.02);
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px 12px 0 0;
+  }
+`;
+
+/* Dedicated beam elements — live inside HeroSection, not clipped */
+const HeroBeamLeft = styled.div`
+  position: absolute;
+  top: 78%;
+  left: 0;
+  width: 28%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, rgba(61, 74, 155, 0.80) 40%, rgba(78, 205, 160, 0.95) 100%);
+  box-shadow: 0 0 18px 6px rgba(61, 74, 155, 0.70), 0 0 40px 10px rgba(61, 74, 155, 0.30);
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 0 4px 4px 0;
+`;
+const HeroBeamRight = styled.div`
+  position: absolute;
+  top: 78%;
+  right: 0;
+  width: 28%;
+  height: 3px;
+  background: linear-gradient(270deg, transparent 0%, rgba(61, 74, 155, 0.80) 40%, rgba(78, 205, 160, 0.95) 100%);
+  box-shadow: 0 0 18px 6px rgba(61, 74, 155, 0.70), 0 0 40px 10px rgba(61, 74, 155, 0.30);
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 4px 0 0 4px;
+`;
+
 const Badge = styled.span`
   display: flex; align-items: center; gap: 8px;
   color: ${theme.colors.textMuted}; font-size: 14px;
@@ -343,12 +525,37 @@ const HelixSvg = () => (
     <defs>
       <linearGradient id="helGrad" x1="0" y1="0" x2="0" y2="400">
         <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.9" />
+        <stop offset="50%" stopColor={theme.colors.brandIndigo} stopOpacity="0.7" />
+        <stop offset="100%" stopColor="transparent" />
+      </linearGradient>
+      <linearGradient id="helGradCore" x1="0" y1="0" x2="0" y2="400">
+        <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.8" />
+        <stop offset="50%" stopColor={theme.colors.brandTeal} stopOpacity="0.2" />
         <stop offset="100%" stopColor="transparent" />
       </linearGradient>
     </defs>
-    <path d="M125 0 Q 80 80 125 150 T 125 300 T 125 400" stroke="url(#helGrad)" strokeWidth="1.5" />
-    <path d="M125 0 Q 170 80 125 150 T 125 300 T 125 400" stroke="url(#helGrad)" strokeWidth="1.5" opacity="0.8" />
-    <path d="M125 0 V 400" stroke="url(#helGrad)" strokeWidth="24" filter="blur(24px)" opacity="0.3" />
+    
+    {/* Central Core Line */}
+    <path d="M125 0 V 400" stroke="url(#helGradCore)" strokeWidth="1" opacity="0.5" strokeDasharray="3 4" />
+    
+    {/* Main Outer Twist 1 */}
+    <path d="M125 0 Q 30 75 125 150 T 125 300 T 125 450" stroke="url(#helGrad)" strokeWidth="1.5" />
+    
+    {/* Main Outer Twist 2 */}
+    <path d="M125 0 Q 220 75 125 150 T 125 300 T 125 450" stroke="url(#helGrad)" strokeWidth="1.5" opacity="0.8" />
+
+    {/* Inner Tight Twist 1 */}
+    <path d="M125 0 Q 80 50 125 100 T 125 200 T 125 300 T 125 400" stroke="url(#helGradCore)" strokeWidth="1" opacity="0.5" />
+    
+    {/* Inner Tight Twist 2 */}
+    <path d="M125 0 Q 170 50 125 100 T 125 200 T 125 300 T 125 400" stroke="url(#helGradCore)" strokeWidth="1" opacity="0.5" />
+
+    {/* Glowing Nodes at Intersections */}
+    <circle cx="125" cy="150" r="3" fill={theme.colors.brandTeal} style={{ filter: 'drop-shadow(0 0 6px #4ECDA0)' }} opacity="0.8" />
+    <circle cx="125" cy="300" r="2" fill={theme.colors.brandIndigo} style={{ filter: 'drop-shadow(0 0 4px #3D4A9B)' }} opacity="0.6" />
+
+    {/* Ambient Glow */}
+    <path d="M125 0 V 400" stroke="url(#helGrad)" strokeWidth="32" filter="blur(28px)" opacity="0.3" />
   </svg>
 );
 
@@ -376,13 +583,189 @@ const LinesSvg = () => (
 const SectionBgGrid = styled.div`
   position: absolute; inset: 0; pointer-events: none; z-index: 0;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(${theme.colors.surfaceBorder} 1px, transparent 1px),
+    linear-gradient(90deg, ${theme.colors.surfaceBorder} 1px, transparent 1px);
   background-size: 60px 60px;
   background-position: center top;
   mask-image: radial-gradient(ellipse at center top, black 20%, transparent 70%);
   -webkit-mask-image: radial-gradient(ellipse at center top, black 20%, transparent 70%);
 `;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CANVAS BACKGROUNDS (per-section atmospheric glows)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const CanvasWrap = styled.div`
+  position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+`;
+
+// Stats — subtle teal center pulse
+const CanvasStats = () => (
+  <CanvasWrap>
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      <defs>
+        <radialGradient id="cStats" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.12" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="50%" cy="50%" rx="60%" ry="80%" fill="url(#cStats)" />
+    </svg>
+  </CanvasWrap>
+);
+
+// Features — teal top-left orb + indigo bottom-right orb
+const CanvasFeatures = () => (
+  <CanvasWrap>
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      <defs>
+        <radialGradient id="cFeatL" cx="0%" cy="0%" r="60%">
+          <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.18" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="cFeatR" cx="100%" cy="100%" r="60%">
+          <stop offset="0%" stopColor={theme.colors.brandIndigo} stopOpacity="0.22" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#cFeatL)" />
+      <rect width="100%" height="100%" fill="url(#cFeatR)" />
+    </svg>
+  </CanvasWrap>
+);
+
+// Solutions — indigo left sweep + teal right dot cluster
+const CanvasSolutions = () => (
+  <CanvasWrap>
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      <defs>
+        <radialGradient id="cSolL" cx="20%" cy="40%" r="50%">
+          <stop offset="0%" stopColor={theme.colors.brandIndigo} stopOpacity="0.20" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="cSolR" cx="85%" cy="60%" r="40%">
+          <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.14" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#cSolL)" />
+      <rect width="100%" height="100%" fill="url(#cSolR)" />
+    </svg>
+    {/* Dot grid overlay */}
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.3 }}>
+      {[...Array(8)].map((_, row) =>
+        [...Array(12)].map((_, col) => (
+          <circle key={`${row}-${col}`}
+            cx={`${col * 9 + 4}%`} cy={`${row * 14 + 7}%`}
+            r="1" fill={theme.colors.textMuted} />
+        ))
+      )}
+    </svg>
+  </CanvasWrap>
+);
+
+// Integrations — strong center indigo orb + teal edge halos
+const CanvasIntegrations = () => (
+  <CanvasWrap>
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      <defs>
+        <radialGradient id="cIntC" cx="70%" cy="50%" r="55%">
+          <stop offset="0%" stopColor={theme.colors.brandIndigo} stopOpacity="0.28" />
+          <stop offset="60%" stopColor={theme.colors.brandTeal} stopOpacity="0.08" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#cIntC)" />
+    </svg>
+    {/* Arc lines */}
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.35 }}>
+      <ellipse cx="70%" cy="50%" rx="35%" ry="45%" stroke={theme.colors.textMuted} strokeWidth="1" fill="none" />
+      <ellipse cx="70%" cy="50%" rx="48%" ry="58%" stroke={theme.colors.textMuted} strokeWidth="1" fill="none" />
+    </svg>
+  </CanvasWrap>
+);
+
+// Steps — empty background, no side glows
+const CanvasSteps = () => (
+  <CanvasWrap>
+  </CanvasWrap>
+);
+
+// Focus — clean sweeping arcs and simple dot texture
+const CanvasFocus = () => (
+  <CanvasWrap>
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      <defs>
+        <radialGradient id="cFocBot" cx="50%" cy="100%" r="75%">
+          <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.12" />
+          <stop offset="40%" stopColor={theme.colors.brandIndigo} stopOpacity="0.08" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="cFocTop" cx="50%" cy="0%" r="60%">
+          <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.10" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#cFocBot)" />
+      <rect width="100%" height="100%" fill="url(#cFocTop)" />
+    </svg>
+
+  </CanvasWrap>
+);
+
+const TestimonialDot = styled.circle<{ $delay: number; $duration: number }>`
+  animation: ${twinkle} ${p => p.$duration}s ease-in-out ${p => p.$delay}s infinite;
+`;
+
+// Testimonials — deeper teal/indigo split with soft scattered stars
+const CanvasTestimonials = () => (
+  <CanvasWrap>
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      <defs>
+        <radialGradient id="cTestTopR" cx="80%" cy="10%" r="65%">
+          <stop offset="0%" stopColor={theme.colors.brandTeal} stopOpacity="0.25" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="cTestBL" cx="10%" cy="90%" r="55%">
+          <stop offset="0%" stopColor={theme.colors.brandIndigo} stopOpacity="0.25" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#cTestTopR)" />
+      <rect width="100%" height="100%" fill="url(#cTestBL)" />
+    </svg>
+    {/* Scattered glowing dots */}
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      {[...Array(12)].map((_, i) => (
+        <TestimonialDot key={i} 
+          cx={`${10 + (i * 27) % 80}%`} 
+          cy={`${15 + (i * 41) % 70}%`} 
+          r={i % 2 === 0 ? "1.5" : "1"} 
+          fill={theme.colors.brandTeal} 
+          opacity={0.1 + (i % 3) * 0.05} 
+          filter="blur(0.5px)" 
+          $delay={i * 0.4}
+          $duration={3 + (i % 3)}
+        />
+      ))}
+    </svg>
+  </CanvasWrap>
+);
+
+// CTA — clean, powerful center burst
+const CanvasCta = () => (
+  <CanvasWrap style={{ position: 'absolute', inset: 0 }}>
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
+      <defs>
+        <radialGradient id="cCta" cx="50%" cy="50%" r="75%">
+          <stop offset="0%" stopColor={theme.colors.brandIndigo} stopOpacity="0.45" />
+          <stop offset="45%" stopColor={theme.colors.brandTeal} stopOpacity="0.10" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#cCta)" />
+    </svg>
+  </CanvasWrap>
+);
 
 // ── Dashboard Mockup ──
 const DashWrap = styled.div`
@@ -414,7 +797,7 @@ const DSideIcon = styled.div<{ $active?: boolean }>`
   width: 28px; height: 28px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   font-size: 14px;
-  background: ${p => p.$active ? `${theme.colors.brandTeal}15` : "transparent"};
+  background: ${p => p.$active ? `rgba(78, 205, 160, 0.15)` : "transparent"};
   color: ${p => p.$active ? theme.colors.brandTeal : theme.colors.textDim};
 `;
 
@@ -579,9 +962,10 @@ const ShowcaseItemTitle = styled.h5<{ $active: boolean }>`
 
 const ShowcaseItemDescWrap = styled.div<{ $active: boolean }>`
   overflow: hidden; transition: all 0.4s ease-in-out;
-  max-height: ${p => p.$active ? '120px' : '0'};
+  height: ${p => p.$active ? '72px' : '0'};
   opacity: ${p => p.$active ? '1' : '0'};
   margin-top: ${p => p.$active ? '8px' : '0'};
+  @media(max-width: 640px) { height: ${p => p.$active ? '96px' : '0'}; }
 `;
 
 const ShowcaseItemDesc = styled.p`
@@ -680,7 +1064,7 @@ const Tab = styled.button<{ $active: boolean }>`
   background: ${p => p.$active ? theme.colors.brandGradientText : theme.colors.surface};
   color: ${p => p.$active ? "#fff" : theme.colors.textMuted};
   border: 1px solid ${p => p.$active ? "transparent" : theme.colors.surfaceBorder};
-  &:hover { border-color: ${theme.colors.brandTeal}40; }
+  &:hover { border-color: rgba(78, 205, 160, 0.40); }
 `;
 
 const SolutionsGrid = styled.div`
@@ -704,7 +1088,7 @@ const SolutionCard = styled.div`
 
 const SolutionCardVisual = styled.div`
   aspect-ratio: 5/4;
-  background: linear-gradient(135deg, ${theme.colors.brandTeal}08 0%, ${theme.colors.brandIndigo}15 100%);
+  background: linear-gradient(135deg, rgba(78, 205, 160, 0.08) 0%, rgba(61, 74, 155, 0.15) 100%);
   position: relative;
   border-bottom: 1px solid ${theme.colors.surfaceBorder};
 `;
@@ -717,7 +1101,7 @@ const SolutionCardBody = styled.div`
 
 const SolutionIcon = styled.div`
   width: 64px; height: 64px; border-radius: 18px;
-  background: ${theme.colors.brandTeal}15; border: 1px solid ${theme.colors.brandTeal}25;
+  background: rgba(78, 205, 160, 0.15); border: 1px solid rgba(78, 205, 160, 0.25);
   display: flex; align-items: center; justify-content: center;
   font-size: 28px; color: ${theme.colors.brandTeal};
 `;
@@ -735,6 +1119,18 @@ const IntegSplitLayout = styled.div`
 
 const IntegContentCol = styled.div`
   display: flex; flex-direction: column; text-align: left;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -60px;
+    z-index: -1;
+    pointer-events: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
+  }
 `;
 
 const IntegCluster = styled.div`
@@ -753,9 +1149,12 @@ const ClusterCenter = styled.div`
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   font-family: ${theme.fonts.heading};
   font-size: 32px; font-weight: 700; letter-spacing: -1px;
-  background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   z-index: 2;
+
+  span {
+    background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
 `;
 
 const ClusterApp = styled(motion.div) <{ $top: string; $left: string; $size?: string; $delay?: number }>`
@@ -767,7 +1166,7 @@ const ClusterApp = styled(motion.div) <{ $top: string; $left: string; $size?: st
   border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-  font-size: 24px; font-weight: 600; color: #fff;
+  font-size: 24px; font-weight: 600; color: ${theme.colors.textPrimary};
   z-index: 1;
 `;
 
@@ -784,7 +1183,7 @@ const StepCard = styled.div`
   background: ${theme.colors.surface}; border: 1px solid ${theme.colors.surfaceBorder};
   border-radius: 18px; padding: 32px; position: relative;
   transition: border-color .25s, transform .25s;
-  &:hover { border-color: ${theme.colors.brandTeal}50; transform: translateY(-4px); }
+  &:hover { border-color: rgba(78, 205, 160, 0.50); transform: translateY(-4px); }
   @media(max-width:768px){ padding: 24px; }
 `;
 
@@ -803,7 +1202,7 @@ const StepTitle = styled.h3`
 /* dashed connector line between step cards (desktop only) */
 const StepConnector = styled.div`
   position: absolute; top: 40px; right: -10px; width: 20px; height: 0;
-  border-top: 1.5px dashed ${theme.colors.brandTeal}40;
+  border-top: 1.5px dashed rgba(78, 205, 160, 0.40);
   z-index: 2;
   @media(max-width:768px){ display: none; }
 `;
@@ -835,17 +1234,17 @@ const IndustryCard = styled.div`
   position: relative; overflow: hidden;
   &:hover {
     transform: translateY(-4px);
-    border-color: ${theme.colors.brandTeal}50;
+    border-color: rgba(78, 205, 160, 0.50);
     box-shadow: 0 10px 30px rgba(78,205,160,0.1);
   }
 `;
 
 const IndustryIconWrap = styled.div`
   width: 64px; height: 64px; border-radius: 16px;
-  background: linear-gradient(135deg, ${theme.colors.brandTeal}15 0%, ${theme.colors.brandIndigo}15 100%);
+  background: linear-gradient(135deg, rgba(78, 205, 160, 0.15) 0%, rgba(61, 74, 155, 0.15) 100%);
   display: flex; align-items: center; justify-content: center;
   font-size: 28px; margin-bottom: 24px;
-  border: 1px solid ${theme.colors.brandTeal}20;
+  border: 1px solid rgba(78, 205, 160, 0.20);
 `;
 
 const IndustryTitle = styled.h4`
@@ -869,7 +1268,7 @@ const TestiCard = styled.div`
   border-radius: 18px; padding: 28px;
   display: flex; flex-direction: column; gap: 16px;
   transition: border-color .2s, transform .2s;
-  &:hover { border-color: ${theme.colors.brandTeal}40; transform: translateY(-3px); }
+  &:hover { border-color: rgba(78, 205, 160, 0.40); transform: translateY(-3px); }
 `;
 
 const Stars = styled.div`
@@ -948,6 +1347,10 @@ export default function HomePageTemplate({
     <Page>
       {/* ── HERO ── */}
       <HeroSection>
+        <StarField>
+          {STARS.map((s, i) => <Star key={i} $x={s.x} $y={s.y} $delay={s.d} $size={s.s} />)}
+          {SPARKLES.map((s, i) => <Sparkle key={i} $x={s.x} $y={s.y} $delay={s.d} />)}
+        </StarField>
         <HeroGlow />
         <HeroIconBadge>🎙️</HeroIconBadge>
         <HeroContent>
@@ -966,10 +1369,19 @@ export default function HomePageTemplate({
           </BadgeGrid>
 
         </HeroContent>
+        <HeroImageWrap>
+          <HeroImageInner>
+            <img src="/images/dashboard-hero.webp" alt="Convoa Dashboard" />
+          </HeroImageInner>
+        </HeroImageWrap>
       </HeroSection>
 
+      {/* ── DIVIDER: Hero → Stats ── */}
+      <SectionDivider />
+
       {/* ── STATS ── */}
-      <StatsStrip>
+      <StatsStrip style={{ position: 'relative', overflow: 'hidden' }}>
+        <CanvasStats />
         <StatsGrid>
           {hero.stats.map((s, i) => (
             <StatItem key={i}>
@@ -980,8 +1392,12 @@ export default function HomePageTemplate({
         </StatsGrid>
       </StatsStrip>
 
+      {/* ── DIVIDER: Stats → Features ── */}
+      <SectionDivider />
+
       {/* ── FEATURES ── */}
       <Section>
+        <CanvasFeatures />
         <SectionBgArc><ArcSvg /></SectionBgArc>
         <Container style={{ position: 'relative', zIndex: 1 }}>
           <SectionHead>
@@ -995,8 +1411,12 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
+      {/* ── DIVIDER: Features → Solutions ── */}
+      <SectionDivider />
+
       {/* ── SOLUTIONS TABS ── */}
       <Section>
+        <CanvasSolutions />
         <SectionBgHelix><HelixSvg /></SectionBgHelix>
         <Container style={{ position: 'relative', zIndex: 1 }}>
           <SectionHead>
@@ -1023,9 +1443,12 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
+      {/* ── DIVIDER: Solutions → Integrations ── */}
+      <SectionDivider />
+
       {/* ── INTEGRATIONS ── */}
       <Section>
-        <FunnelGlow />
+        <CanvasIntegrations />
         <Container style={{ position: 'relative', zIndex: 1 }}>
           <IntegSplitLayout>
             <IntegContentCol>
@@ -1037,7 +1460,7 @@ export default function HomePageTemplate({
             </IntegContentCol>
 
             <IntegCluster>
-              <ClusterCenter>convoa</ClusterCenter>
+              <ClusterCenter><span>convoa</span></ClusterCenter>
               <ClusterApp $top="15%" $left="20%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
                 <span style={{ fontSize: "14px" }}>Cal.com</span>
               </ClusterApp>
@@ -1079,8 +1502,12 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
+      {/* ── DIVIDER: Integrations → How It Works ── */}
+      <SectionDivider />
+
       {/* ── STEPS ── */}
       <Section>
+        <CanvasSteps />
         <SectionBgLines><LinesSvg /></SectionBgLines>
         <Container style={{ position: 'relative', zIndex: 1 }}>
           <SectionHead>
@@ -1093,8 +1520,8 @@ export default function HomePageTemplate({
                 {i < steps.content.length - 1 && <StepConnector />}
                 <StepEyebrow>{s.step}</StepEyebrow>
                 {s.image && (
-                  <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
-                    <img src={s.image} alt={s.title} style={{ height: '160px', objectFit: 'contain' }} />
+                  <div style={{ width: '160px', height: '160px', margin: '0 auto 16px' }}>
+                    <img src={s.image} alt={s.title} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(2.2)' }} />
                   </div>
                 )}
                 <StepTitle>{s.title}</StepTitle>
@@ -1105,8 +1532,12 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
+      {/* ── DIVIDER: How It Works → Focus ── */}
+      <SectionDivider />
+
       {/* ── FOCUS ON YOUR CUSTOMERS ── */}
       <Section>
+        <CanvasFocus />
         <Container style={{ position: 'relative', zIndex: 1 }}>
           <FocusLayout>
             <FocusTop>
@@ -1130,9 +1561,12 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
+      {/* ── DIVIDER: Focus → Testimonials ── */}
+      <SectionDivider />
+
       {/* ── TESTIMONIALS ── */}
       <Section>
-        <SectionBgGrid />
+        <CanvasTestimonials />
         <Container style={{ position: 'relative', zIndex: 1 }}>
           <SectionHead>
             <EyebrowWrap><EyebrowPill>Reviews</EyebrowPill></EyebrowWrap>
@@ -1156,8 +1590,12 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
+      {/* ── DIVIDER: Testimonials → CTA ── */}
+      <SectionDivider />
+
       {/* ── FINAL CTA ── */}
-      <CtaSection>
+      <CtaSection style={{ position: 'relative', overflow: 'hidden' }}>
+        <CanvasCta />
         <CtaBox>
           <div style={{ flex: 1 }}>
             <H2 style={{ fontSize: "clamp(24px,3vw,36px)", marginBottom: "8px" }}>{cta.heading}</H2>
