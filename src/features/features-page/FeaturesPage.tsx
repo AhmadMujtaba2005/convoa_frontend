@@ -205,7 +205,7 @@ const FeatureDescription = styled.p`
   margin: 0 0 32px;
 `;
 
-const GlowingButton = styled.button`
+const GlowingButton = styled.a`
   background: ${theme.colors.brandTeal};
   color: #000;
   border: none;
@@ -219,6 +219,7 @@ const GlowingButton = styled.button`
   gap: 8px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 14px rgba(78, 205, 160, 0.4);
+  text-decoration: none;
 
   &:hover {
     transform: translateY(-2px);
@@ -346,7 +347,7 @@ export const FeaturesPageTemplate = () => {
           <FeatureEyebrow>{featuresList[2].eyebrow}</FeatureEyebrow>
           <FeatureTitle>{featuresList[2].title}</FeatureTitle>
           <FeatureDescription>{featuresList[2].description}</FeatureDescription>
-          <GlowingButton>{featuresList[2].ctaText}<ArrowRightOutlined /></GlowingButton>
+          <GlowingButton href="https://app.convoa.ai/login">{featuresList[2].ctaText}<ArrowRightOutlined /></GlowingButton>
         </FullWidthFeatureContent>
       </FullWidthFeature>
 
@@ -399,7 +400,7 @@ export const FeaturesPageTemplate = () => {
         <CtaBox>
           <FeatureTitle style={{ textAlign: 'center', marginBottom: 16 }}>{featuresCta.title}</FeatureTitle>
           <FeatureDescription style={{ textAlign: 'center', margin: '0 auto 40px' }}>{featuresCta.description}</FeatureDescription>
-          <GlowingButton style={{ margin: '0 auto' }}>{featuresCta.buttonText}<ArrowRightOutlined /></GlowingButton>
+          <GlowingButton href="https://app.convoa.ai/login" style={{ margin: '0 auto' }}>{featuresCta.buttonText}<ArrowRightOutlined /></GlowingButton>
           <div style={{ fontSize: 12, color: theme.colors.textMuted, marginTop: 12 }}>{featuresCta.footnote}</div>
         </CtaBox>
       </CtaSection>

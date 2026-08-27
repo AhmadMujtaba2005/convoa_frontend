@@ -347,7 +347,7 @@ export default function Navbar() {
               </MegaMenu>
             </DropWrap>
           </NavCenter>
-          <LoginBtn href="/login">
+          <LoginBtn href="https://app.convoa.ai/login">
             <span>Login &nbsp;</span>
             <svg viewBox="0 0 13 10" height="10px" width="15px">
               <path d="M1,5 L11,5"></path>

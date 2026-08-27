@@ -160,7 +160,7 @@ const TargetAudienceLabel = styled.div`
   margin-bottom: 40px;
 `;
 
-const CtaButton = styled.button`
+const CtaButton = styled.a`
   background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
   color: white;
   padding: 16px 32px;
@@ -173,6 +173,10 @@ const CtaButton = styled.button`
   transition: opacity 0.3s, transform 0.3s;
   margin-bottom: 40px;
   width: 100%;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  box-sizing: border-box;
 
   &:hover {
     opacity: 0.9;
@@ -590,7 +594,7 @@ export default function IndustryPageTemplate({ content }: Props) {
               {content.hero.targetAudience && (
                 <TargetAudienceLabel>{content.hero.targetAudience}</TargetAudienceLabel>
               )}
-              <CtaButton>Start for Free</CtaButton>
+              <CtaButton href="https://app.convoa.ai/login">Start for Free</CtaButton>
               <BulletList>
                 <BulletItem><CheckCircleFilled style={{color: theme.colors.brandTeal}}/> No credit card required</BulletItem>
                 <BulletItem><CheckCircleFilled style={{color: theme.colors.brandTeal}}/> Fast setup</BulletItem>

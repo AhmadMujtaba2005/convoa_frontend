@@ -261,7 +261,7 @@ const HeroCTARow = styled.div`
   margin: 36px auto 36px;
 `;
 
-const GlowingButtonWrap = styled.div`
+const GlowingButtonWrap = styled.a`
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -273,6 +273,7 @@ const GlowingButtonWrap = styled.div`
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: all 0.3s ease-out;
+  text-decoration: none;
   @media(max-width:480px){ width: 100%; }
   
   &:hover {
@@ -308,7 +309,7 @@ const SpinningGradient = styled.div`
   );
 `;
 
-const GlowingButtonInner = styled.button<{ $large?: boolean }>`
+const GlowingButtonInner = styled.div<{ $large?: boolean }>`
   position: relative; z-index: 10;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   width: 100%; 
@@ -325,8 +326,8 @@ const GlowingButtonInner = styled.button<{ $large?: boolean }>`
   }
 `;
 
-const GlowingButton = ({ children, style, large }: any) => (
-  <GlowingButtonWrap style={style}>
+const GlowingButton = ({ children, style, large, href }: any) => (
+  <GlowingButtonWrap style={style} href={href}>
     <GlowingBorderBlur><SpinningGradient /></GlowingBorderBlur>
     <GlowingBorderSharp><SpinningGradient /></GlowingBorderSharp>
     <GlowingButtonInner $large={large}>{children}</GlowingButtonInner>
@@ -975,7 +976,7 @@ export default function HomePageTemplate({
             {hero.description}
           </Body>
           <HeroCTARow>
-            <GlowingButton>{hero.cta}</GlowingButton>
+            <GlowingButton href="https://app.convoa.ai/login">{hero.cta}</GlowingButton>
           </HeroCTARow>
           <BadgeGrid>
             {hero.benefits.map((b, i) => (
@@ -1222,7 +1223,7 @@ export default function HomePageTemplate({
             <H2 style={{ fontSize: "clamp(24px,3vw,36px)", marginBottom: "8px" }}>{cta.heading}</H2>
           </div>
           <div style={{ textAlign: "center" }}>
-            <GlowingButton large>
+            <GlowingButton large href="https://app.convoa.ai/login">
               {cta.button} <ArrowRightOutlined />
             </GlowingButton>
             <CtaSub>{cta.subtext}</CtaSub>

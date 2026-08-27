@@ -382,7 +382,7 @@ const Divider = styled.div`
   width: 100%;
 `;
 
-const ActionButton = styled.button<{ $primary?: boolean, $index?: number }>`
+const ActionButton = styled.a<{ $primary?: boolean, $index?: number }>`
   width: 100%;
   padding: 14px 24px;
   border-radius: 30px;
@@ -394,6 +394,10 @@ const ActionButton = styled.button<{ $primary?: boolean, $index?: number }>`
   background: linear-gradient(135deg, #3DBF91, #3D4A9B);
   color: #fff;
   border: none;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  box-sizing: border-box;
 
   &:hover {
     transform: translateY(-2px);
@@ -606,7 +610,7 @@ export const PricingPageTemplate = () => {
                 ))}
               </FeatureList>
 
-              <ActionButton $index={selectedPlanIndex}>{pricingPlans[selectedPlanIndex].ctaText}</ActionButton>
+              <ActionButton $index={selectedPlanIndex} href="https://app.convoa.ai/login">{pricingPlans[selectedPlanIndex].ctaText}</ActionButton>
             </PlanCard>
           </AnimatePresence>
         </PricingContainer>
