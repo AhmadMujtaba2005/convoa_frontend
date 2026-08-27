@@ -26,6 +26,9 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import ThemeSwitch from "@/components/ThemeSwitch";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,6 +45,8 @@ export default function RootLayout({
             <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 9999 }}>
               <ThemeSwitch />
             </div>
+            <SpeedInsights />
+            <Analytics />
           </AntdRegistry>
         </StyledComponentsRegistry>
       </body>
