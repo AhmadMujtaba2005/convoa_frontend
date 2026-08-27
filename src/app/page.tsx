@@ -1,5 +1,5 @@
-import HomePageTemplate from "@/components/templates/HomePageTemplate";
-import { heroContent, homeCards, homeTrustedBy, homesolutions, integrationCategories, steps, homefocus, homeindustries, ctaSection } from "@/features/home";
+import HomePageTemplate from "@/features/home-page/HomePage";
+import { heroContent, homeCards, homeTrustedBy, homesolutions, integrationCategories, steps, homefocus, homeindustries, ctaSection } from "@/features/home-page/home";
 
 export default function Page() {
   return (

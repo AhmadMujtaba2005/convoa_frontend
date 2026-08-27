@@ -133,16 +133,28 @@ const MegaMenu = styled.div<{ $visible: boolean }>`
   position: absolute;
   top: calc(100% + 16px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(${p => p.$visible ? '0' : '-10px'});
   background: ${theme.colors.surface};
   border-radius: 16px;
   padding: 24px 28px;
-  display: ${p => p.$visible ? "flex" : "none"};
+  display: flex;
+  opacity: ${p => p.$visible ? 1 : 0};
+  visibility: ${p => p.$visible ? 'visible' : 'hidden'};
+  transition: all 0.3s ease;
   gap: 40px;
   border: 1px solid ${theme.colors.surfaceBorder};
   box-shadow: 0 16px 48px rgba(0,0,0,0.6);
   min-width: 540px;
   z-index: 1001;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+  }
 `;
 
 const MCol = styled.div`
@@ -167,20 +179,123 @@ const MItem = styled(Link)`
 `;
 
 const LoginBtn = styled(Link)`
+  position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 22px;
-  height: 36px;
-  border-radius: 20px;
-  background: ${theme.colors.brandGradientText};
-  color: #fff;
-  font-family: ${theme.fonts.body};
-  font-size: 13px;
-  font-weight: 600;
+  justify-content: space-between;
+  padding: 0 16px 0 24px;
+  height: 40px;
+  border-radius: 40px;
+  background: transparent;
+  border: 2px solid ${theme.colors.brandTeal};
   text-decoration: none;
-  transition: opacity 0.2s;
-  &:hover { opacity: 0.85; }
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    width: 44px;
+    border-radius: 40px;
+    background: ${theme.colors.brandTeal};
+    transition: all 0.5s ease;
+    z-index: 0;
+  }
+
+  &:hover::before {
+    width: calc(100% + 4px);
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+    font-family: ${theme.fonts.body};
+    font-size: 14px;
+    font-weight: 600;
+    color: ${theme.colors.textPrimary};
+    transition: color 0.5s ease;
+    margin-right: 12px;
+  }
+
+  &:hover span {
+    color: #000;
+  }
+
+  svg {
+    position: relative;
+    z-index: 1;
+    width: 15px;
+    height: 10px;
+    fill: none;
+    stroke: ${theme.colors.brandTeal};
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: translateX(-4px);
+    transition: all 0.5s ease;
+  }
+
+  &:hover svg {
+    stroke: #000;
+    transform: translateX(0);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+const SwallowIcon = styled.button<{ $open: boolean }>`
+  border: none;
+  background: none;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+
+  width: 24px;
+  height: 24px;
+  position: relative;
+  display: inline-flex;
+  outline: none;
+  color: inherit;
+
+  span {
+    width: 16px;
+    height: 6px;
+    position: absolute;
+    top: calc(50% - 3px);
+    left: calc(50% - 8px);
+    transition: transform 0.3s ease;
+    transform: ${p => p.$open ? 'translateY(-2px)' : 'translateY(2px)'};
+  }
+
+  span:before,
+  span:after {
+    content: "";
+    width: 8px;
+    height: 2px;
+    background-color: currentColor;
+    position: absolute;
+    bottom: 0;
+    transition: transform 0.3s ease;
+  }
+
+  span:before {
+    right: 50%;
+    border-radius: 2px 0 0 2px;
+    transform-origin: ${p => p.$open ? '100% 0' : '100% 100%'};
+    transform: ${p => p.$open ? 'rotate(-40deg)' : 'rotate(40deg)'};
+  }
+
+  span:after {
+    left: 50%;
+    border-radius: 0 2px 2px 0;
+    transform-origin: ${p => p.$open ? '0 0' : '0 100%'};
+    transform: ${p => p.$open ? 'rotate(40deg)' : 'rotate(-40deg)'};
+  }
 `;
 
 export default function Navbar() {
@@ -212,7 +327,10 @@ export default function Navbar() {
               onMouseLeave={() => setDropdownVisible(false)}
             >
               <DropTrigger>
-                Industry <DownOutlined style={{ fontSize: '9px' }} />
+                Industry
+                <SwallowIcon $open={dropdownVisible}>
+                  <span></span>
+                </SwallowIcon>
               </DropTrigger>
               <MegaMenu $visible={dropdownVisible}>
                 {industryNav.map((col) => (
@@ -229,7 +347,13 @@ export default function Navbar() {
               </MegaMenu>
             </DropWrap>
           </NavCenter>
-          <LoginBtn href="/login">Login</LoginBtn>
+          <LoginBtn href="/login">
+            <span>Login &nbsp;</span>
+            <svg viewBox="0 0 13 10" height="10px" width="15px">
+              <path d="M1,5 L11,5"></path>
+              <polyline points="8 1 12 5 8 9"></polyline>
+            </svg>
+          </LoginBtn>
         </NavInner>
       </NavOuter>
     </>

@@ -1,4 +1,4 @@
-import { FeaturesPageTemplate } from "@/components/templates/FeaturesPageTemplate";
+import { FeaturesPageTemplate } from "@/features/features-page/FeaturesPage";
 
 export default function FeaturesPage() {
   return <FeaturesPageTemplate />;
