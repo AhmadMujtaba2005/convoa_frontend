@@ -99,6 +99,7 @@ const NavCenter = styled.div`
   display: flex;
   align-items: center;
   gap: 28px;
+  transform: translateY(2px); /* Optical vertical alignment */
   @media(max-width:768px) { display: none; }
 `;
 
@@ -183,9 +184,9 @@ const LoginBtn = styled(Link)`
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px 0 24px;
-  height: 40px;
-  border-radius: 40px;
+  padding: 0 14px 0 20px;
+  height: 36px;
+  border-radius: 36px;
   background: transparent;
   border: 2px solid ${theme.colors.brandTeal};
   text-decoration: none;
@@ -198,8 +199,8 @@ const LoginBtn = styled(Link)`
     top: -2px;
     right: -2px;
     bottom: -2px;
-    width: 44px;
-    border-radius: 40px;
+    width: 40px;
+    border-radius: 36px;
     background: ${theme.colors.brandTeal};
     transition: all 0.5s ease;
     z-index: 0;
