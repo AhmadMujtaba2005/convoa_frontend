@@ -120,6 +120,27 @@ const HeroSection = styled.section<{ $bgImage?: string }>`
   display: flex;
   align-items: center;
   background: ${p => p.$bgImage ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${p.$bgImage}") center/cover no-repeat` : `radial-gradient(circle at top, rgba(78, 205, 160, 0.1), transparent 60%)`};
+
+  /* Force white text if there is a dark background image, regardless of theme */
+  ${p => p.$bgImage && `
+    h1 { color: #ffffff !important; }
+    ${HeroSubheading} { color: rgba(255, 255, 255, 0.85) !important; }
+    
+    ${EyebrowPill} { 
+      background: rgba(0, 0, 0, 0.7) !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+      color: #ffffff !important;
+      &::before, &::after { background: #9a9aa5 !important; }
+    }
+    
+    ${EyebrowWrap}::before, ${EyebrowWrap}::after {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15)) !important;
+    }
+    
+    /* Bullet items, target audience, and their text */
+    ${TargetAudienceLabel} { color: ${theme.colors.brandTeal} !important; }
+    ${BulletItem} { color: rgba(255, 255, 255, 0.85) !important; }
+  `}
 `;
 
 const HeroGrid = styled.div`
@@ -243,6 +264,17 @@ const Input = styled.input`
 
   &::placeholder {
     color: ${theme.colors.textDim};
+  }
+
+  /* Light mode: readable inputs on the white card */
+  [data-theme='light'] & {
+    background: rgba(0,0,0,0.04);
+    color: #111111;
+    border-color: rgba(0,0,0,0.12);
+    
+    &::placeholder {
+      color: rgba(0,0,0,0.4);
+    }
   }
 `;
 
@@ -435,13 +467,28 @@ const StructuredLabel = styled.strong`
 
 // CTA Stats
 const CtaBox = styled.div<{ $bgImage?: string }>`
-  background: ${p => p.$bgImage ? `linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url("${p.$bgImage}") center/cover no-repeat` : theme.colors.surface};
+  background: ${p => p.$bgImage ? `linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url("${p.$bgImage}") center/cover no-repeat` : theme.colors.surface};
   border: 1px solid ${theme.colors.surfaceBorder};
   border-radius: 24px;
   padding: 64px 40px;
   text-align: center;
   overflow: hidden;
   position: relative;
+
+  /* Dark mode: force near-white heading */
+  h2 {
+    color: #f5f5f7 !important;
+    -webkit-text-fill-color: #f5f5f7 !important;
+  }
+
+  /* Light mode: switch to white overlay + dark text */
+  [data-theme='light'] & {
+    background: ${p => p.$bgImage ? `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.82)), url("${p.$bgImage}") center/cover no-repeat` : theme.colors.surface};
+    h2 {
+      color: #111111 !important;
+      -webkit-text-fill-color: #111111 !important;
+    }
+  }
 `;
 
 const CtaStats = styled.div`
@@ -456,10 +503,10 @@ const CtaStats = styled.div`
 `;
 
 const StatItem = styled.div`
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.07);
   padding: 30px;
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
 
   h3 {
     font-family: ${theme.fonts.heading};
@@ -475,8 +522,15 @@ const StatItem = styled.div`
     font-family: ${theme.fonts.body};
     font-size: 16px;
     line-height: 1.6;
-    color: ${theme.colors.textMuted};
+    color: rgba(245, 245, 247, 0.85);
     margin: 0;
+  }
+
+  /* Light mode: dark text on white overlay */
+  [data-theme='light'] & {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.12);
+    p { color: #333333; }
   }
 `;
 

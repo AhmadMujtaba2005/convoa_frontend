@@ -175,8 +175,8 @@ const MItem = styled(Link)`
   font-size: 13px;
   display: flex; align-items: center; gap: 10px;
   transition: color 0.2s;
-  .anticon { font-size: 15px; opacity: 0.6; }
-  &:hover { color: ${theme.colors.brandTeal}; .anticon { opacity: 1; color: ${theme.colors.brandTeal}; } }
+  .anticon { font-size: 15px; opacity: 0.7; color: ${theme.colors.brandTeal}; transition: opacity 0.2s; }
+  &:hover { color: ${theme.colors.brandTeal}; .anticon { opacity: 1; } }
 `;
 
 const LoginBtn = styled(Link)`

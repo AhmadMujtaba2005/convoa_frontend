@@ -45,6 +45,28 @@ const EyebrowWrap = styled.div`
   }
 `;
 
+const FeatureEyebrowWrap = styled.div`
+  display: flex; align-items: center; justify-content: flex-start;
+  width: 100%; margin-bottom: 24px;
+  &::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, ${theme.colors.surfaceBorder}, transparent);
+    margin-left: 24px;
+  }
+`;
+
+const CenterEyebrowWrap = styled.div`
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; max-width: 600px; margin: 0 auto 24px;
+  &::before, &::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15));
+  }
+  &::after {
+    background: linear-gradient(270deg, transparent, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15));
+  }
+`;
+
 const EyebrowPill = styled.span`
   position: relative;
   padding: 6px 20px; border-radius: 20px;
@@ -174,8 +196,8 @@ const FeatureImage = styled.img`
 
 const AppScreenshot = styled.div`
   border-radius: 16px;
-  background: #0d0d12;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
   overflow: hidden;
   display: flex;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
@@ -240,6 +262,16 @@ const FullWidthFeature = styled.div`
   background-position: center;
   background-image: url('/images/features/feature_human_dark.jpg');
   box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+
+  /* Dark overlay for contrast */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.62);
+    z-index: 0;
+    pointer-events: none;
+  }
 `;
 
 const FullWidthFeatureContent = styled.div`
@@ -250,22 +282,23 @@ const FullWidthFeatureContent = styled.div`
   border-radius: 0;
   border: none;
   background: transparent;
+  z-index: 1;
 
   /* Force light text to remain readable over the dark image background in any theme */
   ${FeatureEyebrow} {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
+    background: rgba(0, 0, 0, 0.7) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
     &::before, &::after {
-      background: rgba(255, 255, 255, 0.5);
+      background: #9a9aa5 !important;
     }
   }
   ${FeatureTitle} {
-    color: #ffffff;
+    color: #ffffff !important;
     text-shadow: 0 4px 24px rgba(0,0,0,0.4);
   }
   ${FeatureDescription} {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.8) !important;
     text-shadow: 0 2px 12px rgba(0,0,0,0.4);
   }
 
@@ -389,10 +422,17 @@ export const FeaturesPageTemplate = () => {
         {/* Gradient Overlay */}
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.9) 100%)', zIndex: 0 }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <FeatureEyebrow style={{ marginLeft: 0 }}>{featuresList[5].eyebrow}</FeatureEyebrow>
-          <FeatureTitle style={{ textAlign: 'center' }}>{featuresList[5].title}</FeatureTitle>
-          <FeatureDescription style={{ textAlign: 'center', margin: '0 auto' }}>{featuresList[5].description}</FeatureDescription>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          <CenterEyebrowWrap>
+            <FeatureEyebrow style={{ margin: '0 24px', background: 'rgba(0,0,0,0.7)', borderColor: 'rgba(255,255,255,0.15)', color: '#ffffff' }}>
+              <style>{`
+                span::before, span::after { background: #9a9aa5 !important; }
+              `}</style>
+              {featuresList[5].eyebrow}
+            </FeatureEyebrow>
+          </CenterEyebrowWrap>
+          <FeatureTitle style={{ textAlign: 'center', color: '#ffffff' }}>{featuresList[5].title}</FeatureTitle>
+          <FeatureDescription style={{ textAlign: 'center', margin: '0 auto', color: 'rgba(255, 255, 255, 0.8)' }}>{featuresList[5].description}</FeatureDescription>
         </div>
       </div>
 

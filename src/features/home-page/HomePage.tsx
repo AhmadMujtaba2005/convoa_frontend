@@ -773,8 +773,8 @@ const ClusterApp = styled(motion.div) <{ $top: string; $left: string; $size?: st
 
 const AppScreenshot = styled.div`
   border-radius: 16px;
-  background: #0d0d12;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
   overflow: hidden;
   display: flex;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);

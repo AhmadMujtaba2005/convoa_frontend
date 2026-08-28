@@ -160,6 +160,14 @@ export const CanvasWrap = styled.div`
   position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
 `;
 
+const DotGridSvg = styled.svg`
+  position: absolute; inset: 0;
+  opacity: 0.25;
+  [data-theme='light'] & {
+    opacity: 0.55;
+  }
+`;
+
 export const CanvasStats = () => (
   <CanvasWrap>
     <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
@@ -223,6 +231,11 @@ export const OrbitRing = styled.div<{ $size: string, $duration: number, $reverse
   border-radius: 50%;
   animation: ${p => p.$reverse ? SpinAnimReverse : SpinAnim} ${p => p.$duration}s linear infinite;
   pointer-events: none;
+
+  /* Light mode: rings are near-invisible at default teal opacity — boost them */
+  [data-theme='light'] & {
+    border-color: rgba(61, 74, 155, ${p => Math.min(1, (p.$opacity || 0.2) * 4)});
+  }
   
   &::before {
     content: '';
@@ -247,12 +260,14 @@ export const CanvasIntegrations = () => (
       </defs>
       <rect width="100%" height="100%" fill="url(#cIntC)" />
     </svg>
-    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.25 }}>
-      <pattern id="dotGridInt" width="40" height="40" patternUnits="userSpaceOnUse">
-        <circle cx="2" cy="2" r="1.5" fill={theme.colors.textMuted} />
-      </pattern>
+    <DotGridSvg width="100%" height="100%">
+      <defs>
+        <pattern id="dotGridInt" width="40" height="40" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.5" fill={theme.colors.textMuted} />
+        </pattern>
+      </defs>
       <rect width="100%" height="100%" fill="url(#dotGridInt)" />
-    </svg>
+    </DotGridSvg>
     
     <OrbitRing $size="50vw" $duration={30} $opacity={0.3} />
     <OrbitRing $size="70vw" $duration={45} $reverse $opacity={0.15} />
