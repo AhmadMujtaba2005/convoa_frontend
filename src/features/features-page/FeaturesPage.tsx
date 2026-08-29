@@ -176,7 +176,6 @@ const FeatureEyebrow = styled.div`
   font-size: 13px; font-weight: 500;
   white-space: nowrap;
   margin-left: 24px;
-  margin-bottom: 24px;
 
   &::before, &::after {
     content: ''; position: absolute; top: 50%;
@@ -293,6 +292,11 @@ const FullWidthFeatureContent = styled.div`
       background: #9a9aa5 !important;
     }
   }
+  ${FeatureEyebrowWrap} {
+    &::after {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), transparent) !important;
+    }
+  }
   ${FeatureTitle} {
     color: #ffffff !important;
     text-shadow: 0 4px 24px rgba(0,0,0,0.4);
@@ -350,7 +354,9 @@ export const FeaturesPageTemplate = () => {
         {/* Feature 1 */}
         <FeatureRow>
           <FeatureContent>
-            <FeatureEyebrow>{featuresList[0].eyebrow}</FeatureEyebrow>
+            <FeatureEyebrowWrap>
+              <FeatureEyebrow>{featuresList[0].eyebrow}</FeatureEyebrow>
+            </FeatureEyebrowWrap>
             <FeatureTitle>{featuresList[0].title}</FeatureTitle>
             <FeatureDescription>{featuresList[0].description}</FeatureDescription>
           </FeatureContent>
@@ -364,7 +370,9 @@ export const FeaturesPageTemplate = () => {
         {/* Feature 2 */}
         <FeatureRow $reverse>
           <FeatureContent>
-            <FeatureEyebrow>{featuresList[1].eyebrow}</FeatureEyebrow>
+            <FeatureEyebrowWrap>
+              <FeatureEyebrow>{featuresList[1].eyebrow}</FeatureEyebrow>
+            </FeatureEyebrowWrap>
             <FeatureTitle>{featuresList[1].title}</FeatureTitle>
             <FeatureDescription>{featuresList[1].description}</FeatureDescription>
           </FeatureContent>
@@ -377,7 +385,9 @@ export const FeaturesPageTemplate = () => {
       {/* Feature 3 */}
       <FullWidthFeature>
         <FullWidthFeatureContent>
-          <FeatureEyebrow>{featuresList[2].eyebrow}</FeatureEyebrow>
+          <FeatureEyebrowWrap>
+            <FeatureEyebrow>{featuresList[2].eyebrow}</FeatureEyebrow>
+          </FeatureEyebrowWrap>
           <FeatureTitle>{featuresList[2].title}</FeatureTitle>
           <FeatureDescription>{featuresList[2].description}</FeatureDescription>
           <GlowingButton href="https://app.convoa.ai/login">{featuresList[2].ctaText}<ArrowRightOutlined /></GlowingButton>
@@ -388,7 +398,9 @@ export const FeaturesPageTemplate = () => {
         {/* Feature 4 */}
         <FeatureRow $reverse>
           <FeatureContent>
-            <FeatureEyebrow>{featuresList[3].eyebrow}</FeatureEyebrow>
+            <FeatureEyebrowWrap>
+              <FeatureEyebrow>{featuresList[3].eyebrow}</FeatureEyebrow>
+            </FeatureEyebrowWrap>
             <FeatureTitle>{featuresList[3].title}</FeatureTitle>
             <FeatureDescription>{featuresList[3].description}</FeatureDescription>
           </FeatureContent>
@@ -402,7 +414,9 @@ export const FeaturesPageTemplate = () => {
         {/* Feature 5 */}
         <FeatureRow>
           <FeatureContent>
-            <FeatureEyebrow>{featuresList[4].eyebrow}</FeatureEyebrow>
+            <FeatureEyebrowWrap>
+              <FeatureEyebrow>{featuresList[4].eyebrow}</FeatureEyebrow>
+            </FeatureEyebrowWrap>
             <FeatureTitle>{featuresList[4].title}</FeatureTitle>
             <FeatureDescription>{featuresList[4].description}</FeatureDescription>
           </FeatureContent>
