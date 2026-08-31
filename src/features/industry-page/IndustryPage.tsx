@@ -10,6 +10,7 @@ import { IndustryContent, globalIndustryFaq } from "@/features/industries/types"
 // Animations
 const fadeUp = keyframes`from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}`;
 
+
 // Page Shell
 const Page = styled.div`
   background: ${theme.colors.background};
@@ -524,9 +525,9 @@ const StatItem = styled.div`
     line-height: 1.6;
     color: rgba(245, 245, 247, 0.85);
     margin: 0;
+    text-align: center;
   }
 
-  /* Light mode: dark text on white overlay */
   [data-theme='light'] & {
     background: rgba(0,0,0,0.04);
     border-color: rgba(0,0,0,0.12);
@@ -699,6 +700,9 @@ export default function IndustryPageTemplate({ content }: Props) {
       <Section>
         <Container>
           <SectionHead>
+            <EyebrowWrap style={{ justifyContent: 'center', marginBottom: '20px' }}>
+              <EyebrowPill>Features</EyebrowPill>
+            </EyebrowWrap>
             <SectionH2>{content.features.heading}</SectionH2>
           </SectionHead>
           <SideBySide>
@@ -721,6 +725,9 @@ export default function IndustryPageTemplate({ content }: Props) {
       <Section>
         <Container>
           <SectionHead>
+            <EyebrowWrap style={{ justifyContent: 'center', marginBottom: '20px' }}>
+              <EyebrowPill>Benefits</EyebrowPill>
+            </EyebrowWrap>
             <SectionH2>{content.benefits.heading}</SectionH2>
             <SectionBody>{content.benefits.subheading}</SectionBody>
           </SectionHead>
@@ -744,6 +751,9 @@ export default function IndustryPageTemplate({ content }: Props) {
       <Section>
         <Container>
           <CtaBox $bgImage={content.statsImage}>
+            <EyebrowWrap style={{ justifyContent: 'center', marginBottom: '20px' }}>
+              <EyebrowPill>Growth</EyebrowPill>
+            </EyebrowWrap>
             <SectionH2 style={{ margin: "0 0 40px" }}>Never miss an opportunity to grow.</SectionH2>
             <CtaStats>
               <StatItem>
@@ -769,6 +779,9 @@ export default function IndustryPageTemplate({ content }: Props) {
       <Section>
         <Container>
           <SectionHead>
+            <EyebrowWrap style={{ justifyContent: 'center', marginBottom: '20px' }}>
+              <EyebrowPill>FAQ</EyebrowPill>
+            </EyebrowWrap>
             <SectionH2>Frequently Asked Questions</SectionH2>
           </SectionHead>
           <FaqSection>

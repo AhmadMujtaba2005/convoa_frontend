@@ -137,7 +137,6 @@ export default function Footer() {
           <div>
             <ColTitle>Support</ColTitle>
             <ColLinks>
-              <FooterLink href="/contact-us">Help Center</FooterLink>
               <FooterLink href="/contact-us">Get in Touch</FooterLink>
             </ColLinks>
           </div>
