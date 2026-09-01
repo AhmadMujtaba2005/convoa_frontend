@@ -237,6 +237,25 @@ const WidgetCard = styled.div`
   padding: 32px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   animation: ${fadeUp} 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(78,205,160,0.4), transparent);
+  }
+
+  &:hover {
+    border-color: rgba(78,205,160,0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  }
 `;
 
 const WidgetLabel = styled.p`
@@ -259,22 +278,33 @@ const Input = styled(AntInput)`
     font-size: 15px;
     font-family: ${theme.fonts.body};
     box-sizing: border-box;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 
-    &:focus, &-focused {
+    &:focus, &:hover, &-focused {
       outline: none;
-      border-color: ${theme.colors.brandTeal};
-      box-shadow: none;
+      border-color: rgba(78,205,160,0.5);
+      background: rgba(78,205,160,0.04);
+      box-shadow: 0 0 0 3px rgba(78,205,160,0.08);
     }
 
     &::placeholder {
       color: ${theme.colors.textDim};
     }
 
+    & input {
+      background: transparent !important;
+      color: inherit !important;
+    }
+
     &:-webkit-autofill,
     &:-webkit-autofill:hover, 
     &:-webkit-autofill:focus, 
-    &:-webkit-autofill:active {
-      transition: background-color 5000s ease-in-out 0s;
+    &:-webkit-autofill:active,
+    & input:-webkit-autofill,
+    & input:-webkit-autofill:hover, 
+    & input:-webkit-autofill:focus, 
+    & input:-webkit-autofill:active {
+      transition: background-color 5000s ease-in-out 0s !important;
       -webkit-text-fill-color: white !important;
     }
 
@@ -297,7 +327,11 @@ const Input = styled(AntInput)`
       &:-webkit-autofill,
       &:-webkit-autofill:hover, 
       &:-webkit-autofill:focus, 
-      &:-webkit-autofill:active {
+      &:-webkit-autofill:active,
+      & input:-webkit-autofill,
+      & input:-webkit-autofill:hover, 
+      & input:-webkit-autofill:focus, 
+      & input:-webkit-autofill:active {
         -webkit-text-fill-color: #111111 !important;
       }
     }

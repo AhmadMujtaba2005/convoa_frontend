@@ -327,11 +327,24 @@ const inputBase = `
       color: ${theme.colors.textDim};
     }
 
+    & input, & textarea {
+      background: transparent !important;
+      color: inherit !important;
+    }
+
     &:-webkit-autofill,
     &:-webkit-autofill:hover, 
     &:-webkit-autofill:focus, 
-    &:-webkit-autofill:active {
-      transition: background-color 5000s ease-in-out 0s;
+    &:-webkit-autofill:active,
+    & input:-webkit-autofill,
+    & input:-webkit-autofill:hover, 
+    & input:-webkit-autofill:focus, 
+    & input:-webkit-autofill:active,
+    & textarea:-webkit-autofill,
+    & textarea:-webkit-autofill:hover,
+    & textarea:-webkit-autofill:focus,
+    & textarea:-webkit-autofill:active {
+      transition: background-color 5000s ease-in-out 0s !important;
       -webkit-text-fill-color: ${theme.colors.textPrimary} !important;
     }
 
