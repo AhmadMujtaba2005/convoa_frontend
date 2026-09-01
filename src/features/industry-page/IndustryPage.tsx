@@ -659,7 +659,7 @@ export default function IndustryPageTemplate({ content }: Props) {
             </div>
             <div>
               <WidgetCard>
-                <WidgetLabel>Experience how Convoa's AI assistant can elevate your customer experience:</WidgetLabel>
+                <WidgetLabel>Experience how Convoa&apos;s AI assistant can elevate your customer experience:</WidgetLabel>
                 <Input placeholder="Full Name" />
                 <Input placeholder="Phone Number" />
                 <Input placeholder="Email Address" />

@@ -211,9 +211,11 @@ export default function ThemeSwitch({ isDark, onToggle }: { isDark?: boolean, on
     if (isDark !== undefined) return;
     const stored = localStorage.getItem('theme');
     if (stored === 'light') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalIsDark(false);
       document.documentElement.setAttribute('data-theme', 'light');
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalIsDark(true);
       document.documentElement.setAttribute('data-theme', 'dark');
     }

@@ -326,7 +326,7 @@ const GlowingButtonInner = styled.div<{ $large?: boolean }>`
   }
 `;
 
-const GlowingButton = ({ children, style, large, href }: any) => (
+const GlowingButton = ({ children, style, large, href }: { children?: React.ReactNode, style?: React.CSSProperties, large?: boolean, href?: string }) => (
   <GlowingButtonWrap style={style} href={href}>
     <GlowingBorderBlur><SpinningGradient /></GlowingBorderBlur>
     <GlowingBorderSharp><SpinningGradient /></GlowingBorderSharp>
