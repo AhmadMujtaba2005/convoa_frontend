@@ -35,7 +35,7 @@ export const HeroCanvas = () => {
 
     let animationFrameId: number;
     
-    // Hexagon grid settings
+    // hexagon grid settings
     const r = 35; // radius
     const w = Math.sqrt(3) * r;
     const h = 2 * r;
@@ -100,7 +100,7 @@ export const HeroCanvas = () => {
       const isLightMode = document.documentElement.getAttribute('data-theme') === 'light';
       time += 1;
       
-      // Teal color matching theme.colors.brandTeal (rgb 78, 205, 160)
+      // teal color matching themecolorsbrandteal
       const r_color = 78, g_color = 205, b_color = 160;
 
       hexes.forEach(hex => {
@@ -109,13 +109,13 @@ export const HeroCanvas = () => {
         
         drawHexagon(hex.x, hex.y, r - 2); // Small gap between hexes
         
-        // Base grid lines
+        // base grid lines
         ctx.strokeStyle = `rgba(${r_color}, ${g_color}, ${b_color}, ${isLightMode ? 0.2 : 0.1})`;
         ctx.lineWidth = 1;
         ctx.stroke();
         
         if (hex.isHighlighted) {
-          // Highlighted hexagon filling
+          // highlighted hexagon filling
           const alpha = (isLightMode ? 0.35 : 0.25) * pulse;
           ctx.fillStyle = `rgba(${r_color}, ${g_color}, ${b_color}, ${alpha})`;
           ctx.fill();

@@ -5,10 +5,11 @@ import styled from "styled-components";
 import { CheckOutlined } from "@ant-design/icons";
 import { theme } from "@/lib/theme";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { PricingHeroCanvas } from "@/components/ui/PricingHeroCanvas";
 import { pricingHero, pricingToggles, pricingPlans, pricingFaqs } from "./pricing";
 
-// Shared Styles
+// shared styles
 const Page = styled.div`
   background: ${theme.colors.background};
   color: ${theme.colors.textPrimary};
@@ -118,7 +119,7 @@ const GradientWord = styled.span`
   -webkit-text-fill-color: transparent;
 `;
 
-// Glass Radio Group
+// glass radio group
 const GlassRadioWrap = styled.div`
   display: flex;
   justify-content: center;
@@ -194,7 +195,7 @@ const GlassGlider = styled.div<{ $index: number }>`
   `}
 `;
 
-// Pricing Specific Styles
+// pricing specific styles
 
 const ToggleWrap = styled.div`
   display: flex;
@@ -509,7 +510,7 @@ const AppScreenshot = styled.div`
   }
 `;
 
-// Template Component
+// template component
 
 export const PricingPageTemplate = () => {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -632,7 +633,7 @@ export const PricingPageTemplate = () => {
                 <>
                   <p style={{ margin: '0 0 16px 0' }}>{faq.answer}</p>
                   <AppScreenshot>
-                    <img src={faq.image} alt={faq.question} />
+                    <Image src={faq.image} alt={faq.question} width={800} height={400} style={{ width: '100%', height: 'auto' }} />
                   </AppScreenshot>
                 </>
               ) : (

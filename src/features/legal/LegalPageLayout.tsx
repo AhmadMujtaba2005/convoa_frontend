@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { theme } from "@/lib/theme";
 import Link from "next/link";
-import { ArrowRightOutlined } from "@ant-design/icons";
 
 const pulseGlow = keyframes`
   0%, 100% { opacity: 0.4; transform: scale(1); }

@@ -17,14 +17,14 @@ export default async function IndustryPage({ params }: Props) {
   return <IndustryPageTemplate content={content} />;
 }
 
-// Pre-render all 9 industry pages at build time (SSG)
+// pre render all 9 industry pages at build time
 export function generateStaticParams() {
   return allIndustries.map((industry) => ({
     slug: industry.slug,
   }));
 }
 
-// Dynamic per-page metadata (title/description) for SEO
+// dynamic per page metadata for seo
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const content = allIndustries.find((i) => i.slug === slug);

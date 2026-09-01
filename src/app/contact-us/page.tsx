@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { theme } from "@/lib/theme";
 import { MailOutlined, GlobalOutlined, ArrowRightOutlined, CheckCircleFilled } from "@ant-design/icons";
+import { Input as AntInput, Button as AntButton } from "antd";
 
-/* ── Animations ── */
+// animations
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -40,7 +41,7 @@ const envDropping = keyframes`
   }
 `;
 
-/* ── Layout ── */
+// layout
 const Page = styled.div`
   background: ${theme.colors.background};
   min-height: 100vh;
@@ -102,7 +103,7 @@ const Wrapper = styled.div`
   }
 `;
 
-/* ── Left info panel ── */
+// left info panel
 const InfoPanel = styled.div`
   animation: ${fadeUp} 0.7s ease both;
 `;
@@ -229,7 +230,7 @@ const TrustItem = styled.div`
   }
 `;
 
-/* ── Form panel ── */
+// form panel
 const FormPanel = styled.div`
   animation: ${fadeUp} 0.7s 0.15s ease both;
 `;
@@ -303,30 +304,32 @@ const Label = styled.label`
 `;
 
 const inputBase = `
-  width: 100%;
-  box-sizing: border-box;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid ${theme.colors.surfaceBorder};
-  border-radius: 12px;
-  padding: 14px 18px;
-  color: ${theme.colors.textPrimary};
-  font-family: ${theme.fonts.body};
-  font-size: 15px;
-  outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  && {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid ${theme.colors.surfaceBorder};
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: ${theme.colors.textPrimary};
+    font-family: ${theme.fonts.body};
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 
-  &:focus {
-    border-color: rgba(78,205,160,0.5);
-    background: rgba(78,205,160,0.04);
-    box-shadow: 0 0 0 3px rgba(78,205,160,0.08);
-  }
+    &:focus, &:hover, &-focused {
+      border-color: rgba(78,205,160,0.5);
+      background: rgba(78,205,160,0.04);
+      box-shadow: 0 0 0 3px rgba(78,205,160,0.08);
+    }
 
-  &::placeholder {
-    color: ${theme.colors.textDim};
+    &::placeholder {
+      color: ${theme.colors.textDim};
+    }
   }
 `;
 
-const Input = styled.input`${inputBase}`;
+const Input = styled(AntInput)`${inputBase}`;
 
 const PhoneWrap = styled.div`
   position: relative;
@@ -346,46 +349,55 @@ const FlagPrefix = styled.div`
   z-index: 1;
 `;
 
-const PhoneInput = styled.input`
+const PhoneInput = styled(AntInput)`
   ${inputBase}
-  padding-left: 76px;
-`;
-
-const Textarea = styled.textarea`
-  ${inputBase}
-  resize: vertical;
-  min-height: 130px;
-  font-family: ${theme.fonts.body};
-`;
-
-const SubmitBtn = styled.button`
-  width: 100%;
-  padding: 16px 24px;
-  border-radius: 14px;
-  border: none;
-  background: linear-gradient(135deg, #4ECDA0 0%, #3D4A9B 100%);
-  background-size: 200% auto;
-  color: #fff;
-  font-family: ${theme.fonts.body};
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-position 0.4s ease;
-  margin-top: 4px;
-  box-shadow: 0 4px 20px rgba(78,205,160,0.25);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(78,205,160,0.4);
-    background-position: right center;
+  && {
+    padding-left: 76px;
   }
+`;
 
-  &:active {
-    transform: translateY(0);
+const Textarea = styled(AntInput.TextArea)`
+  ${inputBase}
+  && {
+    resize: vertical;
+    min-height: 130px;
+    font-family: ${theme.fonts.body};
+  }
+`;
+
+const SubmitBtn = styled(AntButton)`
+  && {
+    width: 100%;
+    height: auto;
+    padding: 16px 24px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #4ECDA0 0%, #3D4A9B 100%);
+    background-size: 200% auto;
+    color: #fff;
+    font-family: ${theme.fonts.body};
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-position 0.4s ease;
+    margin-top: 4px;
+    box-shadow: 0 4px 20px rgba(78,205,160,0.25);
+
+    &:hover, &:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(78,205,160,0.4);
+      background-position: right center;
+      color: #fff;
+      border: none;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 `;
 
@@ -405,7 +417,7 @@ const Disclaimer = styled.p`
   }
 `;
 
-/* ── Success State ── */
+// success state
 const SuccessBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -508,7 +520,7 @@ export default function ContactUsPage() {
       <GridLines />
 
       <Wrapper>
-        {/* ── Left panel ── */}
+        {/* left panel */}
         <InfoPanel>
           <EyebrowRow>
             <EyebrowLine />
@@ -556,7 +568,7 @@ export default function ContactUsPage() {
           </TrustRow>
         </InfoPanel>
 
-        {/* ── Right form panel ── */}
+        {/* right form panel */}
         <FormPanel>
           <FormCard>
             {submitted ? (
@@ -660,8 +672,8 @@ export default function ContactUsPage() {
                     />
                   </FieldWrap>
 
-                  <SubmitBtn type="submit">
-                    Send Message <ArrowRightOutlined />
+                  <SubmitBtn htmlType="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Sending..." : "Send Message"} <ArrowRightOutlined />
                   </SubmitBtn>
 
                   <Disclaimer>

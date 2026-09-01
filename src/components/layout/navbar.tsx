@@ -11,7 +11,7 @@ import { theme } from "@/lib/theme";
 import {
   MedicineBoxOutlined, HeartOutlined, ClearOutlined, BugOutlined,
   ToolOutlined, CalculatorOutlined, SafetyCertificateOutlined,
-  CalendarOutlined, FileProtectOutlined
+  CalendarOutlined, FileProtectOutlined, MenuOutlined, CloseOutlined
 } from "@ant-design/icons";
 
 const getIcon = (label: string) => {
@@ -29,7 +29,7 @@ const getIcon = (label: string) => {
   }
 };
 
-/* ── Wing arcs behind nav ── */
+// wing arcs behind nav
 const WingArcs = styled.div`
   position: absolute;
   top: 0;
@@ -66,7 +66,7 @@ const NavOuter = styled.div<{ $scrolled: boolean }>`
   padding: 0 28px;
   transition: all 0.5s ease-out;
 
-  /* Animation and Glassmorphism */
+  // animation and glassmorphism
   transform: translate(-50%, ${p => p.$scrolled ? '16px' : '0px'});
   background: ${p => p.$scrolled ? 'var(--nav-bg)' : 'transparent'};
   border: 1px solid ${p => p.$scrolled ? 'rgba(255, 255, 255, 0.1)' : 'transparent'};
@@ -299,10 +299,115 @@ const SwallowIcon = styled.button<{ $open: boolean }>`
   }
 `;
 
+const MobileMenuToggle = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: ${theme.colors.textPrimary};
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 16px;
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
+const MobileOverlay = styled.div<{ $visible: boolean }>`
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 3, 5, 0.98);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  padding: 80px 24px 24px;
+  opacity: ${p => p.$visible ? 1 : 0};
+  visibility: ${p => p.$visible ? 'visible' : 'hidden'};
+  transition: all 0.3s ease;
+  overflow-y: auto;
+`;
+
+const MobileCloseBtn = styled.button`
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: ${theme.colors.textPrimary};
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+`;
+
+const MobileNavList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const MobileLink = styled(Link)`
+  color: ${theme.colors.textPrimary};
+  text-decoration: none;
+  font-family: ${theme.fonts.heading};
+  font-size: 24px;
+  font-weight: 600;
+`;
+
+const MobileIndustryGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+`;
+
+const MobileIndustryTitle = styled.div`
+  color: ${theme.colors.brandTeal};
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+`;
+
+const MobileIndustryGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const MobileIndustryLink = styled(Link)`
+  color: ${theme.colors.textMuted};
+  text-decoration: none;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .anticon { color: ${theme.colors.brandTeal}; font-size: 16px; }
+`;
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 20);
@@ -348,15 +453,43 @@ export default function Navbar() {
               </MegaMenu>
             </DropWrap>
           </NavCenter>
-          <LoginBtn href="https://app.convoa.ai/login">
-            <span>Login &nbsp;</span>
-            <svg viewBox="0 0 13 10" height="10px" width="15px">
-              <path d="M1,5 L11,5"></path>
-              <polyline points="8 1 12 5 8 9"></polyline>
-            </svg>
-          </LoginBtn>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <LoginBtn href="https://app.convoa.ai/login">
+              <span>Login &nbsp;</span>
+              <svg viewBox="0 0 13 10" height="10px" width="15px">
+                <path d="M1,5 L11,5"></path>
+                <polyline points="8 1 12 5 8 9"></polyline>
+              </svg>
+            </LoginBtn>
+            <MobileMenuToggle onClick={() => setMobileMenuOpen(true)}>
+              <MenuOutlined />
+            </MobileMenuToggle>
+          </div>
         </NavInner>
       </NavOuter>
+
+      <MobileOverlay $visible={mobileMenuOpen}>
+        <MobileCloseBtn onClick={() => setMobileMenuOpen(false)}>
+          <CloseOutlined />
+        </MobileCloseBtn>
+        <MobileNavList>
+          <MobileLink href="/">Home</MobileLink>
+          <MobileLink href="/features">Features</MobileLink>
+          <MobileLink href="/pricing">Pricing</MobileLink>
+          <MobileLink href="/contact-us">Contact Us</MobileLink>
+          <MobileIndustryGroup>
+            <MobileIndustryTitle>Industries</MobileIndustryTitle>
+            <MobileIndustryGrid>
+              {industryNav.flatMap(g => g.items).map(item => (
+                <MobileIndustryLink key={item.label} href={`/industry${item.href}`}>
+                  {getIcon(item.label)}
+                  {item.label}
+                </MobileIndustryLink>
+              ))}
+            </MobileIndustryGrid>
+          </MobileIndustryGroup>
+        </MobileNavList>
+      </MobileOverlay>
     </>
   );
 }

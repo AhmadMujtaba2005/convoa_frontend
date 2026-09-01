@@ -7,6 +7,7 @@ import { Brain, Calendar, ChartBar, Users } from "lucide-react";
 import { heroContent, homeCards } from "./home";
 import { theme } from "@/lib/theme";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import Image from "next/image";
 import { 
   twinkle, sparkleAnim, SpinAnim, SpinAnimReverse,
   StarField, Star, Sparkle, STARS, SPARKLES, HeroGlow,
@@ -15,7 +16,7 @@ import {
   CanvasIntegrations, CanvasSteps, CanvasFocus, TestimonialDot, CanvasTestimonials, CanvasCta
 } from "@/components/ui/HomePageCanvas";
 
-// Interfaces
+// interfaces
 interface Stat { value: string; label: string; }
 interface Card { description: string; }
 interface Testimonial { quote: string; name: string; location: string; }
@@ -37,13 +38,10 @@ interface Props {
   cta: { heading: string; button: string; subtext: string };
 }
 
-// Animations
+// animations
 const fadeUp = keyframes`from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}`;
-const pulse = keyframes`0%{box-shadow:0 0 0 0 rgba(78,205,160,.25)}70%{box-shadow:0 0 0 14px rgba(78,205,160,0)}100%{box-shadow:0 0 0 0 rgba(78,205,160,0)}`;
-const marquee = keyframes`0%{transform:translateX(0)}100%{transform:translateX(-50%)}`;
-const floatAnim = keyframes`0%{transform:translateY(0)}100%{transform:translateY(-6px)}`;
 
-// Global Layout
+// global layout
 const Page = styled.div`
   background: ${theme.colors.background};
   color: ${theme.colors.textPrimary};
@@ -67,7 +65,7 @@ const Container = styled.div`
   @media(max-width:768px){ padding: 0 16px; }
 `;
 
-// Typography
+// typography
 const EyebrowWrap = styled.div`
   display: flex; align-items: center; justify-content: center;
   width: 100%; max-width: 600px; margin: 0 auto 24px;
@@ -164,7 +162,7 @@ const GradientWord = styled.span`
   -webkit-text-fill-color: transparent;
 `;
 
-// Section Divider
+// section divider
 const SectionDividerWrap = styled.div<{ $label?: string }>`
   position: relative;
   width: 100%;
@@ -219,7 +217,7 @@ const SectionDivider = ({ label }: { label?: string }) => (
   </SectionDividerWrap>
 );
 
-// Hero
+// hero
 const HeroSection = styled.section`
   position: relative;
   display: flex;
@@ -232,7 +230,7 @@ const HeroSection = styled.section`
 `;
 
 
-/* Star Field */
+// star field
 
 const HeroIconBadge = styled.div`
   width: 56px; height: 56px;
@@ -351,7 +349,7 @@ const HeroImageWrap = styled.div`
   z-index: 1;
   animation: ${fadeUp} 1s ease-out;
 
-  /* Top glow */
+  // top glow
   &::before {
     content: '';
     position: absolute;
@@ -365,8 +363,8 @@ const HeroImageWrap = styled.div`
     z-index: -1;
   }
 
-  /* Side beams — rendered as ::before/after on HeroImageWrap */
-  /* Beams are now separate DOM elements — see HeroBeam components below */
+  // side beams rendered as beforeafter on heroimagewrap
+  // beams are now separate dom elements see herobeam components below
 `;
 
 const HeroImageInner = styled.div`
@@ -388,31 +386,7 @@ const HeroImageInner = styled.div`
   }
 `;
 
-/* Dedicated beam elements — live inside HeroSection, not clipped */
-const HeroBeamLeft = styled.div`
-  position: absolute;
-  top: 78%;
-  left: 0;
-  width: 28%;
-  height: 3px;
-  background: linear-gradient(90deg, transparent 0%, rgba(61, 74, 155, 0.80) 40%, rgba(78, 205, 160, 0.95) 100%);
-  box-shadow: 0 0 18px 6px rgba(61, 74, 155, 0.70), 0 0 40px 10px rgba(61, 74, 155, 0.30);
-  pointer-events: none;
-  z-index: 2;
-  border-radius: 0 4px 4px 0;
-`;
-const HeroBeamRight = styled.div`
-  position: absolute;
-  top: 78%;
-  right: 0;
-  width: 28%;
-  height: 3px;
-  background: linear-gradient(270deg, transparent 0%, rgba(61, 74, 155, 0.80) 40%, rgba(78, 205, 160, 0.95) 100%);
-  box-shadow: 0 0 18px 6px rgba(61, 74, 155, 0.70), 0 0 40px 10px rgba(61, 74, 155, 0.30);
-  pointer-events: none;
-  z-index: 2;
-  border-radius: 4px 0 0 4px;
-`;
+
 
 const Badge = styled.span`
   display: flex; align-items: center; gap: 8px;
@@ -421,34 +395,11 @@ const Badge = styled.span`
   .anticon { color: ${theme.colors.brandTeal}; font-size: 14px; }
 `;
 
-/* Background Elements */
-const HeroBeam = styled.div`
-  position: absolute;
-  top: 50%; left: 0; right: 0;
-  height: 400px; transform: translateY(-50%);
-  pointer-events: none; z-index: 0; opacity: 0.9;
-`;
 
-const HeroCurvesSvg = () => (
-  <svg width="100%" height="400" viewBox="0 0 1440 400" fill="none" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id="hcGrad" x1="0" y1="0" x2="1440" y2="0">
-        <stop offset="0%" stopColor="transparent" />
-        <stop offset="30%" stopColor={theme.colors.brandTeal} stopOpacity="0.6" />
-        <stop offset="50%" stopColor={theme.colors.brandTeal} stopOpacity="1" />
-        <stop offset="70%" stopColor={theme.colors.brandTeal} stopOpacity="0.6" />
-        <stop offset="100%" stopColor="transparent" />
-      </linearGradient>
-    </defs>
-    <path d="M0 250 Q 360 150 720 250 T 1440 250" stroke="url(#hcGrad)" strokeWidth="1.5" />
-    <path d="M0 250 Q 360 300 720 250 T 1440 250" stroke="url(#hcGrad)" strokeWidth="1.5" opacity="0.8" />
-    <path d="M0 250 Q 360 250 720 250 T 1440 250" stroke="url(#hcGrad)" strokeWidth="6" filter="blur(16px)" opacity="0.7" />
-  </svg>
-);
 
-/* Background Elements */
+// background elements
 
-// Dashboard Mockup
+// dashboard mockup
 const DashWrap = styled.div`
   width: 90%;
   max-width: 1000px;
@@ -489,7 +440,7 @@ const DMain = styled.div`
 `;
 
 
-// Stats / Trust Bar
+// stats trust bar
 const StatsStrip = styled.div`
   background: ${theme.colors.backgroundElevated};
   border-top: 1px solid ${theme.colors.surfaceBorder};
@@ -522,7 +473,7 @@ const StatLabel = styled.div`
   text-transform: uppercase; letter-spacing: 0.06em;
 `;
 
-// Feature Cards
+// feature cards
 const ShowcaseLayout = styled.div`
   display: flex; flex-direction: column; gap: 32px; width: 100%; margin: 0 auto;
   @media(min-width: 900px){ flex-direction: row; gap: 48px; align-items: center; justify-content: center; }
@@ -659,7 +610,7 @@ const SuperpowerShowcase = ({ cards }: { cards: Card[] }) => {
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SOLUTIONS / TABS
+// solutions tabs
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const SolutionsGrid = styled.div`
@@ -695,7 +646,7 @@ const SolutionCardBody = styled.div`
 `;
 
 
-// Integrations
+// integrations
 const IntegSplitLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -790,7 +741,7 @@ const AppScreenshot = styled.div`
   }
 `;
 
-// Steps
+// steps
 const StepsRow = styled.div`
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px;
   position: relative;
@@ -834,7 +785,7 @@ const StepTitle = styled.h3`
   margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.1;
 `;
 
-/* dashed connector line between step cards (desktop only) */
+// dashed connector line between step cards
 const StepConnector = styled.div`
   position: absolute; top: 40px; right: -10px; width: 20px; height: 0;
   border-top: 1.5px dashed rgba(78, 205, 160, 0.40);
@@ -842,7 +793,7 @@ const StepConnector = styled.div`
   @media(max-width:768px){ display: none; }
 `;
 
-// Focus Section
+// focus section
 const FocusLayout = styled.div`
   display: flex; flex-direction: column; gap: 56px;
 `;
@@ -886,7 +837,7 @@ const IndustryTitle = styled.h4`
   font-size: 18px; font-weight: 600; margin: 0;
 `;
 
-// Testimonials
+// testimonials
 const TestiGrid = styled.div`
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 56px;
   @media(max-width:900px){ grid-template-columns: repeat(2,1fr); }
@@ -926,7 +877,7 @@ const TestiAvatar = styled.div`
 const AuthorName = styled.div`color:${theme.colors.textPrimary};font-weight:600;font-size:14px;`;
 const AuthorLoc = styled.div`color:${theme.colors.textDim};font-size:12px;margin-top:2px;`;
 
-// Final CTA
+// final cta
 const CtaSection = styled.section`
   padding: 120px 24px;
   @media(max-width:768px){ padding: 64px 16px; }
@@ -949,7 +900,7 @@ const CtaSub = styled.p`
   color: ${theme.colors.textDim}; font-size: 13px; margin: 10px 0 0;
 `;
 
-// Component
+// component
 export default function HomePageTemplate({
   hero, cards, trustedBy, solutions, integrations, steps, focus, industries, cta,
 }: Props) {
@@ -961,7 +912,7 @@ export default function HomePageTemplate({
 
   return (
     <Page>
-      {/* Hero */}
+      {/* hero */}
       <HeroSection>
         <StarField>
           {STARS.map((s, i) => <Star key={i} $x={s.x} $y={s.y} $delay={s.d} $size={s.s} />)}
@@ -987,15 +938,15 @@ export default function HomePageTemplate({
         </HeroContent>
         <HeroImageWrap>
           <HeroImageInner>
-            <img src="/images/dashboard-hero.webp" alt="Convoa Dashboard" />
+            <Image src="/images/dashboard-hero.webp" alt="Convoa Dashboard" width={1000} height={562} style={{ width: '100%', height: 'auto' }} />
           </HeroImageInner>
         </HeroImageWrap>
       </HeroSection>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Stats */}
+      {/* stats */}
       <StatsStrip style={{ position: 'relative', overflow: 'hidden' }}>
         <CanvasStats />
         <StatsGrid>
@@ -1008,10 +959,10 @@ export default function HomePageTemplate({
         </StatsGrid>
       </StatsStrip>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Features */}
+      {/* features */}
       <Section>
         <CanvasFeatures />
         <SectionBgArc><ArcSvg /></SectionBgArc>
@@ -1027,10 +978,10 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Solutions Tabs */}
+      {/* solutions tabs */}
       <Section>
         <CanvasSolutions />
         <SectionBgHelix><HelixSvg /></SectionBgHelix>
@@ -1043,10 +994,11 @@ export default function HomePageTemplate({
             {solutions.content.map((s, i) => (
               <SolutionCard key={i}>
                 <SolutionCardVisual>
-                  <img
+                  <Image
                     src={solutionImages[i]}
                     alt={s.title}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", top: 0, left: 0 }}
+                    fill
+                    style={{ objectFit: "cover" }}
                   />
                 </SolutionCardVisual>
                 <SolutionCardBody>
@@ -1059,10 +1011,10 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Integrations */}
+      {/* integrations */}
       <Section>
         <CanvasIntegrations />
         <Container style={{ position: 'relative', zIndex: 1 }}>
@@ -1118,16 +1070,16 @@ export default function HomePageTemplate({
 
           <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
             <AppScreenshot>
-              <img src="/images/app-screenshots/Screenshot 2026-08-25 132006.webp" alt="Convoa Active Integrations" />
+              <Image src="/images/app-screenshots/Screenshot 2026-08-25 132006.webp" alt="Convoa Active Integrations" width={800} height={400} style={{ width: '100%', height: 'auto' }} />
             </AppScreenshot>
           </motion.div>
         </Container>
       </Section>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Steps */}
+      {/* steps */}
       <Section>
         <CanvasSteps />
         <SectionBgLines><LinesSvg /></SectionBgLines>
@@ -1142,8 +1094,8 @@ export default function HomePageTemplate({
                 {i < steps.content.length - 1 && <StepConnector />}
                 <StepEyebrow>{s.step}</StepEyebrow>
                 {s.image && (
-                  <div style={{ width: '160px', height: '160px', margin: '0 auto 16px' }}>
-                    <img src={s.image} alt={s.title} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(2.2)' }} />
+                  <div style={{ width: '160px', height: '160px', margin: '0 auto 16px', position: 'relative' }}>
+                    <Image src={s.image} alt={s.title} fill style={{ objectFit: 'contain', transform: 'scale(2.2)' }} />
                   </div>
                 )}
                 <StepTitle>{s.title}</StepTitle>
@@ -1154,10 +1106,10 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Focus On Your Customers */}
+      {/* focus on your customers */}
       <Section>
         <CanvasFocus />
         <Container style={{ position: 'relative', zIndex: 1 }}>
@@ -1172,8 +1124,8 @@ export default function HomePageTemplate({
             <FocusCards>
               {industries.map((ind, i) => (
                 <IndustryCard key={i}>
-                  <IndustryIconWrap style={{ background: 'transparent', border: 'none', width: '160px', height: '160px' }}>
-                    <img src={ind.image} alt={ind.name} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(2.2)' }} />
+                  <IndustryIconWrap style={{ background: 'transparent', border: 'none', width: '160px', height: '160px', position: 'relative' }}>
+                    <Image src={ind.image} alt={ind.name} fill style={{ objectFit: 'contain', transform: 'scale(2.2)' }} />
                   </IndustryIconWrap>
                   <IndustryTitle>{ind.name}</IndustryTitle>
                 </IndustryCard>
@@ -1183,10 +1135,10 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Testimonials */}
+      {/* testimonials */}
       <Section>
         <CanvasTestimonials />
         <Container style={{ position: 'relative', zIndex: 1 }}>
@@ -1212,10 +1164,10 @@ export default function HomePageTemplate({
         </Container>
       </Section>
 
-      {/* Divider */}
+      {/* divider */}
       <SectionDivider />
 
-      {/* Final CTA */}
+      {/* final cta */}
       <CtaSection style={{ position: 'relative', overflow: 'hidden' }}>
         <CanvasCta />
         <CtaBox>

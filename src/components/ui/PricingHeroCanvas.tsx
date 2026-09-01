@@ -49,16 +49,16 @@ export const PricingHeroCanvas = () => {
       
       const lines = 6;
       for (let i = 0; i < lines; i++) {
-        // Define wave parameters per line to look distinct and sparse
+        // define wave parameters per line to look distinct and sparse
         const amplitude1 = 40 + i * 15;
         const amplitude2 = 30 + i * 10;
         
-        // Spread the lines vertically, centered around the canvas center
+        // spread the lines vertically centered around the canvas center
         const yOffset = canvas.height / 2 + (i - lines / 2) * 90;
         
         ctx.beginPath();
         for (let x = 0; x <= canvas.width; x += 10) {
-          // Static tunnel wave (no time factor in the phase)
+          // static tunnel wave
           const y = yOffset 
             + Math.sin(x * 0.0015 + i) * amplitude1 
             + Math.cos(x * 0.002 + i) * amplitude2;
@@ -67,17 +67,17 @@ export const PricingHeroCanvas = () => {
           else ctx.lineTo(x, y);
         }
         
-        // Draw the thin, faint static tunnel line
+        // draw the thin faint static tunnel line
         ctx.strokeStyle = theme.colors.surfaceBorder || 'rgba(255,255,255,0.05)';
         ctx.lineWidth = 1;
         ctx.globalAlpha = isLightMode ? 0.3 : 0.1;
         ctx.stroke();
         
-        // Draw the traveling dot and tail
+        // draw the traveling dot and tail
         const speed = 0.002 + i * 0.0005;
         const dotX = (time * (80 + i * 20) + i * 300) % (canvas.width + 400) - 200;
         
-        // Draw tail
+        // draw tail
         const tailLength = 150;
         ctx.beginPath();
         for (let tx = Math.max(0, dotX - tailLength); tx <= dotX; tx += 5) {
@@ -89,7 +89,7 @@ export const PricingHeroCanvas = () => {
           else ctx.lineTo(tx, ty);
         }
         
-        // Gradient for the tail (opaque at dotX, transparent at dotX - tailLength)
+        // gradient for the tail
         const tailGrad = ctx.createLinearGradient(dotX - tailLength, 0, dotX, 0);
         tailGrad.addColorStop(0, 'rgba(78, 205, 160, 0)');
         tailGrad.addColorStop(1, 'rgba(78, 205, 160, 1)');
@@ -99,18 +99,18 @@ export const PricingHeroCanvas = () => {
         ctx.globalAlpha = 1;
         ctx.stroke();
         
-        // Leading dot position
+        // leading dot position
         const dotY = yOffset 
             + Math.sin(dotX * 0.0015 + i) * amplitude1 
             + Math.cos(dotX * 0.002 + i) * amplitude2;
         
-        // Base dot
+        // base dot
         ctx.beginPath();
         ctx.arc(dotX, dotY, 2.5, 0, Math.PI * 2);
         ctx.fillStyle = theme.colors.brandTeal;
         ctx.fill();
         
-        // Outer glow
+        // outer glow
         ctx.beginPath();
         ctx.arc(dotX, dotY, 12, 0, Math.PI * 2);
         const glowGrad = ctx.createRadialGradient(dotX, dotY, 0, dotX, dotY, 12);

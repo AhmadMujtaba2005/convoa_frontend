@@ -5,9 +5,7 @@ import styled from "styled-components";
 
 const SwitchWrapper = styled.label`
   --toggle-size: 14px;
-  /* the size is adjusted using font-size,
-     this is not transform scale,
-     so you can choose any size */
+  // the size is adjusted using font size this is not transform scale so you can choose any size
   --container-width: 5.625em;
   --container-height: 2.5em;
   --container-radius: 6.25em;
@@ -169,7 +167,7 @@ const SwitchWrapper = styled.label`
     transition: var(--transition);
   }
 
-  /* actions */
+  // actions
   .theme-switch__checkbox:checked + .theme-switch__container {
     background-color: var(--container-night-bg);
   }

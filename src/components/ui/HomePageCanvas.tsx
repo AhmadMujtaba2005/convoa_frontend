@@ -4,7 +4,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import { theme } from "@/lib/theme";
 
-// --- Animations ---
+// animations
 export const twinkle = keyframes`0%,100%{opacity:0.1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.4)}`;
 export const sparkleAnim = keyframes`0%,100%{opacity:0.4;transform:scale(1) rotate(0deg)}50%{opacity:1;transform:scale(1.6) rotate(180deg)}`;
 export const SpinAnim = keyframes`
@@ -16,7 +16,7 @@ export const SpinAnimReverse = keyframes`
   100% { transform: rotate(-360deg); }
 `;
 
-// --- Hero Canvas Elements ---
+// hero canvas elements
 export const StarField = styled.div`
   position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
 `;
@@ -67,7 +67,7 @@ export const HeroGlow = styled.div`
   z-index: 0;
 `;
 
-// --- Background Section Elements ---
+// background section elements
 export const SectionBgArc = styled.div`
   position: absolute; top: 0; left: 0; right: 0; height: 250px;
   pointer-events: none; z-index: 0; opacity: 0.8;
@@ -109,26 +109,26 @@ export const HelixSvg = () => (
       </linearGradient>
     </defs>
     
-    {/* Central Core Line */}
+    {/* central core line */}
     <path d="M125 0 V 400" stroke="url(#helGradCore)" strokeWidth="1" opacity="0.5" strokeDasharray="3 4" />
     
-    {/* Main Outer Twist 1 */}
+    {/* main outer twist 1 */}
     <path d="M125 0 Q 30 75 125 150 T 125 300 T 125 450" stroke="url(#helGrad)" strokeWidth="1.5" />
     
-    {/* Main Outer Twist 2 */}
+    {/* main outer twist 2 */}
     <path d="M125 0 Q 220 75 125 150 T 125 300 T 125 450" stroke="url(#helGrad)" strokeWidth="1.5" opacity="0.8" />
 
-    {/* Inner Tight Twist 1 */}
+    {/* inner tight twist 1 */}
     <path d="M125 0 Q 80 50 125 100 T 125 200 T 125 300 T 125 400" stroke="url(#helGradCore)" strokeWidth="1" opacity="0.5" />
     
-    {/* Inner Tight Twist 2 */}
+    {/* inner tight twist 2 */}
     <path d="M125 0 Q 170 50 125 100 T 125 200 T 125 300 T 125 400" stroke="url(#helGradCore)" strokeWidth="1" opacity="0.5" />
 
-    {/* Glowing Nodes at Intersections */}
+    {/* glowing nodes at intersections */}
     <circle cx="125" cy="150" r="3" fill={theme.colors.brandTeal} style={{ filter: 'drop-shadow(0 0 6px #4ECDA0)' }} opacity="0.8" />
     <circle cx="125" cy="300" r="2" fill={theme.colors.brandIndigo} style={{ filter: 'drop-shadow(0 0 4px #3D4A9B)' }} opacity="0.6" />
 
-    {/* Ambient Glow */}
+    {/* ambient glow */}
     <path d="M125 0 V 400" stroke="url(#helGrad)" strokeWidth="32" filter="blur(28px)" opacity="0.3" />
   </svg>
 );
@@ -155,7 +155,7 @@ export const LinesSvg = () => (
   </svg>
 );
 
-// --- Canvas Backgrounds ---
+// canvas backgrounds
 export const CanvasWrap = styled.div`
   position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
 `;
@@ -232,7 +232,7 @@ export const OrbitRing = styled.div<{ $size: string, $duration: number, $reverse
   animation: ${p => p.$reverse ? SpinAnimReverse : SpinAnim} ${p => p.$duration}s linear infinite;
   pointer-events: none;
 
-  /* Light mode: rings are near-invisible at default teal opacity — boost them */
+  // light mode rings are near invisible at default teal opacity boost them
   [data-theme='light'] & {
     border-color: rgba(61, 74, 155, ${p => Math.min(1, (p.$opacity || 0.2) * 4)});
   }
@@ -314,7 +314,7 @@ export const CanvasTestimonials = () => (
       <rect width="100%" height="100%" fill="url(#cTestTopR)" />
       <rect width="100%" height="100%" fill="url(#cTestBL)" />
     </svg>
-    {/* Scattered glowing dots */}
+    {/* scattered glowing dots */}
     <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
       {[...Array(12)].map((_, i) => (
         <TestimonialDot key={i} 

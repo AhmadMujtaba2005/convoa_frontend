@@ -1,6 +1,3 @@
-import { contentQuotesLinter } from "@ant-design/cssinjs/lib/linters";
-import { Descriptions } from "antd";
-import { title } from "process";
 
 export const heroContent = {
   eyebrow: "Your Always-On",

@@ -49,7 +49,7 @@ export default function PrivacyPolicyPage() {
       </HeroBanner>
 
       <BodyWrap>
-        {/* Sticky TOC */}
+        {/* sticky toc */}
         <TocWrap>
           <TocTitle>On this page</TocTitle>
           <TocList>
@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage() {
           </TocList>
         </TocWrap>
 
-        {/* Content */}
+        {/* content */}
         <ContentArea ref={contentRef}>
           <P style={{ marginBottom: 32 }}>
             At Convoa, your privacy is important to us. This Privacy Policy explains how we collect,

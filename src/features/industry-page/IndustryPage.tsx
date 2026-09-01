@@ -3,15 +3,16 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircleFilled, CheckOutlined } from "@ant-design/icons";
+import { CheckCircleFilled } from "@ant-design/icons";
+import { Input as AntInput, Button as AntButton } from "antd";
 import { theme } from "@/lib/theme";
 import { IndustryContent, globalIndustryFaq } from "@/features/industries/types";
 
-// Animations
+// animations
 const fadeUp = keyframes`from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}`;
 
 
-// Page Shell
+// page shell
 const Page = styled.div`
   background: ${theme.colors.background};
   color: ${theme.colors.textPrimary};
@@ -29,7 +30,7 @@ const Container = styled.div`
   @media(max-width:768px){ padding: 0 16px; }
 `;
 
-// Section Divider (matches Homepage)
+// section divider
 const SectionDividerWrap = styled.div`
   position: relative;
   width: 100%;
@@ -79,7 +80,7 @@ const SectionDivider = ({ label }: { label?: string }) => (
   </SectionDividerWrap>
 );
 
-// Eyebrow (canonical: matches Home/Pricing/Features)
+// eyebrow
 const EyebrowWrap = styled.div`
   display: flex; align-items: center; justify-content: center;
   width: 100%; max-width: 600px; margin: 0 auto 24px;
@@ -113,7 +114,7 @@ const EyebrowPill = styled.span`
   &::after { right: -24px; }
 `;
 
-// Hero Section
+// hero section
 const HeroSection = styled.section<{ $bgImage?: string }>`
   position: relative;
   padding: 180px 0 100px;
@@ -122,7 +123,7 @@ const HeroSection = styled.section<{ $bgImage?: string }>`
   align-items: center;
   background: ${p => p.$bgImage ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${p.$bgImage}") center/cover no-repeat` : `radial-gradient(circle at top, rgba(78, 205, 160, 0.1), transparent 60%)`};
 
-  /* Force white text if there is a dark background image, regardless of theme */
+  // force white text if there is a dark background image regardless of theme
   ${p => p.$bgImage && `
     h1 { color: #ffffff !important; }
     ${HeroSubheading} { color: rgba(255, 255, 255, 0.85) !important; }
@@ -138,7 +139,7 @@ const HeroSection = styled.section<{ $bgImage?: string }>`
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15)) !important;
     }
     
-    /* Bullet items, target audience, and their text */
+    // bullet items target audience and their text
     ${TargetAudienceLabel} { color: ${theme.colors.brandTeal} !important; }
     ${BulletItem} { color: rgba(255, 255, 255, 0.85) !important; }
   `}
@@ -228,7 +229,7 @@ const BulletItem = styled.div`
   line-height: 1.5;
 `;
 
-// Form Widget (Lead Capture)
+// form widget
 const WidgetCard = styled.div`
   background: ${theme.colors.surface};
   border: 1px solid ${theme.colors.surfaceBorder};
@@ -246,60 +247,67 @@ const WidgetLabel = styled.p`
   line-height: 1.6;
 `;
 
-const Input = styled.input`
-  width: 100%;
-  background: rgba(0,0,0,0.3);
-  border: 1px solid ${theme.colors.surfaceBorder};
-  border-radius: 8px;
-  padding: 14px;
-  color: white;
-  margin-bottom: 12px;
-  font-size: 15px;
-  font-family: ${theme.fonts.body};
-  box-sizing: border-box;
+const Input = styled(AntInput)`
+  && {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid ${theme.colors.surfaceBorder};
+    border-radius: 8px;
+    padding: 14px;
+    color: white;
+    margin-bottom: 12px;
+    font-size: 15px;
+    font-family: ${theme.fonts.body};
+    box-sizing: border-box;
 
-  &:focus {
-    outline: none;
-    border-color: ${theme.colors.brandTeal};
-  }
+    &:focus, &-focused {
+      outline: none;
+      border-color: ${theme.colors.brandTeal};
+      box-shadow: none;
+    }
 
-  &::placeholder {
-    color: ${theme.colors.textDim};
-  }
-
-  /* Light mode: readable inputs on the white card */
-  [data-theme='light'] & {
-    background: rgba(0,0,0,0.04);
-    color: #111111;
-    border-color: rgba(0,0,0,0.12);
-    
     &::placeholder {
-      color: rgba(0,0,0,0.4);
+      color: ${theme.colors.textDim};
+    }
+
+    // light mode readable inputs on the white card
+    [data-theme='light'] & {
+      background: rgba(0,0,0,0.04);
+      color: #111111;
+      border-color: rgba(0,0,0,0.12);
+      
+      &::placeholder {
+        color: rgba(0,0,0,0.4);
+      }
     }
   }
 `;
 
-const WidgetButton = styled.button`
-  background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
-  color: white;
-  padding: 14px 24px;
-  border-radius: 30px;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: ${theme.fonts.body};
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.3s, transform 0.3s;
-  width: 100%;
-  margin-top: 8px;
+const WidgetButton = styled(AntButton)`
+  && {
+    background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
+    color: white;
+    padding: 14px 24px;
+    height: auto;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: ${theme.fonts.body};
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.3s;
+    width: 100%;
+    margin-top: 8px;
 
-  &:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+    &:hover, &:focus {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      color: white;
+    }
   }
 `;
 
-// Generic Section
+// generic section
 const Section = styled.section`
   padding: 100px 0;
 `;
@@ -327,7 +335,7 @@ const SectionBody = styled.p`
   margin: 0;
 `;
 
-// Solutions
+// solutions
 const CardsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -373,59 +381,9 @@ const SolutionCard = styled.div`
   }
 `;
 
-// Feature / Benefit Cards
-const FeatureCardsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 40px;
-`;
 
-const FeatureCard = styled.div`
-  background: ${theme.colors.surface};
-  border: 1px solid ${theme.colors.surfaceBorder};
-  border-radius: 16px;
-  padding: 28px;
-  transition: border-color 0.3s, transform 0.3s;
 
-  &:hover {
-    border-color: rgba(78, 205, 160, 0.3);
-    transform: translateY(-3px);
-  }
-`;
-
-const FeatureCardIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(78, 205, 160, 0.15), rgba(61, 74, 155, 0.15));
-  border: 1px solid rgba(78, 205, 160, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  font-size: 18px;
-  color: ${theme.colors.brandTeal};
-`;
-
-const FeatureCardTitle = styled.h3`
-  font-family: ${theme.fonts.heading};
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: ${theme.colors.textPrimary};
-  margin: 0 0 10px;
-`;
-
-const FeatureCardBody = styled.p`
-  font-family: ${theme.fonts.body};
-  font-size: 16px;
-  line-height: 1.6;
-  color: ${theme.colors.textMuted};
-  margin: 0;
-`;
-
-// Side By Side layout
+// side by side layout
 const SideBySide = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -466,7 +424,7 @@ const StructuredLabel = styled.strong`
   margin-bottom: 8px;
 `;
 
-// CTA Stats
+// cta stats
 const CtaBox = styled.div<{ $bgImage?: string }>`
   background: ${p => p.$bgImage ? `linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url("${p.$bgImage}") center/cover no-repeat` : theme.colors.surface};
   border: 1px solid ${theme.colors.surfaceBorder};
@@ -476,13 +434,13 @@ const CtaBox = styled.div<{ $bgImage?: string }>`
   overflow: hidden;
   position: relative;
 
-  /* Dark mode: force near-white heading */
+  // dark mode force near white heading
   h2 {
     color: #f5f5f7 !important;
     -webkit-text-fill-color: #f5f5f7 !important;
   }
 
-  /* Light mode: switch to white overlay + dark text */
+  // light mode switch to white overlay dark text
   [data-theme='light'] & {
     background: ${p => p.$bgImage ? `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.82)), url("${p.$bgImage}") center/cover no-repeat` : theme.colors.surface};
     h2 {
@@ -535,7 +493,7 @@ const StatItem = styled.div`
   }
 `;
 
-// FAQ
+// faq
 const FaqSection = styled.div`
   max-width: 100%;
   margin: 0 auto;
@@ -623,9 +581,7 @@ const AccordionItem = ({ question, children, isOpen, onToggle }: { question: str
   </FaqItem>
 );
 
-// Feature icons by index
-const FEATURE_ICONS = ["🤖", "📞", "⚙️", "💬", "📊", "🔗"];
-const BENEFIT_ICONS = ["⭐", "⚡", "📅", "🧠", "💰", "✅"];
+
 
 interface Props {
   content: IndustryContent;
@@ -636,7 +592,7 @@ export default function IndustryPageTemplate({ content }: Props) {
 
   return (
     <Page>
-      {/* Hero */}
+      {/* hero */}
       <HeroSection $bgImage={content.hero.image}>
         <Container>
           <HeroGrid>
@@ -673,7 +629,7 @@ export default function IndustryPageTemplate({ content }: Props) {
 
       <SectionDivider />
 
-      {/* Solutions */}
+      {/* solutions */}
       <Section>
         <Container>
           <SectionHead>
@@ -696,7 +652,7 @@ export default function IndustryPageTemplate({ content }: Props) {
 
       <SectionDivider />
 
-      {/* Features */}
+      {/* features */}
       <Section>
         <Container>
           <SectionHead>
@@ -721,7 +677,7 @@ export default function IndustryPageTemplate({ content }: Props) {
 
       <SectionDivider />
 
-      {/* Benefits */}
+      {/* benefits */}
       <Section>
         <Container>
           <SectionHead>
@@ -747,7 +703,7 @@ export default function IndustryPageTemplate({ content }: Props) {
 
       <SectionDivider />
 
-      {/* Final CTA / Stats Band */}
+      {/* final cta stats band */}
       <Section>
         <Container>
           <CtaBox $bgImage={content.statsImage}>
@@ -775,7 +731,7 @@ export default function IndustryPageTemplate({ content }: Props) {
 
       <SectionDivider />
 
-      {/* FAQ */}
+      {/* faq */}
       <Section>
         <Container>
           <SectionHead>

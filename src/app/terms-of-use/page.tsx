@@ -52,7 +52,7 @@ export default function TermsOfUsePage() {
       </HeroBanner>
 
       <BodyWrap>
-        {/* Sticky TOC */}
+        {/* sticky toc */}
         <TocWrap>
           <TocTitle>On this page</TocTitle>
           <TocList>
@@ -64,7 +64,7 @@ export default function TermsOfUsePage() {
           </TocList>
         </TocWrap>
 
-        {/* Content */}
+        {/* content */}
         <ContentArea ref={contentRef}>
           <P style={{ marginBottom: 32 }}>
             Welcome to Convoa. These Terms of Service (&quot;Terms&quot;) govern your access to and use of the Convoa

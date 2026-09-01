@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { theme } from "@/lib/theme";
-import { motion } from "framer-motion";
+import Image from "next/image";
 import { HeroCanvas } from "@/components/ui/HeroCanvas";
 import { featuresHero, featuresList, featuresCta } from "./features";
 
-// Shared Styles
+// shared styles
 const Page = styled.div`
   background: ${theme.colors.background};
   color: ${theme.colors.textPrimary};
@@ -24,13 +24,6 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 0 24px;
   @media(max-width:768px){ padding: 0 16px; }
-`;
-
-const SectionHead = styled.div`
-  text-align: center;
-  margin-bottom: 56px;
-  position: relative;
-  z-index: 1;
 `;
 
 const EyebrowWrap = styled.div`
@@ -129,7 +122,7 @@ const HeroGlow = styled.div`
   background: radial-gradient(ellipse at top center, rgba(78, 205, 160, 0.15) 0%, transparent 70%);
 `;
 
-// Feature Sections
+// feature sections
 
 const FeatureRow = styled.div<{ $reverse?: boolean }>`
   display: flex;
@@ -249,7 +242,7 @@ const GlowingButton = styled.a`
 `;
 
 
-// Full Width Feature Section
+// full width feature section
 const FullWidthFeature = styled.div`
   width: 100%;
   position: relative;
@@ -262,7 +255,7 @@ const FullWidthFeature = styled.div`
   background-image: url('/images/features/feature_human_dark.jpg');
   box-shadow: 0 24px 48px rgba(0,0,0,0.4);
 
-  /* Dark overlay for contrast */
+  // dark overlay for contrast
   &::before {
     content: '';
     position: absolute;
@@ -283,7 +276,7 @@ const FullWidthFeatureContent = styled.div`
   background: transparent;
   z-index: 1;
 
-  /* Force light text to remain readable over the dark image background in any theme */
+  // force light text to remain readable over the dark image background in any theme
   ${FeatureEyebrow} {
     background: rgba(0, 0, 0, 0.7) !important;
     border-color: rgba(255, 255, 255, 0.15) !important;
@@ -315,7 +308,7 @@ const FullWidthFeatureContent = styled.div`
   }
 `;
 
-// CTA Section
+// cta section
 const CtaSection = styled.section`
   padding: 120px 24px;
   text-align: center;
@@ -351,7 +344,7 @@ export const FeaturesPageTemplate = () => {
       </HeroSection>
 
       <Container>
-        {/* Feature 1 */}
+        {/* feature 1 */}
         <FeatureRow>
           <FeatureContent>
             <FeatureEyebrowWrap>
@@ -362,12 +355,12 @@ export const FeaturesPageTemplate = () => {
           </FeatureContent>
           <FeatureVisual>
             <AppScreenshot>
-              <img src={featuresList[0].image} alt={featuresList[0].title} />
+              <Image src={featuresList[0].image || ""} alt={featuresList[0].title} width={800} height={600} style={{ width: '100%', height: 'auto' }} />
             </AppScreenshot>
           </FeatureVisual>
         </FeatureRow>
 
-        {/* Feature 2 */}
+        {/* feature 2 */}
         <FeatureRow $reverse>
           <FeatureContent>
             <FeatureEyebrowWrap>
@@ -382,7 +375,7 @@ export const FeaturesPageTemplate = () => {
         </FeatureRow>
       </Container>
 
-      {/* Feature 3 */}
+      {/* feature 3 */}
       <FullWidthFeature>
         <FullWidthFeatureContent>
           <FeatureEyebrowWrap>
@@ -395,7 +388,7 @@ export const FeaturesPageTemplate = () => {
       </FullWidthFeature>
 
       <Container>
-        {/* Feature 4 */}
+        {/* feature 4 */}
         <FeatureRow $reverse>
           <FeatureContent>
             <FeatureEyebrowWrap>
@@ -406,12 +399,12 @@ export const FeaturesPageTemplate = () => {
           </FeatureContent>
           <FeatureVisual>
             <AppScreenshot>
-              <img src={featuresList[3].image} alt={featuresList[3].title} />
+              <Image src={featuresList[3].image || ""} alt={featuresList[3].title} width={800} height={600} style={{ width: '100%', height: 'auto' }} />
             </AppScreenshot>
           </FeatureVisual>
         </FeatureRow>
 
-        {/* Feature 5 */}
+        {/* feature 5 */}
         <FeatureRow>
           <FeatureContent>
             <FeatureEyebrowWrap>
@@ -422,18 +415,18 @@ export const FeaturesPageTemplate = () => {
           </FeatureContent>
           <FeatureVisual>
             <AppScreenshot>
-              <img src={featuresList[4].image} alt={featuresList[4].title} style={{ objectPosition: 'left top' }} />
+              <Image src={featuresList[4].image || ""} alt={featuresList[4].title} width={800} height={600} style={{ objectPosition: 'left top', width: '100%', height: 'auto' }} />
             </AppScreenshot>
           </FeatureVisual>
         </FeatureRow>
 
       </Container>
 
-      {/* Feature 6 */}
+      {/* feature 6 */}
       <div style={{ position: 'relative', width: '100%', padding: '140px 24px', display: 'flex', justifyContent: 'center', overflow: 'hidden', borderTop: `1px solid ${theme.colors.surfaceBorder}`, borderBottom: `1px solid ${theme.colors.surfaceBorder}` }}>
         <video autoPlay loop muted playsInline style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.6 }} src={featuresList[5].video} />
         
-        {/* Gradient Overlay */}
+        {/* gradient overlay */}
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.9) 100%)', zIndex: 0 }} />
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
