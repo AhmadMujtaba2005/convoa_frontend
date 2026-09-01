@@ -329,6 +329,8 @@ const WidgetButton = styled(AntButton)`
       transform: translateY(-2px);
       color: white !important;
       background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo}) !important;
+      border: none !important;
+      outline: none !important;
     }
   }
 `;
