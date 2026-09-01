@@ -318,9 +318,17 @@ const WidgetButton = styled(AntButton)`
     cursor: pointer;
     width: 100%;
     margin-top: 8px;
+    transition: opacity 0.3s, transform 0.3s;
 
     &::before, &::after {
       display: none !important;
+    }
+
+    &:hover, &:focus {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      color: white !important;
+      background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo}) !important;
     }
   }
 `;
