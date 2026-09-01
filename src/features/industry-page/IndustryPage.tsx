@@ -267,7 +267,7 @@ const Input = styled(AntInput)`
     border-radius: 8px;
     padding: 14px;
     color: white;
-    margin-bottom: 12px;
+    margin-bottom: 24px;
     font-size: 15px;
     font-family: ${theme.fonts.body};
     box-sizing: border-box;
@@ -371,7 +371,7 @@ const WidgetErrorMsg = styled.p`
   padding-left: 2px;
   height: 0;
   overflow: visible;
-  transform: translateY(-8px);
+  transform: translateY(-22px);
 `;
 
 const WidgetSuccessBox = styled.div`
