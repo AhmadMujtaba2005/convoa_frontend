@@ -239,7 +239,6 @@ const WidgetCard = styled.div`
   animation: ${fadeUp} 0.8s ease-out;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 
   &::before {
     content: '';
@@ -249,12 +248,6 @@ const WidgetCard = styled.div`
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(78,205,160,0.4), transparent);
-  }
-
-  &:hover {
-    border-color: rgba(78,205,160,0.35);
-    transform: translateY(-4px);
-    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
   }
 `;
 
@@ -311,6 +304,7 @@ const Input = styled(AntInput)`
     &.ant-input-status-error,
     &.ant-input-affix-wrapper-status-error {
       border-color: #ff4d4f !important;
+      background: rgba(255, 77, 79, 0.04) !important;
       box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
     }
 
