@@ -270,6 +270,12 @@ const Input = styled(AntInput)`
       color: ${theme.colors.textDim};
     }
 
+    &.ant-input-status-error,
+    &.ant-input-affix-wrapper-status-error {
+      border-color: #ff4d4f !important;
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
+    }
+
     // light mode readable inputs on the white card
     [data-theme='light'] & {
       background: rgba(0,0,0,0.04);
@@ -299,12 +305,56 @@ const WidgetButton = styled(AntButton)`
     width: 100%;
     margin-top: 8px;
 
+    &::before, &::after {
+      display: none !important;
+    }
+
     &:hover, &:focus {
       opacity: 0.9;
       transform: translateY(-2px);
       color: white;
+      background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
     }
   }
+`;
+
+const WidgetErrorMsg = styled.p`
+  color: #ff6b6b;
+  font-size: 12px;
+  font-family: ${theme.fonts.body};
+  margin: -6px 0 6px;
+  padding-left: 2px;
+`;
+
+const WidgetSuccessBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  animation: ${fadeUp} 0.5s ease both;
+`;
+
+const WidgetSuccessIcon = styled.div`
+  font-size: 36px;
+  color: ${theme.colors.brandTeal};
+`;
+
+const WidgetSuccessTitle = styled.h3`
+  font-family: ${theme.fonts.heading};
+  font-size: 18px;
+  font-weight: 700;
+  color: ${theme.colors.textPrimary};
+  margin: 0;
+`;
+
+const WidgetSuccessText = styled.p`
+  font-size: 14px;
+  color: ${theme.colors.textMuted};
+  margin: 0;
+  line-height: 1.6;
 `;
 
 // generic section
@@ -590,6 +640,50 @@ interface Props {
 export default function IndustryPageTemplate({ content }: Props) {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
+  // Call Me Now widget state
+  const [widgetForm, setWidgetForm] = useState({ fullName: '', phone: '', email: '', company: '' });
+  const [widgetErrors, setWidgetErrors] = useState<Record<string, string>>({});
+  const [widgetSubmitting, setWidgetSubmitting] = useState(false);
+  const [widgetSubmitted, setWidgetSubmitted] = useState(false);
+
+  const handleWidgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setWidgetForm(prev => ({ ...prev, [name]: value }));
+    if (widgetErrors[name]) setWidgetErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const validateWidget = () => {
+    const errs: Record<string, string> = {};
+    if (!widgetForm.fullName.trim()) errs.fullName = 'Full name is required.';
+    if (!widgetForm.phone.trim()) errs.phone = 'Phone number is required.';
+    if (!widgetForm.email.trim()) errs.email = 'Email address is required.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(widgetForm.email)) errs.email = 'Enter a valid email.';
+    return errs;
+  };
+
+  const handleWidgetSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const errs = validateWidget();
+    if (Object.keys(errs).length > 0) { setWidgetErrors(errs); return; }
+    setWidgetSubmitting(true);
+    try {
+      const res = await fetch('/api/call-me', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(widgetForm),
+      });
+      if (res.ok) {
+        setWidgetSubmitted(true);
+      } else {
+        setWidgetErrors({ form: 'Failed to send. Please try again.' });
+      }
+    } catch {
+      setWidgetErrors({ form: 'An error occurred. Please try again.' });
+    } finally {
+      setWidgetSubmitting(false);
+    }
+  };
+
   return (
     <Page>
       {/* hero */}
@@ -615,12 +709,55 @@ export default function IndustryPageTemplate({ content }: Props) {
             </div>
             <div>
               <WidgetCard>
-                <WidgetLabel>Experience how Convoa&apos;s AI assistant can elevate your customer experience:</WidgetLabel>
-                <Input placeholder="Full Name" />
-                <Input placeholder="Phone Number" />
-                <Input placeholder="Email Address" />
-                <Input placeholder="Company Name" />
-                <WidgetButton>Call Me Now</WidgetButton>
+                {widgetSubmitted ? (
+                  <WidgetSuccessBox>
+                    <WidgetSuccessIcon>✅</WidgetSuccessIcon>
+                    <WidgetSuccessTitle>We&apos;ll call you soon!</WidgetSuccessTitle>
+                    <WidgetSuccessText>
+                      Thanks! Our team will reach out to you shortly.
+                    </WidgetSuccessText>
+                  </WidgetSuccessBox>
+                ) : (
+                  <form onSubmit={handleWidgetSubmit} noValidate>
+                    <WidgetLabel>Experience how Convoa&apos;s AI assistant can elevate your customer experience:</WidgetLabel>
+                    <Input
+                      name="fullName"
+                      placeholder="Full Name *"
+                      value={widgetForm.fullName}
+                      onChange={handleWidgetChange}
+                      status={widgetErrors.fullName ? 'error' : ''}
+                    />
+                    {widgetErrors.fullName && <WidgetErrorMsg>{widgetErrors.fullName}</WidgetErrorMsg>}
+                    <Input
+                      name="phone"
+                      type="tel"
+                      placeholder="Phone Number *"
+                      value={widgetForm.phone}
+                      onChange={handleWidgetChange}
+                      status={widgetErrors.phone ? 'error' : ''}
+                    />
+                    {widgetErrors.phone && <WidgetErrorMsg>{widgetErrors.phone}</WidgetErrorMsg>}
+                    <Input
+                      name="email"
+                      type="email"
+                      placeholder="Email Address *"
+                      value={widgetForm.email}
+                      onChange={handleWidgetChange}
+                      status={widgetErrors.email ? 'error' : ''}
+                    />
+                    {widgetErrors.email && <WidgetErrorMsg>{widgetErrors.email}</WidgetErrorMsg>}
+                    <Input
+                      name="company"
+                      placeholder="Company Name"
+                      value={widgetForm.company}
+                      onChange={handleWidgetChange}
+                    />
+                    {widgetErrors.form && <WidgetErrorMsg>{widgetErrors.form}</WidgetErrorMsg>}
+                    <WidgetButton htmlType="submit" loading={widgetSubmitting} disabled={widgetSubmitting}>
+                      {widgetSubmitting ? 'Sending...' : 'Call Me Now'}
+                    </WidgetButton>
+                  </form>
+                )}
               </WidgetCard>
             </div>
           </HeroGrid>

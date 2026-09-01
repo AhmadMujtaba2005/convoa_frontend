@@ -326,6 +326,14 @@ const inputBase = `
     &::placeholder {
       color: ${theme.colors.textDim};
     }
+
+    &.ant-input-status-error,
+    &.ant-input-affix-wrapper-status-error,
+    &.ant-input-textarea-status-error {
+      border-color: #ff4d4f !important;
+      background: rgba(255, 77, 79, 0.04) !important;
+      box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.1) !important;
+    }
   }
 `;
 
@@ -417,6 +425,15 @@ const Disclaimer = styled.p`
   }
 `;
 
+const FieldError = styled.p`
+  color: #ff4d4f;
+  font-size: 12px;
+  font-family: ${theme.fonts.body};
+  margin: -10px 0 2px;
+  padding-left: 2px;
+  line-height: 1.4;
+`;
+
 // success state
 const SuccessBox = styled.div`
   display: flex;
@@ -480,15 +497,29 @@ export default function ContactUsPage() {
   const [form, setForm] = useState({
     firstName: "", lastName: "", phone: "", email: "", company: "", message: ""
   });
-
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    if (formErrors[name]) setFormErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const validate = () => {
+    const errs: Record<string, string> = {};
+    if (!form.firstName.trim()) errs.firstName = 'First name is required.';
+    if (!form.lastName.trim()) errs.lastName = 'Last name is required.';
+    if (!form.email.trim()) errs.email = 'Email address is required.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Enter a valid email address.';
+    if (!form.message.trim()) errs.message = 'Please enter a message.';
+    return errs;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setFormErrors(errs); return; }
     setIsSubmitting(true);
 
     try {
@@ -592,7 +623,7 @@ export default function ContactUsPage() {
                 <FormTitle>Send us a message</FormTitle>
                 <FormSubtitle>Fill out the form and we&apos;ll be in touch shortly.</FormSubtitle>
 
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} noValidate>
                   <Row>
                     <FieldWrap>
                       <Label htmlFor="firstName">First Name</Label>
@@ -603,8 +634,9 @@ export default function ContactUsPage() {
                         placeholder="John"
                         value={form.firstName}
                         onChange={handleChange}
-                        required
+                        status={formErrors.firstName ? 'error' : ''}
                       />
+                      {formErrors.firstName && <FieldError>{formErrors.firstName}</FieldError>}
                     </FieldWrap>
                     <FieldWrap>
                       <Label htmlFor="lastName">Last Name</Label>
@@ -615,8 +647,9 @@ export default function ContactUsPage() {
                         placeholder="Smith"
                         value={form.lastName}
                         onChange={handleChange}
-                        required
+                        status={formErrors.lastName ? 'error' : ''}
                       />
+                      {formErrors.lastName && <FieldError>{formErrors.lastName}</FieldError>}
                     </FieldWrap>
                   </Row>
 
@@ -644,8 +677,9 @@ export default function ContactUsPage() {
                       placeholder="john@company.com"
                       value={form.email}
                       onChange={handleChange}
-                      required
+                      status={formErrors.email ? 'error' : ''}
                     />
+                    {formErrors.email && <FieldError>{formErrors.email}</FieldError>}
                   </FieldWrap>
 
                   <FieldWrap>
@@ -668,8 +702,9 @@ export default function ContactUsPage() {
                       placeholder="Tell us about your business and how we can help..."
                       value={form.message}
                       onChange={handleChange}
-                      required
+                      status={formErrors.message ? 'error' : ''}
                     />
+                    {formErrors.message && <FieldError>{formErrors.message}</FieldError>}
                   </FieldWrap>
 
                   <SubmitBtn htmlType="submit" disabled={isSubmitting}>
