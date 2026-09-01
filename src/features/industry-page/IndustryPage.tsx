@@ -270,6 +270,14 @@ const Input = styled(AntInput)`
       color: ${theme.colors.textDim};
     }
 
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover, 
+    &:-webkit-autofill:focus, 
+    &:-webkit-autofill:active {
+      transition: background-color 5000s ease-in-out 0s;
+      -webkit-text-fill-color: white !important;
+    }
+
     &.ant-input-status-error,
     &.ant-input-affix-wrapper-status-error {
       border-color: #ff4d4f !important;
@@ -284,6 +292,13 @@ const Input = styled(AntInput)`
       
       &::placeholder {
         color: rgba(0,0,0,0.4);
+      }
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover, 
+      &:-webkit-autofill:focus, 
+      &:-webkit-autofill:active {
+        -webkit-text-fill-color: #111111 !important;
       }
     }
   }
@@ -301,19 +316,11 @@ const WidgetButton = styled(AntButton)`
     font-family: ${theme.fonts.body};
     border: none;
     cursor: pointer;
-    transition: opacity 0.3s, transform 0.3s;
     width: 100%;
     margin-top: 8px;
 
     &::before, &::after {
       display: none !important;
-    }
-
-    &:hover, &:focus {
-      opacity: 0.9;
-      transform: translateY(-2px);
-      color: white;
-      background: linear-gradient(135deg, ${theme.colors.brandTeal}, ${theme.colors.brandIndigo});
     }
   }
 `;
@@ -322,8 +329,11 @@ const WidgetErrorMsg = styled.p`
   color: #ff6b6b;
   font-size: 12px;
   font-family: ${theme.fonts.body};
-  margin: -6px 0 6px;
+  margin: 0;
   padding-left: 2px;
+  height: 0;
+  overflow: visible;
+  transform: translateY(-8px);
 `;
 
 const WidgetSuccessBox = styled.div`

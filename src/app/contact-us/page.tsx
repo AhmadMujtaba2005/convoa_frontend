@@ -327,6 +327,14 @@ const inputBase = `
       color: ${theme.colors.textDim};
     }
 
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover, 
+    &:-webkit-autofill:focus, 
+    &:-webkit-autofill:active {
+      transition: background-color 5000s ease-in-out 0s;
+      -webkit-text-fill-color: ${theme.colors.textPrimary} !important;
+    }
+
     &.ant-input-status-error,
     &.ant-input-affix-wrapper-status-error,
     &.ant-input-textarea-status-error {
@@ -429,9 +437,12 @@ const FieldError = styled.p`
   color: #ff4d4f;
   font-size: 12px;
   font-family: ${theme.fonts.body};
-  margin: -10px 0 2px;
+  margin: 0;
   padding-left: 2px;
   line-height: 1.4;
+  height: 0;
+  overflow: visible;
+  transform: translateY(-8px);
 `;
 
 // success state
