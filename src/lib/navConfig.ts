@@ -2,7 +2,7 @@ export const industryNav = [
     {
         group: "Health",
         items: [
-            { label: "Dental", href: "/dental-practice" },
+            { label: "Dental", href: "/dental" },
             { label: "Chiropractic", href: "/chiropractic" },
         ],
     },

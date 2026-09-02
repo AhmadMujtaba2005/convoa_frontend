@@ -2,46 +2,46 @@ import { IndustryContent } from "./types";
 
 export const injuryLawyers: IndustryContent = {
   slug: "injury-lawyers",
-  metaTitle: "Answering Service for Personal Injury Lawyers | Convoa",
-  metaDescription: "AI answering service for Personal Injury Lawyers",
+  metaTitle: "Personal Injury Answering Service | Convoa",
+  metaDescription: "AI answering service for Personal Injury Law Firms",
   statsImage: "/images/industry-pictures/injury-lawyer-pictures/stats.png",
-  faqImage: "/images/industry-pictures/injury-lawyer-pictures/faq.png",
+  
   hero: {
-    eyebrow: "AI answering service for Personal Injury Lawyers",
-    heading: "Capture Every Case Lead, 24/7",
-    subheading: "AI answers and qualifies calls while you win cases.",
-    targetAudience: "For solo practitioners and law firms",
+    eyebrow: "AI answering service for Law Firms",
+    heading: "Capture Every High-Value Case",
+    subheading: "Be the first to respond when it matters most.",
+    targetAudience: "For personal injury attorneys and law firms",
     image: "/images/industry-pictures/injury-lawyer-pictures/hero.png",
   },
   solutions: {
-    heading: "Unlock 24/7 case intakes without breaking a sweat.",
-    subheading: "Meet the AI solution tailored for legal practices.",
+    heading: "Intake processes that never sleep.",
+    subheading: "An AI solution built for legal lead qualification.",
     cards: [
-      { title: "Keep appointments organized", image: "/images/industry-pictures/injury-lawyer-pictures/solution-1.png" },
-      { title: "Eliminate unwanted and cold calls", image: "/images/industry-pictures/injury-lawyer-pictures/solution-2.png" },
-      { title: "Reduce case intake time and effort", image: "/images/industry-pictures/injury-lawyer-pictures/solution-3.png" }
+      { title: "Conduct Initial Intake", image: "/images/industry-pictures/injury-lawyer-pictures/solution-1.png" },
+      { title: "Schedule Consultations", image: "/images/industry-pictures/injury-lawyer-pictures/solution-2.png" },
+      { title: "Gather Preliminary Facts", image: "/images/industry-pictures/injury-lawyer-pictures/solution-3.png" }
     ]
   },
   features: {
-    heading: "Features that adapt to your needs.",
+    heading: "Features built for legal compliance.",
     image: "/images/industry-pictures/injury-lawyer-pictures/features.png",
     bullets: [
-      { title: "AI that boosts customer experience:", description: "Convoa learns from your website, policies and previous calls — so every call is accurately handled like a pro." },
-      { title: "Never miss a call:", description: "All your calls are answered, no matter the time or volume. Your AI assistant is the perfect partner for your frontdesk, enabling your team to handle more cases." },
-      { title: "Customizable:", description: "Your AI agent is tailored for personal injury law firms. Select from engaging and multilingual AI voices, integrate with your existing scheduling platforms, and view realtime analytics." }
+      { title: "Practice Management Sync:", description: "Integrates with Clio, MyCase, and Filevine to log intake details directly into a new matter." },
+      { title: "Empathetic Response Engine:", description: "Trained to handle distressed callers with care, professionalism, and appropriate tone." },
+      { title: "Conflict Check Data:", description: "Gathers names and incident dates to help your team run preliminary conflict checks faster." }
     ]
   },
   benefits: {
-    heading: "Benefits beyond answering calls.",
-    subheading: "Grow your business without worrying about the calls.",
+    heading: "Maximize your marketing ROI.",
+    subheading: "Stop letting expensive leads go to voicemail.",
     image: "/images/industry-pictures/injury-lawyer-pictures/benefits.png",
     bullets: [
-      { title: "AI Gatekeeper:", description: "Filter unsolicited and unwanted calls, allowing real customers to receive priority service." },
-      { title: "Increased efficiency:", description: "With Convoa, there’s zero downtime and you’ll have increased response times and efficiency across all your communication and scheduling." },
-      { title: "Enhanced customer experience:", description: "Customers are answered on the first ring, and can schedule appointments while your team rests. Convoa is available 24/7 and prioritizes emergencies." },
-      { title: "Critical business understanding:", description: "We understand the needs of law firms — Convoa can be setup to start answering calls today." },
-      { title: "Cost savings:", description: "Provide 24/7 service without increasing operational costs, capture leads and execute outreach without any additional systems." },
-      { title: "Proven results:", description: "Track every conversation, and experience an immediate increase in customer satisfaction." }
+      { title: "Win the Race to Answer:", description: "Accident victims often call the first firm they find. Convoa ensures you always pick up instantly." },
+      { title: "Filter Non-Viable Claims:", description: "Ask qualifying questions (e.g., date of injury, fault) to weed out cases that don't fit your criteria." },
+      { title: "24/7 Availability:", description: "Accidents don't just happen during business hours. Secure leads on nights, weekends, and holidays." },
+      { title: "Ensure Accuracy:", description: "Transcribe intake details precisely, eliminating the errors that happen during manual note-taking." },
+      { title: "Reduce Intake Costs:", description: "Handle high call volumes without staffing a massive 24/7 intake department." },
+      { title: "Focus on Litigation:", description: "Let your attorneys focus on winning cases rather than answering the phone to pre-screen leads." }
     ]
   }
 };

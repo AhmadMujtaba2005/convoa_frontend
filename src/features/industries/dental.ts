@@ -1,47 +1,47 @@
 import { IndustryContent } from "./types";
 
 export const dental: IndustryContent = {
-  slug: "dental-practice",
+  slug: "dental",
   metaTitle: "Dental Answering Service | Convoa",
-  metaDescription: "AI answering service for Dental Practices",
+  metaDescription: "AI answering service for Dental clinics",
   statsImage: "/images/industry-pictures/dental-pictures/stats.png",
-  faqImage: "/images/industry-pictures/dental-pictures/faq.png",
+  
   hero: {
-    eyebrow: "AI answering service for Dental Practices",
-    heading: "Never Miss a Patient Call",
-    subheading: "Answer every call, book every appointment, 24/7.",
-    targetAudience: "For independent practices and dental networks",
+    eyebrow: "AI answering service for Dentists",
+    heading: "Fill Your Chairs, Not Your Voicemail",
+    subheading: "Handle emergencies and routine cleanings automatically.",
+    targetAudience: "For family practices and specialized dental surgeons",
     image: "/images/industry-pictures/dental-pictures/hero.png",
   },
   solutions: {
-    heading: "Delight patients by providing 24/7 customer service.",
-    subheading: "An AI solution tailored to the needs of dentists.",
+    heading: "A seamless experience from the first ring.",
+    subheading: "An AI solution built for modern dental practices.",
     cards: [
-      { title: "Spend more time with your patients", image: "/images/industry-pictures/dental-pictures/solution-1.png" },
-      { title: "Manage peak season stress", image: "/images/industry-pictures/dental-pictures/solution-2.png" },
-      { title: "Automate appointment reminders", image: "/images/industry-pictures/dental-pictures/solution-3.png" }
+      { title: "Triage Dental Emergencies", image: "/images/industry-pictures/dental-pictures/solution-1.png" },
+      { title: "Schedule Routine Cleanings", image: "/images/industry-pictures/dental-pictures/solution-2.png" },
+      { title: "Pre-Screen Insurance Queries", image: "/images/industry-pictures/dental-pictures/solution-3.png" }
     ]
   },
   features: {
-    heading: "Features that adapt to your needs.",
+    heading: "Features built for the front desk.",
     image: "/images/industry-pictures/dental-pictures/features.png",
     bullets: [
-      { title: "AI that boosts customer experience:", description: "Our AI learns from your website, policies and customer queries — so every call is handled accurately like a pro." },
-      { title: "Never miss a call:", description: "All your calls are answered, no matter the time or volume. Our AI assistant is the perfect partner for your frontdesk, enabling more work to get done." },
-      { title: "Customizable:", description: "Your AI agent is tailored to your dental practice needs. Engaging and multilingual voices, integrate with your existing CRM and scheduling platforms, and view realtime analytics." }
+      { title: "Practice Management Integration:", description: "Directly reads and writes to popular dental software like Dentrix and Eaglesoft to keep your schedule accurate." },
+      { title: "After-Hours Escalation:", description: "Identifies true emergencies (e.g., knocked-out tooth) and patches them through to the on-call dentist immediately." },
+      { title: "Procedure-Specific Logic:", description: "Understands the difference in booking length between a simple checkup and a root canal." }
     ]
   },
   benefits: {
-    heading: "Benefits beyond answering calls.",
-    subheading: "Grow your business without worrying about the calls.",
+    heading: "More smiles, less stress.",
+    subheading: "Transform how your clinic handles patient flow.",
     image: "/images/industry-pictures/dental-pictures/benefits.png",
     bullets: [
-      { title: "Enhanced customer experience:", description: "Customers are answered on the first ring, and can schedule appointments while your team rests. Convoa is available 24/7 and prioritizes emergencies." },
-      { title: "Increased efficiency:", description: "With Convoa, there’s zero downtime and you’ll have increased response times and efficiency across all your communication and scheduling." },
-      { title: "Optimized appointment scheduling:", description: "Schedule appointments based on location, time, urgency and technician specialization." },
-      { title: "Critical business understanding:", description: "We understand the needs of dental offices — Convoa can be setup and start answering calls today." },
-      { title: "Cost savings:", description: "Provide 24/7 service without increasing operational costs, capture leads and execute outreach without any additional systems." },
-      { title: "Proven results:", description: "Track every conversation, and experience an immediate increase in customer satisfaction." }
+      { title: "Focus on the Patient:", description: "Keep your front desk focused on the patients physically in the clinic, rather than constantly jumping to the ringing phone." },
+      { title: "Capture After-Hours Leads:", description: "Toothaches happen at 2 AM. Convoa ensures you capture those patients for your morning schedule." },
+      { title: "Reduce Hygiene No-Shows:", description: "Proactively reach out to patients overdue for their 6-month cleanings and get them booked." },
+      { title: "Streamline New Patient Intake:", description: "Collect necessary preliminary information before they arrive, speeding up the waiting room experience." },
+      { title: "Ensure Privacy:", description: "Maintain strict HIPAA compliance across all recorded interactions and transcriptions." },
+      { title: "Lower Staff Burnout:", description: "Relieve your receptionists from the repetitive task of answering routine questions like 'Are you taking new patients?'" }
     ]
   }
 };

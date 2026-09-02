@@ -2,19 +2,20 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import { CheckCircleFilled, StarFilled, ArrowRightOutlined } from "@ant-design/icons";
+import { CheckCircleFilled, StarFilled, ArrowRightOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Brain, Calendar, ChartBar, Users } from "lucide-react";
 import { heroContent, homeCards } from "./home";
 import { theme } from "@/lib/theme";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import Image from "next/image";
-import { 
+import {
   twinkle, sparkleAnim, SpinAnim, SpinAnimReverse,
   StarField, Star, Sparkle, STARS, SPARKLES, HeroGlow,
   SectionBgArc, ArcSvg, SectionBgHelix, HelixSvg, SectionBgLines, LinesSvg,
-  CanvasStats, CanvasFeatures, CanvasSolutions, OrbitRing, 
+  CanvasStats, CanvasFeatures, CanvasSolutions, OrbitRing,
   CanvasIntegrations, CanvasSteps, CanvasFocus, TestimonialDot, CanvasTestimonials, CanvasCta
 } from "@/components/ui/HomePageCanvas";
+import { HeroInteractiveVisual } from "@/components/ui/HeroInteractiveVisual";
 
 // interfaces
 interface Stat { value: string; label: string; }
@@ -109,6 +110,24 @@ const FunnelGlow = styled.div`
   background: radial-gradient(ellipse at top center, rgba(78, 205, 160, 0.40) 0%, rgba(78, 205, 160, 0.15) 50%, transparent 80%);
   mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+`;
+
+const GlowingEyebrow = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: ${theme.colors.brandTeal};
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  
+  &::before, &::after {
+    content: '✦';
+    font-size: 10px;
+    opacity: 0.5;
+  }
 `;
 
 const SectionHead = styled.div`
@@ -256,7 +275,13 @@ const HeroCTARow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 16px;
   margin: 36px auto 36px;
+  @media(max-width: 480px) {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
 `;
 
 const GlowingButtonWrap = styled.a`
@@ -618,6 +643,51 @@ const SolutionsGrid = styled.div`
   @media(max-width: 900px){ grid-template-columns: 1fr; }
 `;
 
+
+const OrbContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 60px auto 40px;
+  width: 100%;
+  max-width: 300px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: -20%;
+    right: -20%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle at center, rgba(5, 10, 15, 0.95) 20%, rgba(5, 10, 15, 0.7) 45%, rgba(5, 10, 15, 0) 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+`;
+
+const OrbVideoWrap = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
+`;
+
+const OrbVideo = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: contrast(1.6) brightness(0.8);
+  pointer-events: none;
+`;
+
 const SolutionCard = styled.div`
   background: ${theme.colors.surface};
   border: 1px solid ${theme.colors.surfaceBorder};
@@ -901,7 +971,7 @@ const CtaSub = styled.p`
 `;
 
 // component
-export default function HomePageTemplate({
+export default function HomePage({
   hero, cards, trustedBy, solutions, integrations, steps, focus, industries, cta,
 }: Props) {
   const solutionImages = [
@@ -909,6 +979,7 @@ export default function HomePageTemplate({
     "/images/solutions/cleaning.png",
     "/images/solutions/dentistry.png"
   ];
+  const ACTIVE_INTEGRATIONS = 2; // Threshold is 3
 
   return (
     <Page>
@@ -921,11 +992,20 @@ export default function HomePageTemplate({
         <HeroGlow />
         <HeroIconBadge>🎙️</HeroIconBadge>
         <HeroContent>
-          <EyebrowWrap style={{ maxWidth: '400px' }}><EyebrowPill>{hero.eyebrow}</EyebrowPill></EyebrowWrap>
+          <GlowingEyebrow>{hero.eyebrow}</GlowingEyebrow>
           <H1><GradientWord>{hero.title}</GradientWord></H1>
           <Body style={{ fontSize: "18px", maxWidth: "620px", margin: "0 auto", lineHeight: "1.6" }}>
             {hero.description}
           </Body>
+        </HeroContent>
+
+        <OrbContainer>
+          <OrbVideoWrap>
+            <OrbVideo autoPlay loop muted playsInline src="/Comp-2.mp4" />
+          </OrbVideoWrap>
+        </OrbContainer>
+
+        <HeroContent>
           <HeroCTARow>
             <GlowingButton href="https://app.convoa.ai/login">{hero.cta}</GlowingButton>
           </HeroCTARow>
@@ -934,7 +1014,6 @@ export default function HomePageTemplate({
               <Badge key={i}><CheckCircleFilled />{b}</Badge>
             ))}
           </BadgeGrid>
-
         </HeroContent>
         <HeroImageWrap>
           <HeroImageInner>
@@ -942,9 +1021,6 @@ export default function HomePageTemplate({
           </HeroImageInner>
         </HeroImageWrap>
       </HeroSection>
-
-      {/* divider */}
-      <SectionDivider />
 
       {/* stats */}
       <StatsStrip style={{ position: 'relative', overflow: 'hidden' }}>
@@ -998,6 +1074,7 @@ export default function HomePageTemplate({
                     src={solutionImages[i]}
                     alt={s.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     style={{ objectFit: "cover" }}
                   />
                 </SolutionCardVisual>
@@ -1015,69 +1092,71 @@ export default function HomePageTemplate({
       <SectionDivider />
 
       {/* integrations */}
-      <Section>
-        <CanvasIntegrations />
-        <Container style={{ position: 'relative', zIndex: 1 }}>
-          <IntegSplitLayout>
-            <IntegContentCol>
-              <EyebrowWrap style={{ justifyContent: 'flex-start', marginBottom: '24px' }}>
-                <EyebrowPill>{integrations.subtitle}</EyebrowPill>
-              </EyebrowWrap>
-              <H2 style={{ textAlign: 'left', margin: '0 0 24px 0' }}>{integrations.title}</H2>
-              <Body style={{ textAlign: 'left', margin: 0 }}>{integrations.description}</Body>
-            </IntegContentCol>
+      {ACTIVE_INTEGRATIONS >= 3 && (
+        <Section>
+          <CanvasIntegrations />
+          <Container style={{ position: 'relative', zIndex: 1 }}>
+            <IntegSplitLayout>
+              <IntegContentCol>
+                <EyebrowWrap style={{ justifyContent: 'flex-start', marginBottom: '24px' }}>
+                  <EyebrowPill>{integrations.subtitle}</EyebrowPill>
+                </EyebrowWrap>
+                <H2 style={{ textAlign: 'left', margin: '0 0 24px 0' }}>{integrations.title}</H2>
+                <Body style={{ textAlign: 'left', margin: 0 }}>{integrations.description}</Body>
+              </IntegContentCol>
 
-            <IntegCluster>
-              <ClusterCenter><span>convoa</span></ClusterCenter>
-              <ClusterApp $top="15%" $left="20%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-                <span style={{ fontSize: "14px" }}>Cal.com</span>
-              </ClusterApp>
-              <ClusterApp $top="8%" $left="45%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-                <div style={{ background: "#4285F4", width: "40px", height: "40px", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", color: "white" }}>31</div>
-              </ClusterApp>
-              <ClusterApp $top="12%" $left="70%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-                <span style={{ color: "#0078D4", fontSize: "36px" }}>O</span>
-              </ClusterApp>
+              <IntegCluster>
+                <ClusterCenter><span>convoa</span></ClusterCenter>
+                <ClusterApp $top="15%" $left="20%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
+                  <span style={{ fontSize: "14px" }}>Cal.com</span>
+                </ClusterApp>
+                <ClusterApp $top="8%" $left="45%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+                  <div style={{ background: "#4285F4", width: "40px", height: "40px", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", color: "white" }}>31</div>
+                </ClusterApp>
+                <ClusterApp $top="12%" $left="70%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+                  <span style={{ color: "#0078D4", fontSize: "36px" }}>O</span>
+                </ClusterApp>
 
-              <ClusterApp $top="35%" $left="5%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
-                <span style={{ fontSize: "24px" }}>📅</span>
-              </ClusterApp>
-              <ClusterApp $top="55%" $left="15%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }}>
-                <span style={{ fontSize: "24px" }}>📚</span>
-              </ClusterApp>
+                <ClusterApp $top="35%" $left="5%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
+                  <span style={{ fontSize: "24px" }}>📅</span>
+                </ClusterApp>
+                <ClusterApp $top="55%" $left="15%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }}>
+                  <span style={{ fontSize: "24px" }}>📚</span>
+                </ClusterApp>
 
-              <ClusterApp $top="30%" $left="85%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.6 }}>
-                <span style={{ fontSize: "24px" }}>⚙️</span>
-              </ClusterApp>
-              <ClusterApp $top="55%" $left="80%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.7 }}>
-                <span style={{ fontSize: "24px" }}>📊</span>
-              </ClusterApp>
+                <ClusterApp $top="30%" $left="85%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.6 }}>
+                  <span style={{ fontSize: "24px" }}>⚙️</span>
+                </ClusterApp>
+                <ClusterApp $top="55%" $left="80%" $size="72px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.7 }}>
+                  <span style={{ fontSize: "24px" }}>📊</span>
+                </ClusterApp>
 
-              <ClusterApp $top="80%" $left="30%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.8 }}>
-                <span style={{ fontSize: "24px" }}>📞</span>
-              </ClusterApp>
-              <ClusterApp $top="75%" $left="50%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.9 }}>
-                <div style={{ background: "white", color: "#111", width: "48px", height: "48px", borderRadius: "10px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#E03C31" }}>JUL</div>
-                  <div style={{ fontSize: "16px", fontWeight: 700 }}>17</div>
-                </div>
-              </ClusterApp>
-              <ClusterApp $top="70%" $left="75%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.0 }}>
-                <span style={{ fontSize: "16px" }}>_zapier</span>
-              </ClusterApp>
-            </IntegCluster>
-          </IntegSplitLayout>
+                <ClusterApp $top="80%" $left="30%" $size="64px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.8 }}>
+                  <span style={{ fontSize: "24px" }}>📞</span>
+                </ClusterApp>
+                <ClusterApp $top="75%" $left="50%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.9 }}>
+                  <div style={{ background: "white", color: "#111", width: "48px", height: "48px", borderRadius: "10px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ fontSize: "10px", fontWeight: 700, color: "#E03C31" }}>JUL</div>
+                    <div style={{ fontSize: "16px", fontWeight: 700 }}>17</div>
+                  </div>
+                </ClusterApp>
+                <ClusterApp $top="70%" $left="75%" $size="80px" initial={{ y: 10, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.0 }}>
+                  <span style={{ fontSize: "16px" }}>_zapier</span>
+                </ClusterApp>
+              </IntegCluster>
+            </IntegSplitLayout>
 
-          <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-            <AppScreenshot>
-              <Image src="/images/app-screenshots/Screenshot 2026-08-25 132006.webp" alt="Convoa Active Integrations" width={800} height={400} style={{ width: '100%', height: 'auto' }} />
-            </AppScreenshot>
-          </motion.div>
-        </Container>
-      </Section>
+            <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+              <AppScreenshot>
+                <Image src="/images/app-screenshots/Screenshot 2026-08-25 132006.webp" alt="Convoa Active Integrations" width={800} height={400} style={{ width: '100%', height: 'auto' }} />
+              </AppScreenshot>
+            </motion.div>
+          </Container>
+        </Section>
+      )}
 
       {/* divider */}
-      <SectionDivider />
+      {ACTIVE_INTEGRATIONS >= 3 && <SectionDivider />}
 
       {/* steps */}
       <Section>
@@ -1095,7 +1174,7 @@ export default function HomePageTemplate({
                 <StepEyebrow>{s.step}</StepEyebrow>
                 {s.image && (
                   <div style={{ width: '160px', height: '160px', margin: '0 auto 16px', position: 'relative' }}>
-                    <Image src={s.image} alt={s.title} fill style={{ objectFit: 'contain', transform: 'scale(2.2)' }} />
+                    <Image src={s.image} alt={s.title} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'contain', transform: 'scale(2.2)' }} />
                   </div>
                 )}
                 <StepTitle>{s.title}</StepTitle>
@@ -1125,7 +1204,7 @@ export default function HomePageTemplate({
               {industries.map((ind, i) => (
                 <IndustryCard key={i}>
                   <IndustryIconWrap style={{ background: 'transparent', border: 'none', width: '160px', height: '160px', position: 'relative' }}>
-                    <Image src={ind.image} alt={ind.name} fill style={{ objectFit: 'contain', transform: 'scale(2.2)' }} />
+                    <Image src={ind.image} alt={ind.name} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'contain', transform: 'scale(2.2)' }} />
                   </IndustryIconWrap>
                   <IndustryTitle>{ind.name}</IndustryTitle>
                 </IndustryCard>

@@ -1,9 +1,9 @@
 
 export const heroContent = {
-  eyebrow: "Your Always-On",
+  eyebrow: "24/7 AI Receptionist",
   title: "AI Voice Assistant",
   description:
-    "Convoa is your 24/7 AI assistant – answer inbound and outbound calls, schedule appointments, and boost revenue by providing customer engagement around the clock.",
+    "Convoa is your 24/7 AI assistant – answer every inbound call, place outbound calls that book appointments, and boost revenue by providing customer engagement around the clock.",
   cta: "Start for free",
 
   benefits: [

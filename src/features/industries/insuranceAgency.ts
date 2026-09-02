@@ -3,45 +3,45 @@ import { IndustryContent } from "./types";
 export const insuranceAgency: IndustryContent = {
   slug: "insurance-agency",
   metaTitle: "Insurance Agency Answering Service | Convoa",
-  metaDescription: "AI answering service for Insurance Agents",
+  metaDescription: "AI answering service for Insurance Agencies",
   statsImage: "/images/industry-pictures/insurance-pictures/stats.png",
-  faqImage: "/images/industry-pictures/insurance-pictures/faq.png",
+  
   hero: {
     eyebrow: "AI answering service for Insurance Agents",
-    heading: "Close More Policies, Miss Zero Leads",
-    subheading: "AI answers every prospect call, day or night.",
-    targetAudience: "For independent agents and insurance agencies",
+    heading: "Always There When Disaster Strikes",
+    subheading: "Handle claims and policy questions while your producers sell.",
+    targetAudience: "For independent agencies and regional brokerages",
     image: "/images/industry-pictures/insurance-pictures/hero.png",
   },
   solutions: {
-    heading: "Enable 24/7 customer support for your agency.",
-    subheading: "An AI solution designed for insurance agents.",
+    heading: "Provide reassurance, instantly.",
+    subheading: "An AI solution built for the insurance industry.",
     cards: [
-      { title: "Support customers all day, all night.", image: "/images/industry-pictures/insurance-pictures/solution-1.png" },
-      { title: "Reach out to more prospects", image: "/images/industry-pictures/insurance-pictures/solution-2.png" },
-      { title: "Automate customer intake processes", image: "/images/industry-pictures/insurance-pictures/solution-3.png" }
+      { title: "Start the Claims Process", image: "/images/industry-pictures/insurance-pictures/solution-1.png" },
+      { title: "Handle Policy Change Requests", image: "/images/industry-pictures/insurance-pictures/solution-2.png" },
+      { title: "Gather Quote Information", image: "/images/industry-pictures/insurance-pictures/solution-3.png" }
     ]
   },
   features: {
-    heading: "Features that adapt to your needs.",
+    heading: "Features built for agencies.",
     image: "/images/industry-pictures/insurance-pictures/features.png",
     bullets: [
-      { title: "AI that boosts customer experience:", description: "Our AI learns from your website, policies and customer queries — so every call is accurately handled like a pro." },
-      { title: "Never miss a call:", description: "All your calls are answered, no matter the time or volume. Our AI assistant is the perfect partner for your frontdesk, enabling more work to get done." },
-      { title: "Customizable:", description: "Your AI agent is tailored to your insurance agency needs. Engaging and multilingual voices, integration with your existing scheduling platforms, and realtime analytics." }
+      { title: "Agency Management Sync:", description: "Integrates with AMS360, QQCatalyst, and EZLynx to log calls directly into client files." },
+      { title: "Secure Document Handling:", description: "Instructs callers on where to securely upload photos of damage or required trailing documents." },
+      { title: "Localized Agent Routing:", description: "Intelligently routes complex calls to the specific producer assigned to that client's account." }
     ]
   },
   benefits: {
-    heading: "Benefits beyond answering calls.",
-    subheading: "Grow your business without worrying about the calls.",
+    heading: "Protect your book of business.",
+    subheading: "Keep retention high and producers focused on selling.",
     image: "/images/industry-pictures/insurance-pictures/benefits.png",
     bullets: [
-      { title: "Enhanced customer experience:", description: "Customers are answered on the first ring, and can schedule appointments while your team rests. Convoa is available 24/7 and prioritizes emergencies." },
-      { title: "Increased efficiency:", description: "With Convoa, there’s zero downtime and you’ll have increased response times and efficiency across all your communication and scheduling." },
-      { title: "AI Gatekeeper:", description: "Filter unsolicited and unwanted calls, allowing real customers to receive priority service." },
-      { title: "Critical business understanding:", description: "We understand the needs of insurance agents — Convoa can be setup to start answering calls today." },
-      { title: "Cost savings:", description: "Provide 24/7 service without increasing operational costs, capture leads and execute outreach without any additional systems." },
-      { title: "Proven results:", description: "Track every conversation, and experience an immediate increase in customer satisfaction." }
+      { title: "Never Miss a Claim:", description: "Be the first to answer when a client is standing on the side of the road after an accident." },
+      { title: "Free Up Producers:", description: "Stop letting your top salespeople waste time answering 'Can I get a copy of my ID card?'" },
+      { title: "Survive Storm Season:", description: "Instantly handle massive call spikes when extreme weather hits your region." },
+      { title: "Filter Bad Leads:", description: "Pre-qualify inbound quote requests so your producers only talk to ideal prospects." },
+      { title: "Consistent Brand Voice:", description: "Ensure every caller receives a calm, professional, and empathetic response." },
+      { title: "Reduce Overhead:", description: "Manage high call volumes without needing to hire seasonal or part-time CSRs." }
     ]
   }
 };

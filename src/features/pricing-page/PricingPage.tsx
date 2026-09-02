@@ -275,11 +275,20 @@ const SaveBadge = styled.div`
 `;
 
 const PricingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 1000px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1200px;
   margin: 0 auto;
+  align-items: stretch;
+
+  @media(max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media(max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const PlanCard = styled(motion.div) <{ $popular?: boolean }>`
@@ -289,6 +298,7 @@ const PlanCard = styled(motion.div) <{ $popular?: boolean }>`
   padding: 40px 32px;
   display: flex;
   flex-direction: column;
+  height: 100%;
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -513,8 +523,7 @@ const AppScreenshot = styled.div`
 // template component
 
 export const PricingPageTemplate = () => {
-  const [isAnnual, setIsAnnual] = useState(false);
-  const [selectedPlanIndex, setSelectedPlanIndex] = useState(1);
+  const [isAnnual, setIsAnnual] = useState(true);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   return (
@@ -560,60 +569,44 @@ export const PricingPageTemplate = () => {
           <ToggleLabel $active={!isAnnual}>{pricingToggles.monthly}</ToggleLabel>
         </ToggleWrap>
 
-        <GlassRadioWrap>
-          <GlassRadioGroup>
-            <GlassGlider $index={selectedPlanIndex} />
-            <GlassRadioLabel $active={selectedPlanIndex === 0} onClick={() => setSelectedPlanIndex(0)}>
-              Launch
-            </GlassRadioLabel>
-            <GlassRadioLabel $active={selectedPlanIndex === 1} onClick={() => setSelectedPlanIndex(1)}>
-              Pro
-            </GlassRadioLabel>
-            <GlassRadioLabel $active={selectedPlanIndex === 2} onClick={() => setSelectedPlanIndex(2)}>
-              Convoa Enterprise
-            </GlassRadioLabel>
-          </GlassRadioGroup>
-        </GlassRadioWrap>
-
         <PricingContainer>
-          <AnimatePresence mode="wait">
+          {pricingPlans.map((plan, index) => (
             <PlanCard
-              key={selectedPlanIndex}
-              $popular={pricingPlans[selectedPlanIndex].popular}
+              key={index}
+              $popular={plan.popular}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
             >
-              {pricingPlans[selectedPlanIndex].popular && <PopularRibbon>POPULAR</PopularRibbon>}
-              <PlanName>{pricingPlans[selectedPlanIndex].name}</PlanName>
+              {plan.popular && <PopularRibbon>POPULAR</PopularRibbon>}
+              <PlanName>{plan.name}</PlanName>
               
               <PlanPriceWrap>
-                {pricingPlans[selectedPlanIndex].contactUs ? (
+                {plan.contactUs ? (
                   <>
                     <PlanPrice $contact>Contact Us</PlanPrice>
                     <PriceSuffix>&nbsp;</PriceSuffix>
                   </>
                 ) : (
                   <>
-                    <PlanPrice><Currency>$</Currency>{isAnnual ? pricingPlans[selectedPlanIndex].annualPrice : pricingPlans[selectedPlanIndex].monthlyPrice}</PlanPrice>
+                    <PlanPrice><Currency>$</Currency>{isAnnual ? plan.annualPrice : plan.monthlyPrice}</PlanPrice>
                     <PriceSuffix>Per Month</PriceSuffix>
                   </>
                 )}
               </PlanPriceWrap>
 
               <FeatureList>
-                {pricingPlans[selectedPlanIndex].features.map((feature, i) => (
+                {plan.features.map((feature, i) => (
                   <React.Fragment key={i}>
                     <FeatureItem><CheckIcon /> {feature}</FeatureItem>
-                    {i < pricingPlans[selectedPlanIndex].features.length - 1 && <Divider />}
+                    {i < plan.features.length - 1 && <Divider />}
                   </React.Fragment>
                 ))}
               </FeatureList>
 
-              <ActionButton $index={selectedPlanIndex} href="https://app.convoa.ai/login">{pricingPlans[selectedPlanIndex].ctaText}</ActionButton>
+              <ActionButton $index={index} href="https://app.convoa.ai/login">{plan.ctaText}</ActionButton>
             </PlanCard>
-          </AnimatePresence>
+          ))}
         </PricingContainer>
 
         <FaqSection>

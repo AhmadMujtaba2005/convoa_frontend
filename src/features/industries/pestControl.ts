@@ -3,45 +3,45 @@ import { IndustryContent } from "./types";
 export const pestControl: IndustryContent = {
   slug: "pest-control",
   metaTitle: "Pest Control Answering Service | Convoa",
-  metaDescription: "Professional solutions for Pest Control services.",
+  metaDescription: "AI answering service for Pest Control Companies",
   statsImage: "/images/industry-pictures/pestcontrol-pictures/stats.png",
-  faqImage: "/images/industry-pictures/pestcontrol-pictures/faq.png",
+  
   hero: {
-    eyebrow: "AI answering service for Pest Control services",
-    heading: "Stop Missing Pest Control Calls",
-    subheading: "Every lead answered, every job booked, 24/7.",
-    targetAudience: "For independent exterminators and pest control agencies",
+    eyebrow: "AI answering service for Pest Control",
+    heading: "Exterminate Missed Calls",
+    subheading: "Capture panicked callers and schedule recurring treatments.",
+    targetAudience: "For local exterminators and regional pest control brands",
     image: "/images/industry-pictures/pestcontrol-pictures/hero.png",
   },
   solutions: {
-    heading: "Keep your service buzzing with 24/7 customer service.",
-    subheading: "An AI solution tailored for Pest Control services.",
+    heading: "Fast responses for urgent pests.",
+    subheading: "An AI solution built to handle seasonal swarms.",
     cards: [
-      { title: "Avoid schedule disruption due to emergencies", image: "/images/industry-pictures/pestcontrol-pictures/solution-1.png" },
-      { title: "Automated maintenance reminders", image: "/images/industry-pictures/pestcontrol-pictures/solution-2.png" },
-      { title: "Eliminate customer service issues", image: "/images/industry-pictures/pestcontrol-pictures/solution-3.png" }
+      { title: "Handle Emergency Infestations", image: "/images/industry-pictures/pestcontrol-pictures/solution-1.png" },
+      { title: "Schedule Recurring Treatments", image: "/images/industry-pictures/pestcontrol-pictures/solution-2.png" },
+      { title: "Identify Pests via Questions", image: "/images/industry-pictures/pestcontrol-pictures/solution-3.png" }
     ]
   },
   features: {
-    heading: "Features that adapt to your needs.",
+    heading: "Features built for exterminators.",
     image: "/images/industry-pictures/pestcontrol-pictures/features.png",
     bullets: [
-      { title: "AI that boosts customer experience:", description: "Our AI learns from your website, policies and customer queries — so every call is handled accurately like a pro." },
-      { title: "Never miss a call:", description: "All your calls are answered, no matter the time or volume. Our AI assistant is the perfect partner for your frontdesk, enabling more work to get done." },
-      { title: "Customizable:", description: "Your AI agent is tailored to your pest control business needs. Engaging and multilingual voices, integration with your existing CRM and scheduling platforms, and realtime analytics included." }
+      { title: "Field Software Integration:", description: "Syncs directly with PestPac, GorillaDesk, and FieldRoutes to keep your schedule accurate." },
+      { title: "Seasonal Knowledge Base:", description: "Understands the difference between spring termites and fall rodents to give accurate advice." },
+      { title: "Territory Mapping:", description: "Ensures appointments are booked intelligently based on your technicians' specific zones." }
     ]
   },
   benefits: {
-    heading: "Benefits beyond answering calls.",
-    subheading: "Grow your business without worrying about the calls.",
+    heading: "Grow your recurring revenue.",
+    subheading: "Win the frantic call and keep them for life.",
     image: "/images/industry-pictures/pestcontrol-pictures/benefits.png",
     bullets: [
-      { title: "Enhanced customer experience:", description: "Customers are answered on the first ring, and can schedule appointments while your team rests. Convoa is available 24/7 and prioritizes emergencies." },
-      { title: "Increased efficiency:", description: "With Convoa, there’s zero downtime and you’ll have increased response times and efficiency across all your communication and scheduling." },
-      { title: "Optimized appointment scheduling:", description: "Schedule appointments based on location, time, urgency and technician specialization." },
-      { title: "Critical business understanding:", description: "We understand the Pest Control industry and your business — Convoa can be setup and start answering calls today." },
-      { title: "Cost savings:", description: "Provide 24/7 service without increasing operational costs, capture leads and execute outreach without any additional systems." },
-      { title: "Proven results:", description: "Track every conversation, and experience an immediate increase in customer satisfaction." }
+      { title: "Win the Panicked Caller:", description: "When someone finds a wasp nest, they call until someone answers. Convoa ensures you get the job." },
+      { title: "Boost Recurring Plans:", description: "Seamlessly upsell one-time callers into quarterly maintenance plans during the booking process." },
+      { title: "Optimize Routing:", description: "Reduce windshield time by grouping appointments geographically without manual dispatch intervention." },
+      { title: "Handle Summer Spikes:", description: "Easily manage the massive influx of calls during peak mosquito and ant seasons." },
+      { title: "Free Up Your Techs:", description: "Stop forcing your technicians to pull over and answer the phone while driving between stops." },
+      { title: "Improve Cash Flow:", description: "Automatically remind customers of upcoming services and past-due invoices." }
     ]
   }
 };

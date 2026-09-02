@@ -6,7 +6,8 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { theme } from "@/lib/theme";
 import Image from "next/image";
 import { HeroCanvas } from "@/components/ui/HeroCanvas";
-import { featuresHero, featuresList, featuresCta } from "./features";
+import { featuresHero, featuresList, gridFeatures, featuresCta } from "./features";
+import { getFeatureMockup } from "./FeatureMockups";
 
 // shared styles
 const Page = styled.div`
@@ -122,8 +123,6 @@ const HeroGlow = styled.div`
   background: radial-gradient(ellipse at top center, rgba(78, 205, 160, 0.15) 0%, transparent 70%);
 `;
 
-// feature sections
-
 const FeatureRow = styled.div<{ $reverse?: boolean }>`
   display: flex;
   flex-direction: ${p => p.$reverse ? 'row-reverse' : 'row'};
@@ -179,29 +178,12 @@ const FeatureEyebrow = styled.div`
   &::after { right: -24px; }
 `;
 
+
 const FeatureImage = styled.img`
   width: 100%;
   max-width: 650px;
   height: auto;
   object-fit: contain;
-`;
-
-const AppScreenshot = styled.div`
-  border-radius: 16px;
-  background: ${theme.colors.surface};
-  border: 1px solid ${theme.colors.surfaceBorder};
-  overflow: hidden;
-  display: flex;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
-  width: 100%;
-  max-width: 800px;
-  
-  img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    display: block;
-  }
 `;
 
 const FeatureTitle = styled.h2`
@@ -219,7 +201,7 @@ const FeatureDescription = styled.p`
   margin: 0 0 32px;
 `;
 
-const GlowingButton = styled.a`
+const GlowingButtonOld = styled.a`
   background: ${theme.colors.brandTeal};
   color: #000;
   border: none;
@@ -241,8 +223,6 @@ const GlowingButton = styled.a`
   }
 `;
 
-
-// full width feature section
 const FullWidthFeature = styled.div`
   width: 100%;
   position: relative;
@@ -308,6 +288,121 @@ const FullWidthFeatureContent = styled.div`
   }
 `;
 
+const AppScreenshot = styled.div`
+  border-radius: 16px;
+  background: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.surfaceBorder};
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  
+  img, video {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+`;
+
+const FeaturesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 64px 0 120px;
+  
+  @media(max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media(max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const FeatureCard = styled.div<{ $span?: number }>`
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  grid-column: span ${p => p.$span || 1};
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(78, 205, 160, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  &:hover {
+    border-color: rgba(78, 205, 160, 0.4);
+    box-shadow: inset 0 0 0 1px rgba(78, 205, 160, 0.1), 0 20px 40px -15px rgba(78, 205, 160, 0.15);
+    transform: translateY(-4px);
+    &::before { opacity: 1; }
+  }
+  
+  @media(max-width: 900px) {
+    grid-column: span 1;
+  }
+`;
+
+const CardTitle = styled.h3`
+  font-family: ${theme.fonts.heading};
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  background: linear-gradient(to right, ${theme.colors.textPrimary}, ${theme.colors.textMuted});
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+
+const CardDescription = styled.p`
+  font-size: 15px;
+  line-height: 1.7;
+  color: ${theme.colors.textMuted};
+  margin: 0 0 32px;
+  flex: 1;
+`;
+
+const CardVisual = styled.div`
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-top: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  transition: transform 0.4s ease;
+  
+  img, video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  ${FeatureCard}:hover & {
+    transform: scale(1.02);
+  }
+`;
+
+
+
+
+
 // cta section
 const CtaSection = styled.section`
   padding: 120px 24px;
@@ -325,6 +420,44 @@ const CtaBox = styled.div`
   position: relative;
   z-index: 1;
 `;
+
+const CtaTitle = styled.h2`
+  font-family: ${theme.fonts.heading};
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 24px;
+`;
+
+const CtaDescription = styled.p`
+  font-size: 16px;
+  line-height: 1.6;
+  color: ${theme.colors.textMuted};
+  margin: 0 0 32px;
+`;
+
+const GlowingButton = styled.a`
+  background: ${theme.colors.brandTeal};
+  color: #000;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(78, 205, 160, 0.4);
+  text-decoration: none;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 160, 0.6);
+  }
+`;
+
 
 export const FeaturesPageTemplate = () => {
   return (
@@ -383,7 +516,7 @@ export const FeaturesPageTemplate = () => {
           </FeatureEyebrowWrap>
           <FeatureTitle>{featuresList[2].title}</FeatureTitle>
           <FeatureDescription>{featuresList[2].description}</FeatureDescription>
-          <GlowingButton href="https://app.convoa.ai/login">{featuresList[2].ctaText}<ArrowRightOutlined /></GlowingButton>
+          <GlowingButtonOld href="https://app.convoa.ai/login">{featuresList[2].ctaText}<ArrowRightOutlined /></GlowingButtonOld>
         </FullWidthFeatureContent>
       </FullWidthFeature>
 
@@ -443,10 +576,24 @@ export const FeaturesPageTemplate = () => {
         </div>
       </div>
 
+      <Container>
+        <FeaturesGrid>
+          {gridFeatures.map((feature, i) => (
+            <FeatureCard key={i} $span={i === 0 || i === 1 || i === 6 || i === 7 ? 2 : 1}>
+              <CardTitle>{feature.title}</CardTitle>
+              <CardDescription>{feature.description}</CardDescription>
+              <CardVisual style={{ background: 'transparent', border: 'none', minHeight: '120px', justifyContent: 'center' }}>
+                {getFeatureMockup(feature.title)}
+              </CardVisual>
+            </FeatureCard>
+          ))}
+        </FeaturesGrid>
+      </Container>
+
       <CtaSection>
         <CtaBox>
-          <FeatureTitle style={{ textAlign: 'center', marginBottom: 16 }}>{featuresCta.title}</FeatureTitle>
-          <FeatureDescription style={{ textAlign: 'center', margin: '0 auto 40px' }}>{featuresCta.description}</FeatureDescription>
+          <CtaTitle style={{ textAlign: 'center', marginBottom: 16 }}>{featuresCta.title}</CtaTitle>
+          <CtaDescription style={{ textAlign: 'center', margin: '0 auto 40px' }}>{featuresCta.description}</CtaDescription>
           <GlowingButton href="https://app.convoa.ai/login" style={{ margin: '0 auto' }}>{featuresCta.buttonText}<ArrowRightOutlined /></GlowingButton>
           <div style={{ fontSize: 12, color: theme.colors.textMuted, marginTop: 12 }}>{featuresCta.footnote}</div>
         </CtaBox>

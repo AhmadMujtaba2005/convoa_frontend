@@ -3,45 +3,45 @@ import { IndustryContent } from "./types";
 export const taxAccountants: IndustryContent = {
   slug: "tax-accountants",
   metaTitle: "Tax Accountant Answering Service | Convoa",
-  metaDescription: "AI answering service for Tax Accountant",
+  metaDescription: "AI answering service for Tax Accountants and CPAs",
   statsImage: "/images/industry-pictures/tax-pictures/stats.png",
-  faqImage: "/images/industry-pictures/tax-pictures/faq.png",
+  
   hero: {
-    eyebrow: "AI answering service for Tax Accountant",
-    heading: "More Clients, Zero Missed Calls",
-    subheading: "AI handles your frontdesk while you focus on the numbers.",
-    targetAudience: "For independent accountants and tax firms",
+    eyebrow: "AI answering service for CPAs",
+    heading: "Survive Tax Season Uninterrupted",
+    subheading: "Filter leads and chase documents while you focus on returns.",
+    targetAudience: "For independent CPAs and accounting firms",
     image: "/images/industry-pictures/tax-pictures/hero.png",
   },
   solutions: {
-    heading: "Enable 24/7 customer support for your agency.",
-    subheading: "An AI solution designed for tax accountants.",
+    heading: "Focus on billable hours.",
+    subheading: "An AI solution built for the April crunch.",
     cards: [
-      { title: "Keep customers engaged while you crunch the numbers", image: "/images/industry-pictures/tax-pictures/solution-1.png" },
-      { title: "Reach out to more prospects", image: "/images/industry-pictures/tax-pictures/solution-2.png" },
-      { title: "Automate customer outreach & reminders", image: "/images/industry-pictures/tax-pictures/solution-3.png" }
+      { title: "Schedule Prep Appointments", image: "/images/industry-pictures/tax-pictures/solution-1.png" },
+      { title: "Answer Deadline Questions", image: "/images/industry-pictures/tax-pictures/solution-2.png" },
+      { title: "Chase Missing Documents", image: "/images/industry-pictures/tax-pictures/solution-3.png" }
     ]
   },
   features: {
-    heading: "Features that adapt to your needs.",
+    heading: "Features built for accounting workflows.",
     image: "/images/industry-pictures/tax-pictures/features.png",
     bullets: [
-      { title: "AI that boosts customer experience:", description: "Our AI learns from your website, policies and customer queries — so every call is accurately handled like a pro." },
-      { title: "Never miss a call:", description: "All your calls are answered, no matter the time or volume. Our AI assistant is the perfect partner for your frontdesk, enabling more work to get done." },
-      { title: "Customizable:", description: "Your AI agent is tailored to your tax agency needs. Engaging and multilingual voices, integration with your existing scheduling platforms, and realtime analytics." }
+      { title: "Secure Portal Guidance:", description: "Guides clients on exactly how and where to securely upload their W-2s and 1099s." },
+      { title: "Peak Season Scaling:", description: "Automatically handles massive call volume spikes as filing deadlines approach." },
+      { title: "CRM Integration:", description: "Syncs with Canopy, Karbon, or your preferred CRM to log calls and update client status." }
     ]
   },
   benefits: {
-    heading: "Benefits beyond answering calls.",
-    subheading: "Grow your business without worrying about the calls.",
+    heading: "Keep your sanity intact.",
+    subheading: "Protect your time when it's most valuable.",
     image: "/images/industry-pictures/tax-pictures/benefits.png",
     bullets: [
-      { title: "Enhanced customer experience:", description: "Customers are answered on the first ring, and can schedule appointments while your team rests. Convoa is available 24/7 and prioritizes emergencies." },
-      { title: "Increased efficiency:", description: "With Convoa, there’s zero downtime and you’ll have increased response times and efficiency across all your communication and scheduling." },
-      { title: "AI Gatekeeper:", description: "Filter unsolicited and unwanted calls, allowing real customers to receive priority service." },
-      { title: "Critical business understanding:", description: "We understand the needs of tax accountants — Convoa can be setup to start answering calls today." },
-      { title: "Cost savings:", description: "Provide 24/7 service without increasing operational costs, capture leads and execute outreach without any additional systems." },
-      { title: "Proven results:", description: "Track every conversation, and experience an immediate increase in customer satisfaction." }
+      { title: "Stop the 'Is it done yet?' Calls:", description: "Automatically provide status updates to clients without pulling you out of deep work." },
+      { title: "Filter Non-Ideal Clients:", description: "Qualify inbound leads to ensure you only take on returns that match your firm's profitability goals." },
+      { title: "Extend Office Hours:", description: "Allow clients to book appointments and get answers late at night, even when your office is closed." },
+      { title: "Reduce Admin Overhead:", description: "Eliminate the need to hire temporary front desk staff just for tax season." },
+      { title: "Professional Presentation:", description: "Maintain a calm, organized front even when the office is chaotic." },
+      { title: "Focus on Advisory:", description: "Reclaim hours spent on routine phone calls and redirect them to high-value advisory services." }
     ]
   }
 };
