@@ -652,18 +652,6 @@ const OrbContainer = styled.div`
   margin: 60px auto 40px;
   width: 100%;
   max-width: 300px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 40px;
-    left: -20%;
-    right: -20%;
-    aspect-ratio: 1;
-    background: radial-gradient(circle at center, rgba(5, 10, 15, 0.95) 20%, rgba(5, 10, 15, 0.7) 45%, rgba(5, 10, 15, 0) 70%);
-    z-index: 0;
-    pointer-events: none;
-  }
 `;
 
 const OrbVideoWrap = styled.div`
@@ -673,11 +661,21 @@ const OrbVideoWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
-  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
   mix-blend-mode: screen;
-  pointer-events: none;
   z-index: 1;
+
+  [data-theme='light'] & {
+    mix-blend-mode: multiply;
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* Cover overlay to prevent native browser video hovers */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
 `;
 
 const OrbVideo = styled.video`
@@ -686,6 +684,13 @@ const OrbVideo = styled.video`
   object-fit: contain;
   filter: contrast(1.6) brightness(0.8);
   pointer-events: none;
+  
+  &::-webkit-media-controls {
+    display: none !important;
+  }
+  &::-webkit-media-controls-enclosure {
+    display: none !important;
+  }
 `;
 
 const SolutionCard = styled.div`
@@ -974,6 +979,14 @@ const CtaSub = styled.p`
 export default function HomePage({
   hero, cards, trustedBy, solutions, integrations, steps, focus, industries, cta,
 }: Props) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(e => console.log("Video autoplay failed:", e));
+    }
+  }, []);
+
   const solutionImages = [
     "/images/solutions/plumbing.png",
     "/images/solutions/cleaning.png",
@@ -989,7 +1002,6 @@ export default function HomePage({
           {STARS.map((s, i) => <Star key={i} $x={s.x} $y={s.y} $delay={s.d} $size={s.s} />)}
           {SPARKLES.map((s, i) => <Sparkle key={i} $x={s.x} $y={s.y} $delay={s.d} />)}
         </StarField>
-        <HeroGlow />
         <HeroIconBadge>🎙️</HeroIconBadge>
         <HeroContent>
           <GlowingEyebrow>{hero.eyebrow}</GlowingEyebrow>
@@ -1001,7 +1013,18 @@ export default function HomePage({
 
         <OrbContainer>
           <OrbVideoWrap>
-            <OrbVideo autoPlay loop muted playsInline src="/Comp-2.mp4" />
+            <OrbVideo 
+              ref={videoRef}
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              src="/Comp-2.mp4" 
+              disablePictureInPicture 
+              disableRemotePlayback 
+              controls={false}
+              tabIndex={-1}
+            />
           </OrbVideoWrap>
         </OrbContainer>
 

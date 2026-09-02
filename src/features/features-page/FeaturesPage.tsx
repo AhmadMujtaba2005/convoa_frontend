@@ -557,10 +557,10 @@ export const FeaturesPageTemplate = () => {
 
       {/* feature 6 */}
       <div style={{ position: 'relative', width: '100%', padding: '140px 24px', display: 'flex', justifyContent: 'center', overflow: 'hidden', borderTop: `1px solid ${theme.colors.surfaceBorder}`, borderBottom: `1px solid ${theme.colors.surfaceBorder}` }}>
-        <video autoPlay loop muted playsInline style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.6 }} src={featuresList[5].video} />
+        <video autoPlay loop muted playsInline disablePictureInPicture disableRemotePlayback style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, opacity: 0.6, pointerEvents: 'none' }} src={featuresList[5].video} />
         
-        {/* gradient overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.9) 100%)', zIndex: 0 }} />
+        {/* gradient overlay that also blocks native browser video hovers */}
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.9) 100%)', zIndex: 0, pointerEvents: 'auto' }} />
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
           <CenterEyebrowWrap>
