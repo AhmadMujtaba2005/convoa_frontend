@@ -9,8 +9,6 @@ export default function StyledComponentsRegistry({
 }: {
   children: React.ReactNode;
 }) {
-  // only create stylesheet once with lazy initial state
-  // x ref httpsreactjsorgdocshooks referencehtmllazy initial state
   const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
 
   useServerInsertedHTML(() => {
