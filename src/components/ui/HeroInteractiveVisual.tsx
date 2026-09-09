@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { theme } from "@/lib/theme";
 import { Phone, Globe, MessageSquare, Mic } from "lucide-react";
@@ -173,7 +173,7 @@ const ActionGroup = styled.div`
 
 export const HeroInteractiveVisual = () => {
   const [mode, setMode] = useState<'voice' | 'chat'>('voice');
-  
+
   return (
     <VisualContainer>
       <ToggleContainer>
@@ -184,24 +184,24 @@ export const HeroInteractiveVisual = () => {
           <Mic size={16} /> Voice
         </ToggleButton>
       </ToggleContainer>
-      
+
       <OrbWrapper>
         {mode === 'chat' && (
           <ChatBubble>Hey, how can I help you today?</ChatBubble>
         )}
         <Orb $isVoice={mode === 'voice'}>
-           {mode === 'voice' && (
-             <Waveform>
-               <Bar $delay="0s" />
-               <Bar $delay="0.1s" />
-               <Bar $delay="0.2s" />
-               <Bar $delay="0.3s" />
-               <Bar $delay="0.4s" />
-             </Waveform>
-           )}
+          {mode === 'voice' && (
+            <Waveform>
+              <Bar $delay="0s" />
+              <Bar $delay="0.1s" />
+              <Bar $delay="0.2s" />
+              <Bar $delay="0.3s" />
+              <Bar $delay="0.4s" />
+            </Waveform>
+          )}
         </Orb>
       </OrbWrapper>
-      
+
       <ActionRow>
         <ActionGroup>
           <ActionButton>

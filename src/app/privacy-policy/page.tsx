@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 import {
   Page, BgGlow, GridLines,
   HeroBanner, HeroGlow, BadgeRow, Badge, HeroTitle, HeroSub, MetaRow, MetaDot,
@@ -11,15 +11,15 @@ import {
 } from "@/features/legal/LegalPageLayout";
 
 const TOC = [
-  { id: "s1",  label: "1. Information We Collect" },
-  { id: "s2",  label: "2. How We Use It" },
-  { id: "s3",  label: "3. Sharing" },
-  { id: "s4",  label: "4. Data Security" },
-  { id: "s5",  label: "5. Data Retention" },
-  { id: "s6",  label: "6. Your Rights" },
-  { id: "s7",  label: "7. Third-Party Links" },
-  { id: "s8",  label: "8. Children's Privacy" },
-  { id: "s9",  label: "9. Policy Updates" },
+  { id: "s1", label: "1. Information We Collect" },
+  { id: "s2", label: "2. How We Use It" },
+  { id: "s3", label: "3. Sharing" },
+  { id: "s4", label: "4. Data Security" },
+  { id: "s5", label: "5. Data Retention" },
+  { id: "s6", label: "6. Your Rights" },
+  { id: "s7", label: "7. Third-Party Links" },
+  { id: "s8", label: "8. Children's Privacy" },
+  { id: "s9", label: "9. Policy Updates" },
   { id: "s10", label: "10. Contact Us" },
 ];
 

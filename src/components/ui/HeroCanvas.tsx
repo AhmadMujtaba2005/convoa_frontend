@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import styled from "styled-components";
-import { theme } from "@/lib/theme";
+
 
 const CanvasWrap = styled.div`
   position: absolute;
@@ -34,17 +34,17 @@ export const HeroCanvas = () => {
     if (!ctx) return;
 
     let animationFrameId: number;
-    
+
     // hexagon grid settings
     const r = 35; // radius
     const w = Math.sqrt(3) * r;
     const h = 2 * r;
     const xOffset = w;
     const yOffset = 1.5 * r;
-    
+
     let cols = 0;
     let rows = 0;
-    
+
     interface Hex {
       col: number;
       row: number;
@@ -54,17 +54,17 @@ export const HeroCanvas = () => {
       speed: number;
       isHighlighted: boolean;
     }
-    
+
     let hexes: Hex[] = [];
     let time = 0;
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      
+
       cols = Math.ceil(canvas.width / xOffset) + 1;
       rows = Math.ceil(canvas.height / yOffset) + 1;
-      
+
       hexes = [];
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -99,21 +99,21 @@ export const HeroCanvas = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isLightMode = document.documentElement.getAttribute('data-theme') === 'light';
       time += 1;
-      
+
       // teal color matching themecolorsbrandteal
       const r_color = 78, g_color = 205, b_color = 160;
 
       hexes.forEach(hex => {
         hex.phase += hex.speed;
         const pulse = (Math.sin(hex.phase) + 1) / 2; // 0 to 1
-        
+
         drawHexagon(hex.x, hex.y, r - 2); // Small gap between hexes
-        
+
         // base grid lines
         ctx.strokeStyle = `rgba(${r_color}, ${g_color}, ${b_color}, ${isLightMode ? 0.2 : 0.1})`;
         ctx.lineWidth = 1;
         ctx.stroke();
-        
+
         if (hex.isHighlighted) {
           // highlighted hexagon filling
           const alpha = (isLightMode ? 0.35 : 0.25) * pulse;

@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
 import styled, { keyframes, css } from "styled-components";
 import { theme } from "@/lib/theme";
-import { PlayCircleFilled, FileTextOutlined, CheckCircleFilled, MessageFilled, AudioFilled, UserOutlined } from "@ant-design/icons";
+import { PlayCircleFilled, FileTextOutlined, MessageFilled, AudioFilled, UserOutlined } from "@ant-design/icons";
 
 // --- ANIMATIONS ---
 const pulse = keyframes`
@@ -329,7 +328,7 @@ export const getFeatureMockup = (title: string) => {
           </WindowFrame>
         </MockupWrap>
       );
-      
+
     case "Knowledge Base":
       return (
         <MockupWrap>
@@ -339,7 +338,7 @@ export const getFeatureMockup = (title: string) => {
           </Dropzone>
         </MockupWrap>
       );
-      
+
     case "Call Analytics":
       return (
         <MockupWrap>
@@ -354,7 +353,7 @@ export const getFeatureMockup = (title: string) => {
           </ChartContainer>
         </MockupWrap>
       );
-      
+
     case "Custom Voices":
       return (
         <MockupWrap>
@@ -367,7 +366,7 @@ export const getFeatureMockup = (title: string) => {
           </VoiceContainer>
         </MockupWrap>
       );
-      
+
     case "Call Recordings":
       return (
         <MockupWrap>
@@ -385,7 +384,7 @@ export const getFeatureMockup = (title: string) => {
           </PlayerUI>
         </MockupWrap>
       );
-      
+
     case "Seamless Handoff":
       return (
         <MockupWrap>
@@ -401,7 +400,7 @@ export const getFeatureMockup = (title: string) => {
           </FlowGraph>
         </MockupWrap>
       );
-      
+
     case "Custom Guardrails":
       return (
         <MockupWrap>
@@ -421,7 +420,7 @@ export const getFeatureMockup = (title: string) => {
           </ToggleList>
         </MockupWrap>
       );
-      
+
     case "SMS Follow-Ups":
       return (
         <MockupWrap>
@@ -433,7 +432,7 @@ export const getFeatureMockup = (title: string) => {
           </ChatWindow>
         </MockupWrap>
       );
-      
+
     default:
       return null;
   }

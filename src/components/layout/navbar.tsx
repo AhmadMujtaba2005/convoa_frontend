@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { industryNav } from "@/lib/navConfig";
-import { DownOutlined } from "@ant-design/icons";
 import { theme } from "@/lib/theme";
 
 import {

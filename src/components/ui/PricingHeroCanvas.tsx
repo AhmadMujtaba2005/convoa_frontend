@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import styled from "styled-components";
 import { theme } from "@/lib/theme";
 
@@ -45,69 +45,69 @@ export const PricingHeroCanvas = () => {
       time += 0.005;
 
       const isLightMode = document.documentElement.getAttribute('data-theme') === 'light';
-      
+
       const lines = 6;
       for (let i = 0; i < lines; i++) {
         // define wave parameters per line to look distinct and sparse
         const amplitude1 = 40 + i * 15;
         const amplitude2 = 30 + i * 10;
-        
+
         // spread the lines vertically centered around the canvas center
         const yOffset = canvas.height / 2 + (i - lines / 2) * 90;
-        
+
         ctx.beginPath();
         for (let x = 0; x <= canvas.width; x += 10) {
           // static tunnel wave
-          const y = yOffset 
-            + Math.sin(x * 0.0015 + i) * amplitude1 
+          const y = yOffset
+            + Math.sin(x * 0.0015 + i) * amplitude1
             + Math.cos(x * 0.002 + i) * amplitude2;
-          
+
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
-        
+
         // draw the thin faint static tunnel line
         ctx.strokeStyle = theme.colors.surfaceBorder || 'rgba(255,255,255,0.05)';
         ctx.lineWidth = 1;
         ctx.globalAlpha = isLightMode ? 0.3 : 0.1;
         ctx.stroke();
-        
+
         // draw the traveling dot and tail
         const dotX = (time * (80 + i * 20) + i * 300) % (canvas.width + 400) - 200;
-        
+
         // draw tail
         const tailLength = 150;
         ctx.beginPath();
         for (let tx = Math.max(0, dotX - tailLength); tx <= dotX; tx += 5) {
-          const ty = yOffset 
-            + Math.sin(tx * 0.0015 + i) * amplitude1 
+          const ty = yOffset
+            + Math.sin(tx * 0.0015 + i) * amplitude1
             + Math.cos(tx * 0.002 + i) * amplitude2;
-          
+
           if (tx === Math.max(0, dotX - tailLength)) ctx.moveTo(tx, ty);
           else ctx.lineTo(tx, ty);
         }
-        
+
         // gradient for the tail
         const tailGrad = ctx.createLinearGradient(dotX - tailLength, 0, dotX, 0);
         tailGrad.addColorStop(0, 'rgba(78, 205, 160, 0)');
         tailGrad.addColorStop(1, 'rgba(78, 205, 160, 1)');
-        
+
         ctx.strokeStyle = tailGrad;
         ctx.lineWidth = 2;
         ctx.globalAlpha = 1;
         ctx.stroke();
-        
+
         // leading dot position
-        const dotY = yOffset 
-            + Math.sin(dotX * 0.0015 + i) * amplitude1 
-            + Math.cos(dotX * 0.002 + i) * amplitude2;
-        
+        const dotY = yOffset
+          + Math.sin(dotX * 0.0015 + i) * amplitude1
+          + Math.cos(dotX * 0.002 + i) * amplitude2;
+
         // base dot
         ctx.beginPath();
         ctx.arc(dotX, dotY, 2.5, 0, Math.PI * 2);
         ctx.fillStyle = theme.colors.brandTeal;
         ctx.fill();
-        
+
         // outer glow
         ctx.beginPath();
         ctx.arc(dotX, dotY, 12, 0, Math.PI * 2);

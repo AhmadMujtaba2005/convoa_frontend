@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 import {
   Page, BgGlow, GridLines,
   HeroBanner, HeroGlow, BadgeRow, Badge, HeroTitle, HeroSub, MetaRow, MetaDot,
@@ -11,15 +11,15 @@ import {
 } from "@/features/legal/LegalPageLayout";
 
 const TOC = [
-  { id: "s1",  label: "1. Eligibility" },
-  { id: "s2",  label: "2. Account Registration" },
-  { id: "s3",  label: "3. Use of Services" },
-  { id: "s4",  label: "4. Subscription & Billing" },
-  { id: "s5",  label: "5. Free Trials" },
-  { id: "s6",  label: "6. Cancellation" },
-  { id: "s7",  label: "7. User Data & Privacy" },
-  { id: "s8",  label: "8. Intellectual Property" },
-  { id: "s9",  label: "9. Service Availability" },
+  { id: "s1", label: "1. Eligibility" },
+  { id: "s2", label: "2. Account Registration" },
+  { id: "s3", label: "3. Use of Services" },
+  { id: "s4", label: "4. Subscription & Billing" },
+  { id: "s5", label: "5. Free Trials" },
+  { id: "s6", label: "6. Cancellation" },
+  { id: "s7", label: "7. User Data & Privacy" },
+  { id: "s8", label: "8. Intellectual Property" },
+  { id: "s9", label: "9. Service Availability" },
   { id: "s10", label: "10. Limitation of Liability" },
   { id: "s11", label: "11. Modifications" },
   { id: "s12", label: "12. Governing Law" },

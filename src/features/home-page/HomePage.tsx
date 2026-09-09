@@ -7,11 +7,11 @@ import { theme } from "@/lib/theme";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import Image from "next/image";
 import {
-  twinkle, sparkleAnim, SpinAnim, SpinAnimReverse,
+  SpinAnim,
   StarField, Star, Sparkle, STARS, SPARKLES,
   SectionBgArc, ArcSvg, SectionBgHelix, HelixSvg, SectionBgLines, LinesSvg,
-  CanvasStats, CanvasFeatures, CanvasSolutions, OrbitRing,
-  CanvasIntegrations, CanvasSteps, CanvasFocus, TestimonialDot, CanvasTestimonials, CanvasCta
+  CanvasStats, CanvasFeatures, CanvasSolutions,
+  CanvasIntegrations, CanvasSteps, CanvasFocus, CanvasTestimonials, CanvasCta
 } from "@/components/ui/HomePageCanvas";
 
 // interfaces
@@ -930,7 +930,7 @@ export default function HomePage({
   hero, cards, trustedBy, solutions, integrations, steps, focus, industries, cta,
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch(() => {
@@ -965,15 +965,15 @@ export default function HomePage({
 
         <OrbContainer>
           <OrbVideoWrap>
-            <OrbVideo 
+            <OrbVideo
               ref={videoRef}
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              src="/Comp-2.mp4" 
-              disablePictureInPicture 
-              disableRemotePlayback 
+              autoPlay
+              loop
+              muted
+              playsInline
+              src="/Comp-2.mp4"
+              disablePictureInPicture
+              disableRemotePlayback
               controls={false}
               tabIndex={-1}
             />
