@@ -2,20 +2,17 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import { CheckCircleFilled, StarFilled, ArrowRightOutlined, PhoneOutlined } from "@ant-design/icons";
-import { Brain, Calendar, ChartBar, Users } from "lucide-react";
-import { heroContent, homeCards } from "./home";
+import { CheckCircleFilled, StarFilled, ArrowRightOutlined } from "@ant-design/icons";
 import { theme } from "@/lib/theme";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import Image from "next/image";
 import {
   twinkle, sparkleAnim, SpinAnim, SpinAnimReverse,
-  StarField, Star, Sparkle, STARS, SPARKLES, HeroGlow,
+  StarField, Star, Sparkle, STARS, SPARKLES,
   SectionBgArc, ArcSvg, SectionBgHelix, HelixSvg, SectionBgLines, LinesSvg,
   CanvasStats, CanvasFeatures, CanvasSolutions, OrbitRing,
   CanvasIntegrations, CanvasSteps, CanvasFocus, TestimonialDot, CanvasTestimonials, CanvasCta
 } from "@/components/ui/HomePageCanvas";
-import { HeroInteractiveVisual } from "@/components/ui/HeroInteractiveVisual";
 
 // interfaces
 interface Stat { value: string; label: string; }
@@ -104,13 +101,7 @@ const EyebrowPill = styled.span`
   &::after { right: -24px; }
 `;
 
-const FunnelGlow = styled.div`
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 1000px; height: 400px; pointer-events: none; z-index: 0;
-  background: radial-gradient(ellipse at top center, rgba(78, 205, 160, 0.40) 0%, rgba(78, 205, 160, 0.15) 50%, transparent 80%);
-  mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-`;
+
 
 const GlowingEyebrow = styled.div`
   display: inline-flex;
@@ -207,9 +198,7 @@ const SectionDividerLine = styled.div`
   z-index: 2;
 `;
 
-const SectionDividerGlow = styled.div`
-  display: none;
-`;
+
 
 const SectionDividerPill = styled.span`
   position: relative;
@@ -230,7 +219,6 @@ const SectionDividerPill = styled.span`
 
 const SectionDivider = ({ label }: { label?: string }) => (
   <SectionDividerWrap>
-    <SectionDividerGlow />
     <SectionDividerLine />
     {label && <SectionDividerPill>{label}</SectionDividerPill>}
   </SectionDividerWrap>
@@ -424,45 +412,7 @@ const Badge = styled.span`
 
 // background elements
 
-// dashboard mockup
-const DashWrap = styled.div`
-  width: 90%;
-  max-width: 1000px;
-  margin: 0 auto;
-  border-radius: 22px;
-  background: ${theme.colors.surface};
-  border: 1px solid ${theme.colors.surfaceBorder};
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  display: flex;
-  overflow: hidden;
-  animation: ${fadeUp} 1s ease-out 0.15s both;
-  position: relative;
-  z-index: 2;
-  min-height: 380px;
-  @media(max-width:768px){ flex-direction: column; width: 100%; min-height: auto; border-radius: 16px; }
-`;
 
-const DSide = styled.div`
-  width: 56px;
-  border-right: 1px solid ${theme.colors.surfaceBorder};
-  display: flex; flex-direction: column; align-items: center;
-  padding: 20px 0; gap: 20px;
-  @media(max-width:768px){ flex-direction: row; width: 100%; border-right: none; border-bottom: 1px solid ${theme.colors.surfaceBorder}; padding: 12px 16px; justify-content: flex-start; }
-`;
-
-const DSideIcon = styled.div<{ $active?: boolean }>`
-  width: 28px; height: 28px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  background: ${p => p.$active ? `rgba(78, 205, 160, 0.15)` : "transparent"};
-  color: ${p => p.$active ? theme.colors.brandTeal : theme.colors.textDim};
-`;
-
-const DMain = styled.div`
-  flex: 1; padding: 24px 28px;
-  display: flex; flex-direction: column; gap: 16px;
-  @media(max-width:768px){ padding: 16px; }
-`;
 
 
 // stats trust bar
@@ -983,7 +933,9 @@ export default function HomePage({
   
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(e => console.log("Video autoplay failed:", e));
+      videoRef.current.play().catch(() => {
+        // Autoplay blocked by browser — video will remain paused
+      });
     }
   }, []);
 

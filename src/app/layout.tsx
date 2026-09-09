@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
+import StyledComponentsRegistry from '@/lib/registry';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import Navbar from "@/components/layout/navbar";
+import Footer from "@/components/layout/footer";
+import ThemeSwitch from "@/components/ThemeSwitch";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -19,15 +26,6 @@ export const metadata: Metadata = {
   description:
     "Convoa automates calls, bookings, and lead handling with a smart AI voice assistant that works 24/7 to grow your business.",
 };
-
-import StyledComponentsRegistry from '@/lib/registry';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
-import ThemeSwitch from "@/components/ThemeSwitch";
-
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
 
 export default function RootLayout({
   children,

@@ -16,14 +16,4 @@ export const theme = {
     heading: "var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif",
     body: "var(--font-inter), 'Inter', system-ui, sans-serif",
   },
-  // kept for backward compat with footer imports
-  get colors_compat() {
-    return {
-      background: this.colors.background,
-      surface: this.colors.surface,
-      border: this.colors.surfaceBorder,
-      text: { primary: this.colors.textPrimary, muted: this.colors.textMuted, dim: this.colors.textDim },
-      brand: { teal: this.colors.brandTeal, indigo: this.colors.brandIndigo, gradient: this.colors.brandGradient, gradientText: this.colors.brandGradientText },
-    };
-  },
 };

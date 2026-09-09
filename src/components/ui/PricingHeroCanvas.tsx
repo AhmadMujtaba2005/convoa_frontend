@@ -13,7 +13,6 @@ const CanvasWrap = styled.div`
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  opacity: 1; /* Handle opacity in JS based on theme */
   mask-image: radial-gradient(95% 90%, black 35%, transparent 82%);
   -webkit-mask-image: radial-gradient(95% 90%, black 35%, transparent 82%);
 `;
@@ -74,7 +73,6 @@ export const PricingHeroCanvas = () => {
         ctx.stroke();
         
         // draw the traveling dot and tail
-        const speed = 0.002 + i * 0.0005;
         const dotX = (time * (80 + i * 20) + i * 300) % (canvas.width + 400) - 200;
         
         // draw tail

@@ -243,17 +243,6 @@ const Node = styled.div<{ $type: 'user' | 'ai' | 'agent' }>`
   z-index: 2;
   box-shadow: ${p => p.$type === 'ai' ? `0 0 20px rgba(78,205,160,0.4)` : 'none'};
 `;
-const FlowLine = styled.div`
-  flex: 1; height: 2px; min-width: 40px;
-  background: linear-gradient(90deg, transparent, ${theme.colors.brandTeal}, transparent);
-  position: relative;
-  &::after {
-    content: ''; position: absolute; top: -3px; left: 0; width: 8px; height: 8px;
-    background: ${theme.colors.brandTeal}; border-radius: 50%;
-    box-shadow: 0 0 10px ${theme.colors.brandTeal};
-    animation: slideUp 2s infinite linear;
-  }
-`;
 // Custom SVG line for the flowing dots
 const SvgLine = styled.svg`
   position: absolute; top: 50%; left: 25px; width: calc(100% - 50px); height: 40px;
